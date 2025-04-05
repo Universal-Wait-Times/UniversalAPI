@@ -53,9 +53,9 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
           source: |
-            ./api/target/UniversalAPI.jar
-            ./api/api.Dockerfile
-            ./docker-compose.yml
+            api/target/UniversalAPI.jar
+            api/api.Dockerfile
+            docker-compose.yml
           target: ${{ vars.UNIVERSAL_API_PATH }}
 
       - name: Restart universalapi service (triggers start.sh)
