@@ -1,0 +1,28 @@
+---
+name: Restart Service
+on:
+  workflow_dispatch: null
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+      - name: Restart service
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ secrets.SFTP_PORT }}
+          script: |
+            echo "Restarting universalapi..."
+            systemctl restart universalapi
+            systemctl status universalapi
+      - name: 📡 Notify Discord of deployment
+        run: >
+          curl -X POST -H "Content-Type: application/json" -d '{
+            "embeds": [{
+              "title": "UniversalAPI Restarted",
+              "description": "**Branch:** `${{ github.ref_name }}`\n**By:** `${{ github.actor }}`",
+              "color": 5763719,
+              "timestamp": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"
+            }]
+          }' ${{ secrets.DISCORD_DEPLOYMENT_WEBHOOK }}
