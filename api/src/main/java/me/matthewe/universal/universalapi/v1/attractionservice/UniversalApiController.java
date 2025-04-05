@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@RequestMapping("/api/v1/wait_times")
+@RequestMapping("/api/v1/attractions")
 @RestController()
 public class UniversalApiController {
 
@@ -17,7 +17,7 @@ public class UniversalApiController {
         this.service = service;
     }
 
-    @GetMapping("/attractions")
+    @GetMapping()
     public List<Attraction> getAttractions( @RequestParam(defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractions(), waitTimes);
     }
@@ -63,13 +63,13 @@ public class UniversalApiController {
         return returnList;
     }
 
-    @GetMapping("/{resort}/attractions")
+    @GetMapping("/{resort}")
     public List<Attraction> getAttractions(@PathVariable String resort, @RequestParam(defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractionsByResort(ResortRegion.valueOf(resort.toUpperCase())), waitTimes);
     }
 
 
-    @GetMapping("/{resort}/{park}/attractions")
+    @GetMapping("/{resort}/{park}")
     public List<Attraction> getAttractions(@PathVariable String resort, @PathVariable String park, @RequestParam(defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractionsByResortPark(ResortRegion.valueOf(resort.toUpperCase()), UniversalPark.getByPark(park)), waitTimes);
     }
