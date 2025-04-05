@@ -5,6 +5,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    steps:
       - name: Restart service
         uses: appleboy/ssh-action@v1.0.0
         with:
