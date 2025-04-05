@@ -42,7 +42,7 @@ jobs:
           source: ./target/UniversalAPI.jar
           target: ${{ vars.UNIVERSAL_API_PATH }}
           strip_components: 1
-      - name: Restart universalapi service via SSH
+      - name: Move JAR and restart service
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SFTP_HOST }}
@@ -50,6 +50,8 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
           script: |
+            echo "Moving UniversalAPI.jar to deploy folder..."
+            mv ${{ vars.UNIVERSAL_API_PATH }}/target/UniversalAPI.jar ${{ vars.UNIVERSAL_API_PATH }}/UniversalAPI.jar
             echo "Restarting universalapi..."
             systemctl restart universalapi
             systemctl status universalapi --no-pager
