@@ -40,7 +40,11 @@ jobs:
       - name: Deploy to Nexus
         run: mvn deploy -Dmaven.test.skip=true
         working-directory: ./api
-
+      - name: Debug file output
+        run: |
+          ls -l ./api/target
+          ls -l ./api/
+          ls -l .
       - name: Upload Dockerfile, JAR, and docker-compose.yml to server
         uses: appleboy/scp-action@v0.1.4
         with:
