@@ -22,7 +22,8 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean package
-
+      - name: Deploy maven
+        run: mvn deploy
       - name: Upload JAR to SFTP using SCP
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -32,6 +33,8 @@ jobs:
           port: ${{ secrets.SFTP_PORT }}
           source: ./target/UniversalAPI.jar
           target: ${{ vars.UNIVERSAL_API_PATH }}
+          strip_components: 2
+
 
       - name: Restart universalapi service via SSH
         uses: appleboy/ssh-action@v1.0.0
