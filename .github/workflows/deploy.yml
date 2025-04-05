@@ -1,25 +1,33 @@
+---
 name: Build, Deploy, and Notify
-
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
-
+  workflow_dispatch: null
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: "17"
           distribution: temurin
+      - name: Set up Maven auth
+        run: >
+          mkdir -p ~/.m2
 
+          echo "<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\" \
+            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \
+            xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd\"> \
+            <servers> \
+              <server><id>nexus-releases</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server> \
+              <server><id>nexus-snapshots</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server> \
+            </servers> \
+          </settings>" > ~/.m2/settings.xml
       - name: Build with Maven
         run: mvn clean package
       - name: Deploy maven
@@ -34,8 +42,6 @@ jobs:
           source: ./target/UniversalAPI.jar
           target: ${{ vars.UNIVERSAL_API_PATH }}
           strip_components: 2
-
-
       - name: Restart universalapi service via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -47,7 +53,6 @@ jobs:
             echo "Restarting universalapi..."
             sudo systemctl restart universalapi
             sudo systemctl status universalapi --no-pager
-
       - name: 📡 Notify Discord of deployment
         run: >
           curl -X POST -H "Content-Type: application/json" -d '{
