@@ -53,8 +53,8 @@ jobs:
             echo "Moving UniversalAPI.jar to deploy folder..."
             mv ${{ vars.UNIVERSAL_API_PATH }}/target/UniversalAPI.jar ${{ vars.UNIVERSAL_API_PATH }}/UniversalAPI.jar
             echo "Restarting universalapi..."
-            systemctl restart universalapi
-            systemctl status universalapi --no-pager
+            sudo /bin/systemctl restart universalapi.service
+            /bin/systemctl status universalapi.service
       - name: 📡 Notify Discord of deployment
         run: >
           curl -X POST -H "Content-Type: application/json" -d '{

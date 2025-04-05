@@ -15,8 +15,8 @@ jobs:
           port: ${{ secrets.SFTP_PORT }}
           script: |
             echo "Restarting universalapi..."
-            systemctl restart universalapi
-            systemctl status universalapi
+            sudo /bin/systemctl restart universalapi.service
+            /bin/systemctl status universalapi.service
       - name: 📡 Notify Discord of deployment
         run: >
           curl -X POST -H "Content-Type: application/json" -d '{
