@@ -3,7 +3,7 @@ name: Build, Deploy, and Notify
 on:
   push:
     branches:
-      - main
+      - master
   workflow_dispatch: null
 jobs:
   deploy:
