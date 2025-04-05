@@ -1,8 +1,10 @@
-package me.matthewe.universal.universalapi;
+package me.matthewe.universal.universalapi.v1.attractionservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
+import me.matthewe.universal.universalapi.v1.ResortRegion;
+import me.matthewe.universal.universalapi.v1.UniversalPark;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -203,7 +205,7 @@ public class UniversalApiService {
 
                     UniversalPark universalPark = UniversalPark.getByPark(park);
 
-                    if (waitTimeAttractionId.equals("ush.rides.secret_life_of_pets")) { //Dealing with strange edge case
+                    if (waitTimeAttractionId.equals("ush.rides.secret_life_of_pets")) { //Dealing with strange edge case.
                         universalPark = UniversalPark.USJ;
 
                     }

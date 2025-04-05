@@ -1,11 +1,13 @@
-package me.matthewe.universal.universalapi;
+package me.matthewe.universal.universalapi.v1.attractionservice;
 
+import me.matthewe.universal.universalapi.v1.ResortRegion;
+import me.matthewe.universal.universalapi.v1.UniversalPark;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@RequestMapping("/api")
+@RequestMapping("/api/v1/wait_times")
 @RestController()
 public class UniversalApiController {
 
@@ -42,8 +44,6 @@ public class UniversalApiController {
                     returnList.add(attraction);
 
                 }
-            }
-            if (attraction.getQueues().size()==1) {
             }
         }
         return returnList;

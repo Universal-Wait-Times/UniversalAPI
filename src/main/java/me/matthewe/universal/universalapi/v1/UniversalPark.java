@@ -1,4 +1,4 @@
-package me.matthewe.universal.universalapi;
+package me.matthewe.universal.universalapi.v1;
 
 public enum UniversalPark {
 

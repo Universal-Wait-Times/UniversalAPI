@@ -1,7 +1,8 @@
-package me.matthewe.universal.universalapi;
+package me.matthewe.universal.universalapi.v1.attractionservice;
 
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
+import me.matthewe.universal.universalapi.v1.ResortRegion;
 
 import java.time.OffsetDateTime;
 import java.util.List;
