@@ -1,25 +1,21 @@
+---
 name: Build, Deploy, and Notify
-
 on:
   push:
     branches:
       - master
-  workflow_dispatch:
-
+  workflow_dispatch: null
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: "21"
           distribution: temurin
-
       - name: Set up Maven auth
         run: >
           mkdir -p ~/.m2
@@ -32,11 +28,9 @@ jobs:
               <server><id>nexus-snapshots</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server> \
             </servers> \
           </settings>" > ~/.m2/settings.xml
-
       - name: Build JAR
         run: mvn clean package -Dmaven.test.skip=true
         working-directory: ./api
-
       - name: Deploy to Nexus
         run: mvn deploy -Dmaven.test.skip=true
         working-directory: ./api
@@ -45,6 +39,14 @@ jobs:
           ls -l ./api/target
           ls -l ./api/
           ls -l .
+      - name: Final sanity check
+        run: |
+          echo "[*] Workspace root:"
+          pwd
+          echo "[*] Confirming files exist..."
+          ls -lh api/target/UniversalAPI.jar || echo "❌ JAR missing"
+          ls -lh api/api.Dockerfile || echo "❌ Dockerfile missing"
+          ls -lh docker-compose.yml || echo "❌ docker-compose.yml missing"
       - name: Upload Dockerfile, JAR, and docker-compose.yml to server
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -57,7 +59,6 @@ jobs:
             api/api.Dockerfile
             docker-compose.yml
           target: ${{ vars.UNIVERSAL_API_PATH }}
-
       - name: Restart universalapi service (triggers start.sh)
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -69,7 +70,6 @@ jobs:
             echo "Restarting systemd service..."
             sudo /bin/systemctl restart universalapi.service
             /bin/systemctl status universalapi.service
-
       - name: 📡 Notify Discord of deployment
         run: >
           curl -X POST -H "Content-Type: application/json" -d '{
