@@ -49,7 +49,7 @@ public class UniversalApiController {
         return returnList;
     }
 
-    @GetMapping("/orlandotest")
+    @GetMapping("/orlandotests")
     public List<Attraction> getAttractionsJapanTest() {
         List<Attraction> attractions = service.fetchAttractionsByResortPark(ResortRegion.UOR, UniversalPark.IOA);
 
