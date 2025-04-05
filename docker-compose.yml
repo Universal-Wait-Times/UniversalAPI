@@ -10,7 +10,7 @@ services:
   universalapi:
     build:
       context: ./api
-      dockerfile: Dockerfile
+      dockerfile: api.Dockerfile
     container_name: universalapi
     depends_on:
       - redis

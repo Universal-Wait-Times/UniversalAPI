@@ -54,7 +54,7 @@ jobs:
           port: ${{ secrets.SFTP_PORT }}
           source: |
             ./api/target/UniversalAPI.jar
-            ./api/Dockerfile
+            ./api/api.Dockerfile
             ./docker-compose.yml
           target: ${{ vars.UNIVERSAL_API_PATH }}
           strip_components: 1
