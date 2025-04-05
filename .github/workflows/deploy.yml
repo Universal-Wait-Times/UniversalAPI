@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
           source: ./target/UniversalAPI.jar
-          target: ${{ secrets.UNIVERSAL_API_PATH }}/UniversalAPI.jar
+          target: ${{ secrets.UNIVERSAL_API_PATH }}
 
       - name: Restart universalapi service via SSH
         uses: appleboy/ssh-action@v1.0.0
