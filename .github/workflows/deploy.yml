@@ -1,15 +1,15 @@
----
 name: Build, Deploy, and Notify
 
 on:
   push:
     branches:
       - master
-  workflow_dispatch: null
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,26 +33,29 @@ jobs:
             </servers> \
           </settings>" > ~/.m2/settings.xml
 
-      - name: Build with Maven
+      - name: Build JAR
         run: mvn clean package -Dmaven.test.skip=true
         working-directory: ./api
 
-      - name: Deploy maven
+      - name: Deploy to Nexus
         run: mvn deploy -Dmaven.test.skip=true
         working-directory: ./api
 
-      - name: Upload JAR to SFTP using SCP
+      - name: Upload Dockerfile, JAR, and docker-compose.yml to server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
-          source: ./api/target/UniversalAPI.jar
+          source: |
+            ./api/target/UniversalAPI.jar
+            ./api/Dockerfile
+            ./docker-compose.yml
           target: ${{ vars.UNIVERSAL_API_PATH }}
           strip_components: 1
 
-      - name: Move JAR and restart service
+      - name: Restart universalapi service (triggers start.sh)
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SFTP_HOST }}
@@ -60,9 +63,7 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
           script: |
-            echo "Moving UniversalAPI.jar to deploy folder..."
-            mv ${{ vars.UNIVERSAL_API_PATH }}/target/UniversalAPI.jar ${{ vars.UNIVERSAL_API_PATH }}/UniversalAPI.jar
-            echo "Restarting universalapi..."
+            echo "Restarting systemd service..."
             sudo /bin/systemctl restart universalapi.service
             /bin/systemctl status universalapi.service
 

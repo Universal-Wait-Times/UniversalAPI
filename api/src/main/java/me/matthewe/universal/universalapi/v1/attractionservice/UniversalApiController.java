@@ -2,6 +2,7 @@ package me.matthewe.universal.universalapi.v1.attractionservice;
 
 import me.matthewe.universal.universalapi.v1.ResortRegion;
 import me.matthewe.universal.universalapi.v1.UniversalPark;
+import me.matthewe.universal.universalapi.v1.redis.RedisPublisher;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,15 +13,24 @@ import java.util.List;
 public class UniversalApiController {
 
     private final UniversalApiService service;
+    private final RedisPublisher publisher;
 
-    public UniversalApiController(UniversalApiService service) {
+    public UniversalApiController(UniversalApiService service, RedisPublisher publisher) {
         this.service = service;
+        this.publisher = publisher;
     }
 
     @GetMapping()
     public List<Attraction> getAttractions( @RequestParam(defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractions(), waitTimes);
     }
+
+
+    @PostMapping
+    public void test() {
+        publisher.publish("attraction-updates","test");
+    }
+
 
     private List<Attraction> applyFilters(List<Attraction> attractions, int waitTimes) {
         if (waitTimes==-1||waitTimes==0)return attractions;
