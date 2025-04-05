@@ -94,21 +94,26 @@ public class UniversalApiService {
                     if (shows.containsKey(attraction.getWaitTimeAttractionId())) {
 
                         shows.put(attraction.getWaitTimeAttractionId(), attraction);
+                        onUpdate(attraction,show, false);
                         return true;
                     }
                     shows.put(attraction.getWaitTimeAttractionId(), attraction);
+                    onUpdate(attraction,show, true);
                     return false;
 
                 } else {
                     if (rides.containsKey(attraction.getWaitTimeAttractionId())) {
-
                         rides.put(attraction.getWaitTimeAttractionId(), attraction);
+                        onUpdate(attraction,show, false);
                         return true;
                     }
                     rides.put(attraction.getWaitTimeAttractionId(), attraction);
+                    onUpdate(attraction,show, true);
                     return false;
                 }
             }
+
+
             @Override
             public List<Attraction> getAttractions() {
                 List<Attraction>  attractions = new ArrayList<>();
@@ -118,6 +123,11 @@ public class UniversalApiService {
             }
         }
     }
+
+    private static void onUpdate(Attraction attraction, boolean show, boolean b) {
+    }
+
+
     public UniversalApiService(RestTemplate restTemplate, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
