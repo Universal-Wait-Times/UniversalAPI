@@ -1,0 +1,57 @@
+name: Build, Deploy, and Notify
+
+on:
+  push:
+    branches:
+      - main
+      - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: mvn clean package
+
+      - name: Upload JAR to SFTP
+        uses: wangyoucao577/sftp-action@v1
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          port: ${{ secrets.SFTP_PORT }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          localPath: ./target/UniversalAPI.jar
+          remotePath: ${{ secrets.UNIVERSAL_API_PATH }}/UniversalAPI.jar
+
+      - name: Restart universalapi service via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SFTP_HOST }}
+          username: ${{ secrets.SFTP_USERNAME }}
+          password: ${{ secrets.SFTP_PASSWORD }}
+          port: ${{ secrets.SFTP_PORT }}
+          script: |
+            echo "Restarting universalapi..."
+            sudo systemctl restart universalapi
+            sudo systemctl status universalapi --no-pager
+
+      - name: 📡 Notify Discord of deployment
+        run: |
+          curl -X POST -H "Content-Type: application/json" -d '{
+            "embeds": [{
+              "title": "🚀 UniversalAPI Deployed",
+              "description": "**Branch:** `${{ github.ref_name }}`\n**By:** `${{ github.actor }}`",
+              "color": 5763719,
+              "timestamp": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"
+            }]
+          }' ${{ secrets.DISCORD_DEPLOYMENT_WEBHOOK }}
