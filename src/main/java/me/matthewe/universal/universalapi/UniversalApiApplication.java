@@ -8,6 +8,10 @@ public class UniversalApiApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(UniversalApiApplication.class, args);
+        System.err.println("Hello world test");
+        System.err.println("Hello world test");
+        System.err.println("Hello world test");
+        System.err.println("Hello world test");
     }
 
 }
