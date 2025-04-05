@@ -6,14 +6,13 @@
 
     <groupId>me.matthewe.universal</groupId>
     <artifactId>UniversalAPI</artifactId>
-    <version>${universal.version}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>UniversalAPI</name>
     <description>UniversalAPI</description>
     <packaging>pom</packaging>
 
     <properties>
 
-        <universal.version>0.0.1-SNAPSHOT</universal.version>
         <java.version>17</java.version>
     </properties>
 
