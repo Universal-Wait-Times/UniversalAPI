@@ -158,7 +158,7 @@ public class UniversalApiService {
                 List<Attraction> attractions = objectMapper.readValue(json, new TypeReference<>() {});
 
 
-                System.err.println(json);
+//                System.err.println(json);
 
 
 
@@ -222,7 +222,7 @@ public class UniversalApiService {
 
             cache.set(resortData);
         } catch (Exception e) {
-            System.err.println("Failed to refresh attraction cache: " + e.getMessage());
+            log.error("Failed to refresh attraction cache: " + e.getMessage());
         }
     }
 }

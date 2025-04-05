@@ -1,9 +1,6 @@
 package me.matthewe.universal.universalapi;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,8 +16,37 @@ public class UniversalApiController {
     }
 
     @GetMapping("/attractions")
-    public List<Attraction> getAttractions() {
-        return service.fetchAttractions();
+    public List<Attraction> getAttractions( @RequestParam(defaultValue = "-1") int waitTimes) {
+        return applyFilters(service.fetchAttractions(), waitTimes);
+    }
+
+    private List<Attraction> applyFilters(List<Attraction> attractions, int waitTimes) {
+        if (waitTimes==-1||waitTimes==0)return attractions;
+        List<Attraction> returnList =new ArrayList<>();
+        for (Attraction attraction : attractions) {
+
+            for (Attraction.Queue queue : attraction.getQueues()) {
+                if (queue.getQueueType()!= Attraction.Queue.Type.STANDBY)continue;
+
+                if (queue.getStatus()== Attraction.Queue.Status.RIDE_NOW) {
+                    returnList.add(attraction);
+                    continue;
+                }
+
+                if (queue.getStatus()!= Attraction.Queue.Status.OPEN) {
+                    continue;
+                }
+
+                int displayWaitTime = queue.getDisplayWaitTime();
+                if (displayWaitTime!=0 && displayWaitTime<=waitTimes) {
+                    returnList.add(attraction);
+
+                }
+            }
+            if (attraction.getQueues().size()==1) {
+            }
+        }
+        return returnList;
     }
 
     @GetMapping("/orlandotest")
@@ -37,9 +63,15 @@ public class UniversalApiController {
         return returnList;
     }
 
+    @GetMapping("/{resort}/attractions")
+    public List<Attraction> getAttractions(@PathVariable String resort, @RequestParam(defaultValue = "-1") int waitTimes) {
+        return applyFilters(service.fetchAttractionsByResort(ResortRegion.valueOf(resort.toUpperCase())), waitTimes);
+    }
+
+
     @GetMapping("/{resort}/{park}/attractions")
-    public List<Attraction> getAttractions(@PathVariable String resort, @PathVariable String park) {
-        return service.fetchAttractionsByResortPark(ResortRegion.valueOf(resort.toUpperCase()), UniversalPark.getByPark(park));
+    public List<Attraction> getAttractions(@PathVariable String resort, @PathVariable String park, @RequestParam(defaultValue = "-1") int waitTimes) {
+        return applyFilters(service.fetchAttractionsByResortPark(ResortRegion.valueOf(resort.toUpperCase()), UniversalPark.getByPark(park)), waitTimes);
     }
 
 

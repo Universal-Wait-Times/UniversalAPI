@@ -99,9 +99,15 @@ public class Attraction {
         @JsonProperty("display_wait_time")
         @JsonSetter(nulls = Nulls.SKIP)
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-
         private int displayWaitTime = 0; // Default 0
 
+        public Type getQueueType() {
+            return queueType;
+        }
+
+        public Status getStatus() {
+            return status;
+        }
 
         @JsonProperty("opens_at")
         @JsonSetter(nulls = Nulls.SKIP)
@@ -109,9 +115,12 @@ public class Attraction {
 
         private OffsetDateTime opensAt;
 
+        public int getDisplayWaitTime() {
+            return displayWaitTime;
+        }
 
         public static enum Status {
-            BRIEF_DELAY, CLOSED, OPENS_AT, RIDE_NOW, OPEN, UNKNOWN;
+            BRIEF_DELAY, CLOSED, OPENS_AT, RIDE_NOW, OPEN,AT_CAPACITY, UNKNOWN;
 
             @JsonCreator
             public static Status fromString(String value) {
