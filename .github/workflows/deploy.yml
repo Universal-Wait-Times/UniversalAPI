@@ -41,6 +41,7 @@ jobs:
           port: ${{ secrets.SFTP_PORT }}
           source: ./target/UniversalAPI.jar
           target: ${{ vars.UNIVERSAL_API_PATH }}
+          strip_components: 1
       - name: Restart universalapi service via SSH
         uses: appleboy/ssh-action@v1.0.0
         with:
@@ -50,8 +51,8 @@ jobs:
           port: ${{ secrets.SFTP_PORT }}
           script: |
             echo "Restarting universalapi..."
-            sudo systemctl restart universalapi
-            sudo systemctl status universalapi --no-pager
+            systemctl restart universalapi
+            systemctl status universalapi --no-pager
       - name: 📡 Notify Discord of deployment
         run: >
           curl -X POST -H "Content-Type: application/json" -d '{
