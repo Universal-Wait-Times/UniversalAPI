@@ -24,7 +24,7 @@ public class UniversalApiController {
     }
 
     @GetMapping()
-    public List<Attraction> getAttractions( @RequestParam(defaultValue = "-1") int waitTimes) {
+    public List<Attraction> getAttractions( @RequestParam(name = "waitTimes", defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractions(), waitTimes);
     }
 
@@ -77,14 +77,14 @@ public class UniversalApiController {
     }
 
     @GetMapping("/{resort}")
-    public List<Attraction> getAttractions(@PathVariable String resort, @RequestParam(defaultValue = "-1") int waitTimes) {
+    public List<Attraction> getAttractions(@PathVariable String resort, @RequestParam(name = "waitTimes", defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractionsByResort(ResortRegion.valueOf(resort.toUpperCase())), waitTimes);
     }
 
 
     @GetMapping("/{resort}/{park}")
-    public List<Attraction> getAttractions(@PathVariable String resort, @PathVariable String park, @RequestParam(defaultValue = "-1") int waitTimes) {
+    public List<Attraction> getAttractions(@PathVariable String resort, @PathVariable String park, @RequestParam(name = "waitTimes", defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractionsByResortPark(ResortRegion.valueOf(resort.toUpperCase()), UniversalPark.getByPark(park)), waitTimes);
     }
-    
+
 }
