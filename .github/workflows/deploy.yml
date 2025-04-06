@@ -45,7 +45,7 @@ jobs:
           pwd
           echo "[*] Confirming files exist..."
           ls -lh api/target/UniversalAPI.jar || echo "❌ JAR missing"
-          ls -lh api/api.Dockerfile || echo "❌ Dockerfile missing"
+          ls -lh api/Dockerfile || echo "❌ Dockerfile missing"
           ls -lh docker-compose.yml || echo "❌ docker-compose.yml missing"
       - name: Upload Dockerfile, JAR, and docker-compose.yml to server
         uses: appleboy/scp-action@v0.1.4
@@ -54,7 +54,7 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
-          source: "api/target/UniversalAPI.jar,api/api.Dockerfile,docker-compose.yml"
+          source: "api/target/UniversalAPI.jar,api/Dockerfile,docker-compose.yml"
           target: ${{ vars.UNIVERSAL_API_PATH }}
       - name: Restart universalapi service (triggers start.sh)
         uses: appleboy/ssh-action@v1.0.0
