@@ -5,7 +5,9 @@ services:
     image: redis:7.2
     container_name: universalapi-redis
     networks:
-      - internal-net
+      internal-net:
+        aliases:
+          - universalapi-redis
 
   universalapi:
     build:
@@ -19,9 +21,9 @@ services:
     networks:
       - internal-net
     environment:
-      - SPRING_REDIS_HOST=redis
+      - SPRING_REDIS_HOST=universalapi-redis
       - SPRING_REDIS_PORT=6379
-      - SERVER_PORT=9504 # Override default Spring Boot port
+      - SERVER_PORT=9504
 
 networks:
   internal-net:
