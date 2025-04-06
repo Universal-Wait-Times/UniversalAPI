@@ -121,7 +121,7 @@ public class Attraction {
         }
 
         public static enum Status {
-            BRIEF_DELAY, CLOSED, OPENS_AT, RIDE_NOW, OPEN,AT_CAPACITY, UNKNOWN;
+            BRIEF_DELAY, CLOSED, OPENS_AT, RIDE_NOW, OPEN,AT_CAPACITY, SPECIAL_EVENT, UNKNOWN;
 
             @JsonCreator
             public static Status fromString(String value) {
