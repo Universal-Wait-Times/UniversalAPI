@@ -137,7 +137,7 @@ public class UniversalApiService {
                         }
 
 
-                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
+//                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
                     } catch (Exception e) {
                         // Log or handle the serialization error appropriately.
                         System.err.println("Failed to publish JSON payload: " + e.getMessage());

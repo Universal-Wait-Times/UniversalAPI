@@ -28,7 +28,7 @@ public class AttractionsController {
 
     @PostMapping
     public void test() {
-        publisher.publish("attraction-updates","test");
+//        publisher.publish("attraction-updates","test");
     }
 
 
