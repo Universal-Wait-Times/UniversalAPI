@@ -4,10 +4,8 @@ services:
   redis:
     image: redis:7.2
     container_name: universalapi-redis
-    networks:
-      internal-net:
-        aliases:
-          - universalapi-redis
+    ports:
+      - "6379:6379"  # Publish Redis port to the host
 
   universalapi:
     build:
@@ -16,15 +14,8 @@ services:
     container_name: universalapi
     depends_on:
       - redis
-    ports:
-      - "127.0.0.1:9504:9504" # Spring Boot on port 9504 (localhost only)
-    networks:
-      - internal-net
+    network_mode: host  # Use host networking so localhost is shared with the host
     environment:
-      - SPRING_REDIS_HOST=universalapi-redis
+      - SPRING_REDIS_HOST=localhost
       - SPRING_REDIS_PORT=6379
       - SERVER_PORT=9504
-
-networks:
-  internal-net:
-    driver: bridge
