@@ -3,9 +3,6 @@ package me.matthewe.universal.universalapi.v1.attractionservice;
 import me.matthewe.universal.universalapi.v1.ResortRegion;
 import me.matthewe.universal.universalapi.v1.UniversalPark;
 import me.matthewe.universal.universalapi.v1.redis.RedisPublisher;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -13,12 +10,12 @@ import java.util.List;
 
 @RequestMapping("/api/v1/attractions")
 @RestController()
-public class UniversalApiController {
+public class AttractionsController {
 
     private final UniversalApiService service;
     private final RedisPublisher publisher;
 
-    public UniversalApiController(UniversalApiService service, RedisPublisher publisher) {
+    public AttractionsController(UniversalApiService service, RedisPublisher publisher) {
         this.service = service;
         this.publisher = publisher;
     }
@@ -76,13 +73,13 @@ public class UniversalApiController {
         return returnList;
     }
 
-    @GetMapping("/{resort}")
+    @GetMapping("/{resort}/")
     public List<Attraction> getAttractions(@PathVariable String resort, @RequestParam(name = "waitTimes", defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractionsByResort(ResortRegion.valueOf(resort.toUpperCase())), waitTimes);
     }
 
 
-    @GetMapping("/{resort}/{park}")
+    @GetMapping("/{resort}/{park}/")
     public List<Attraction> getAttractions(@PathVariable String resort, @PathVariable String park, @RequestParam(name = "waitTimes", defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractionsByResortPark(ResortRegion.valueOf(resort.toUpperCase()), UniversalPark.getByPark(park)), waitTimes);
     }
