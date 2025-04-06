@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import jakarta.annotation.PostConstruct;
 import me.matthewe.universal.universalapi.gson.GsonUtils;
+import me.matthewe.universal.universalapi.utils.DiscordWebhookUtil;
 import me.matthewe.universal.universalapi.v1.ResortRegion;
 import me.matthewe.universal.universalapi.v1.UniversalPark;
 import me.matthewe.universal.universalapi.v1.redis.RedisPublisher;
@@ -136,7 +137,11 @@ public class UniversalApiService {
                             jsonObject.add("newAttraction", GSON.fromJson(GSON.toJson(newAttraction, Attraction.class), JsonObject.class));
                         }
 
+                        if (oldAttraction != null) {
 
+
+                            DiscordWebhookUtil.sendStatusUpdate(newAttraction);
+                        }
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
                     } catch (Exception e) {
                         // Log or handle the serialization error appropriately.
