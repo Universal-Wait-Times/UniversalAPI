@@ -5,13 +5,28 @@ import lombok.*;
 import me.matthewe.universal.universalapi.v1.ResortRegion;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Attraction {
+
+
+    @JsonIgnore private UUID tempId;
+
+    public UUID getTempId() {
+        return tempId;
+    }
+
+    public Attraction setTempId(UUID tempId) {
+        this.tempId = tempId;
+        return this;
+    }
 
     @JsonIgnore private ResortRegion resortRegion;
     @JsonProperty("wait_time_attraction_id")
@@ -41,7 +56,7 @@ public class Attraction {
 
 
 
-    @JsonProperty("modified_at")
+    @JsonProperty("modifiedAt")
     private OffsetDateTime modifiedAt;
 
 
@@ -92,6 +107,8 @@ public class Attraction {
         return queues;
     }
 
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Queue {
         @JsonProperty("queue_id")  private String queueId;
         @JsonProperty("queue_type")  private Type queueType;
@@ -115,6 +132,7 @@ public class Attraction {
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
 
         private OffsetDateTime opensAt;
+
 
         public int getDisplayWaitTime() {
             return displayWaitTime;

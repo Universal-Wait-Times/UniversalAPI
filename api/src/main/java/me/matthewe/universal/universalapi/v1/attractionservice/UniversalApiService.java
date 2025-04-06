@@ -2,9 +2,15 @@ package me.matthewe.universal.universalapi.v1.attractionservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import jakarta.annotation.PostConstruct;
+import me.matthewe.universal.universalapi.gson.GsonUtils;
 import me.matthewe.universal.universalapi.v1.ResortRegion;
 import me.matthewe.universal.universalapi.v1.UniversalPark;
+import me.matthewe.universal.universalapi.v1.redis.RedisPublisher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -23,6 +29,8 @@ public class UniversalApiService {
 
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+    private final RedisPublisher redisPublisher;
+
 
     private final AtomicReference<ResortData> cache = new AtomicReference<>(new ResortData());
 
@@ -91,26 +99,75 @@ public class UniversalApiService {
                 this.rides = new HashMap<>();
             }
 
-            public boolean update(Attraction attraction, boolean show) {
+
+            private  void onUpdate(Attraction oldAttraction, Attraction newAttraction, boolean show, boolean initial, RedisPublisher redisPublisher) {
+                boolean updatedStatus = false;
+
+                if (oldAttraction == null) {
+                    updatedStatus = true;
+
+                } else {
+
+                    if (oldAttraction.getTempId().equals(newAttraction.getTempId())) {
+                        return;
+                    }
+
+                    Attraction.Queue.Status oldStatus = oldAttraction.getQueues().get(0).getStatus();
+                    Attraction.Queue.Status newStatus = newAttraction.getQueues().get(0).getStatus();
+
+                    if (oldStatus != newStatus) {
+                        updatedStatus = true;
+                    }
+                }
+                if (updatedStatus) {
+                    try {
+                        // Create a JSON payload with both old and new attraction objects.
+
+                        JsonObject jsonObject = new JsonObject();
+
+
+                        Gson GSON = GsonUtils.GSON_SHORT;
+                        if (oldAttraction != null) {
+                            jsonObject.add("oldAttraction", GSON.fromJson(GSON.toJson(oldAttraction, Attraction.class), JsonObject.class));
+
+                        }
+                        if (newAttraction != null) {
+
+                            jsonObject.add("newAttraction", GSON.fromJson(GSON.toJson(newAttraction, Attraction.class), JsonObject.class));
+                        }
+
+
+                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
+                    } catch (Exception e) {
+                        // Log or handle the serialization error appropriately.
+                        System.err.println("Failed to publish JSON payload: " + e.getMessage());
+                    }
+                }
+            }
+
+
+            public boolean update(Attraction attraction, boolean show, RedisPublisher redisPublisher) {
                 if (show) {
                     if (shows.containsKey(attraction.getWaitTimeAttractionId())) {
-
+                        final Attraction oldShow = shows.get(attraction.getWaitTimeAttractionId());
                         shows.put(attraction.getWaitTimeAttractionId(), attraction);
-                        onUpdate(attraction,show, false);
+                        onUpdate(oldShow, attraction,show, false,redisPublisher);
                         return true;
                     }
                     shows.put(attraction.getWaitTimeAttractionId(), attraction);
-                    onUpdate(attraction,show, true);
+                    onUpdate(null, attraction,show, true,redisPublisher);
                     return false;
 
                 } else {
                     if (rides.containsKey(attraction.getWaitTimeAttractionId())) {
+                        final Attraction oldRide = rides.get(attraction.getWaitTimeAttractionId());
+
                         rides.put(attraction.getWaitTimeAttractionId(), attraction);
-                        onUpdate(attraction,show, false);
+                        onUpdate(oldRide, attraction,show, false,redisPublisher);
                         return true;
                     }
                     rides.put(attraction.getWaitTimeAttractionId(), attraction);
-                    onUpdate(attraction,show, true);
+                    onUpdate(null, attraction,show, true,redisPublisher);
                     return false;
                 }
             }
@@ -126,13 +183,11 @@ public class UniversalApiService {
         }
     }
 
-    private static void onUpdate(Attraction attraction, boolean show, boolean b) {
-    }
-
-
-    public UniversalApiService(RestTemplate restTemplate, ObjectMapper objectMapper) {
+    public UniversalApiService(RestTemplate restTemplate, ObjectMapper objectMapper, RedisPublisher redisPublisher) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
+        objectMapper.registerModule(new JavaTimeModule());
+        this.redisPublisher = redisPublisher;
     }
 
     public List<Attraction> fetchAttractions() {
@@ -176,7 +231,7 @@ public class UniversalApiService {
 
 
                 for (Attraction attraction : attractions) {
-
+                    attraction.setTempId(UUID.randomUUID());
 
                     ResortRegion resortAreaCode = attraction.getResortAreaCode();
 
@@ -220,9 +275,9 @@ public class UniversalApiService {
                     String type = split[2];
                     if (type.equalsIgnoreCase("rides")) {
 
-                        parkData.update(attraction, false);
+                        parkData.update(attraction, false,redisPublisher);
                     } else {
-                        parkData.update(attraction, true);
+                        parkData.update(attraction, true,redisPublisher);
 
                     }
 
