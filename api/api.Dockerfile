@@ -8,4 +8,3 @@ COPY target/UniversalAPI.jar UniversalAPI.jar
 EXPOSE 9504
 
 ENTRYPOINT ["java", "-jar", "UniversalAPI.jar"]
- 

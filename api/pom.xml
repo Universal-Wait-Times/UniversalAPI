@@ -80,6 +80,8 @@
     <build>
         <finalName>UniversalAPI</finalName>
         <plugins>
+
+            <!-- Compiler plugin, etc. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -96,10 +98,23 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
+
+            <!-- ******* KEY SPRING BOOT PLUGIN ******* -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>me.matthewe.universal.universalapi.UniversalApiApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
+
 </project>
