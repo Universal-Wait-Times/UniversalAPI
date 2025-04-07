@@ -94,7 +94,33 @@ public class DiscordWebhookUtil {
             case USH -> {
                 resortInfo = "Universal Studios Hollywood's " + park.getParkName();
             }
+        }
 
+        if ((oldAttraction.getQueues().size() > 1) && (attraction.getQueues().size() > 1)) {
+            Attraction.Queue singleQueueOld = oldAttraction.getQueues().get(0);
+            Attraction.Queue.Status oldSingleStatus = singleQueueOld.getStatus();
+
+            Attraction.Queue singleQueueNew = attraction.getQueues().get(0);
+            Attraction.Queue.Status newSingleStatus = singleQueueNew.getStatus();
+
+            if (oldSingleStatus!=newSingleStatus) {
+
+                if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.CLOSED) {
+                    goMessage( String.format("%s's at %s Single Rider line is now closed.",
+                            attraction.getDisplayName(),
+                            resortInfo));
+                } else  if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.AT_CAPACITY) {
+                    goMessage( String.format("%s's at %s Single Rider line is now at capacity.",
+                            attraction.getDisplayName(),
+                            resortInfo));
+                }else  if (oldSingleStatus== Attraction.Queue.Status.CLOSED && newSingleStatus==Attraction.Queue.Status.OPEN) {
+                    goMessage(String.format("%s's at %s Single Rider line is now open.",
+                            attraction.getDisplayName(),
+                            resortInfo));
+                } else {
+                    goMessage("SINGLE RIDER DEBUG " + attraction.getDisplayName() + " @.matthewe ");
+                }
+            }
         }
 
         Attraction.Queue queue = attraction.getQueues().get(0);
@@ -169,8 +195,16 @@ public class DiscordWebhookUtil {
         }
 
 
+        goMessage(message);
+    }
+
+    private static void goMessage(String message) {
         if (message == null) return;
 
+        String localTesting = System.getenv("localtesting");
+        if ((localTesting != null) && localTesting.equalsIgnoreCase("true")) {
+            message = "[local] " + message;
+        }
         System.out.println(message);
         // Enqueue the message for throttled sending.
         messageQueue.offer(message);
