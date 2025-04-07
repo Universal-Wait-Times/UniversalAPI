@@ -49,16 +49,9 @@ jobs:
           ls -lh api/target/UniversalAPI.jar || echo "❌ JAR missing"
           ls -lh api/Dockerfile || echo "❌ Dockerfile missing"
           ls -lh docker-compose.yml || echo "❌ docker-compose.yml missing"
-      - name: Environmental Variables Local
-        uses: appleboy/ssh-action@v1.0.0
-        with:
-          host: ${{ secrets.SFTP_HOST }}
-          username: ${{ secrets.SFTP_USERNAME }}
-          password: ${{ secrets.SFTP_PASSWORD }}
-          port: ${{ secrets.SFTP_PORT }}
-          script: |
-            echo "Restarting systemd service..."
-            echo "DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }}" > .env
+      - name: Inject Discord webhook into docker-compose.yml
+        run: |
+          sed -i "s|__DISCORD_WEBHOOK__|${{ secrets.DISCORD_WEBHOOK_URL }}|" docker-compose.yml
       - name: Upload Dockerfile, JAR, and docker-compose.yml to server
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -66,7 +59,7 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
-          source: "api/target/UniversalAPI.jar,api/Dockerfile,docker-compose.yml,.env"
+          source: "api/target/UniversalAPI.jar,api/Dockerfile,docker-compose.yml"
           target: ${{ vars.UNIVERSAL_API_PATH }}
       - name: Restart universalapi service (triggers start.sh)
         uses: appleboy/ssh-action@v1.0.0
