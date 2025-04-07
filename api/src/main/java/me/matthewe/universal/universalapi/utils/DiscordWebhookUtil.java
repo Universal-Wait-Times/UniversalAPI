@@ -1,5 +1,6 @@
 package me.matthewe.universal.universalapi.utils;
 
+import me.matthewe.universal.universalapi.v1.UniversalPark;
 import me.matthewe.universal.universalapi.v1.attractionservice.Attraction;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -74,19 +75,26 @@ public class DiscordWebhookUtil {
         String message = null;
 
 
-        String resortInfo = attraction.getResortAreaCode().getParkName();
+        String resortInfo = "";
+
+        final UniversalPark park = attraction.getPark();
         switch (attraction.getResortAreaCode()) {
             case UOR -> {
-                resortInfo += "'s " + attraction.getPark().getParkName();
-
+                if (park == UniversalPark.IOA) {
+                    resortInfo = "Islands of Adventure";
+                } else if (park == UniversalPark.USF) {
+                    resortInfo = "Universal Studios Florida";
+                } else if (park == UniversalPark.UEU) {
+                    resortInfo = "Universal Epic Universe";
+                }
             }
             case USJ -> {
-                //No change in message japan only has one park
+                resortInfo = "Universal Studios Japan";
             }
             case USH -> {
-                resortInfo += "'s " + attraction.getPark().getParkName();
-
+                resortInfo = "Universal Studios Hollywood's " + park.getParkName();
             }
+
         }
 
         Attraction.Queue queue = attraction.getQueues().get(0);
