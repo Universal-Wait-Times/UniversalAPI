@@ -118,7 +118,10 @@ public class DiscordWebhookUtil {
                             attraction.getDisplayName(),
                             resortInfo));
                 } else {
+                    if (isLocalTesting()) {
+
                     goMessage("SINGLE RIDER DEBUG " + attraction.getDisplayName() + " @.matthewe ");
+                    }
                 }
             }
         }
@@ -198,11 +201,18 @@ public class DiscordWebhookUtil {
         goMessage(message);
     }
 
+    private static boolean isLocalTesting() {
+        String localTesting = System.getenv("localtesting");
+        if ((localTesting != null) && localTesting.equalsIgnoreCase("true")) {
+            return true;
+        }
+        return false;
+    }
+
     private static void goMessage(String message) {
         if (message == null) return;
 
-        String localTesting = System.getenv("localtesting");
-        if ((localTesting != null) && localTesting.equalsIgnoreCase("true")) {
+        if (isLocalTesting()) {
             message = "[local] " + message;
         }
         System.out.println(message);
