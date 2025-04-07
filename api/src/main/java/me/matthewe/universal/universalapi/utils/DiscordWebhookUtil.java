@@ -73,7 +73,7 @@ public class DiscordWebhookUtil {
         String message=null;
 
         if (attraction==null) {
-            message = "Webhook started";
+            message = "**RIDE STATUS UPDATES WILL NOW DISPLAY**";
         } else {
 
             Attraction.Queue queue = attraction.getQueues().get(0);
