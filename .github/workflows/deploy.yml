@@ -67,6 +67,7 @@ jobs:
           port: ${{ secrets.SFTP_PORT }}
           script: |
             echo "Setting environmental variables"
+            sudo -s
             sudo bash -c 'echo "DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }}" > /var/www/springboot/universalapi.env'
             sudo cat /var/www/springboot/universalapi.env
             echo "Restarting systemd service..."
