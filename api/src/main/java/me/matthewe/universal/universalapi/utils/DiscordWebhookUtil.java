@@ -74,8 +74,8 @@ public class DiscordWebhookUtil {
         String message = null;
 
 
-        String resortInfo = attraction.getResortRegion().getParkName();
-        switch (attraction.getResortRegion()) {
+        String resortInfo = attraction.getResortAreaCode().getParkName();
+        switch (attraction.getResortAreaCode()) {
             case UOR -> {
                 resortInfo = "'s " + attraction.getPark().getParkName();
 
