@@ -66,6 +66,8 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
           script: |
+            echo "Setting environmental variables"
+            export DISCORD_WEBHOOK_URL="${{ secrets.DISCORD_WEBHOOK_URL }}"
             echo "Restarting systemd service..."
             sudo /bin/systemctl restart universalapi.service
             /bin/systemctl status universalapi.service

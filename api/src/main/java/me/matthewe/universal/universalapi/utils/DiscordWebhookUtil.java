@@ -66,58 +66,68 @@ public class DiscordWebhookUtil {
             return;
         }
 
+
         // Get the first queue (assuming at least one exists).
-        Attraction.Queue queue = attraction.getQueues().get(0);
 
-        Attraction.Queue.Status status = queue.getStatus();
+
         String message=null;
-        switch (status){
-            case BRIEF_DELAY -> {
-                message = String.format("%s at %s is now %s",
-                        attraction.getDisplayName(),
-                        attraction.getResortAreaCode().getParkName(),
-                        "experiencing a brief delay");
-            }
-            case CLOSED -> {
-                message = String.format("%s at %s is now %s",
-                        attraction.getDisplayName(),
-                        attraction.getResortAreaCode().getParkName(),
-                        "closed");
-            }
-            case OPENS_AT -> {
-                message=null;
-            }
-            case RIDE_NOW -> {
-                message = String.format("%s at %s is now %s",
-                        attraction.getDisplayName(),
-                        attraction.getResortAreaCode().getParkName(),
-                        "walk on");
-            }
 
-            case OPEN -> {
-                message = String.format("%s at %s is now %s",
-                        attraction.getDisplayName(),
-                        attraction.getResortAreaCode().getParkName(),
-                        "open with wait time of " + queue.getDisplayWaitTime() +" minutes" );
-            }
-            case AT_CAPACITY -> {
-                message = String.format("%s at %s is now %s",
-                        attraction.getDisplayName(),
-                        attraction.getResortAreaCode().getParkName(),
-                       "at capacity");
-            }
-            case SPECIAL_EVENT -> {
-                message = String.format("%s at %s is now %s",
-                        attraction.getDisplayName(),
-                        attraction.getResortAreaCode().getParkName(),
-                        "open for a special event");
-            }
-            case UNKNOWN -> {
-                message=null;
+        if (attraction==null) {
+            message = "Webhook started";
+        } else {
+
+            Attraction.Queue queue = attraction.getQueues().get(0);
+
+            Attraction.Queue.Status status = queue.getStatus();
+            switch (status){
+                case BRIEF_DELAY -> {
+                    message = String.format("%s at %s is now %s",
+                            attraction.getDisplayName(),
+                            attraction.getResortAreaCode().getParkName(),
+                            "experiencing a brief delay");
+                }
+                case CLOSED -> {
+                    message = String.format("%s at %s is now %s",
+                            attraction.getDisplayName(),
+                            attraction.getResortAreaCode().getParkName(),
+                            "closed");
+                }
+                case OPENS_AT -> {
+                    message=null;
+                }
+                case RIDE_NOW -> {
+                    message = String.format("%s at %s is now %s",
+                            attraction.getDisplayName(),
+                            attraction.getResortAreaCode().getParkName(),
+                            "walk on");
+                }
+
+                case OPEN -> {
+                    message = String.format("%s at %s is now %s",
+                            attraction.getDisplayName(),
+                            attraction.getResortAreaCode().getParkName(),
+                            "open with wait time of " + queue.getDisplayWaitTime() +" minutes" );
+                }
+                case AT_CAPACITY -> {
+                    message = String.format("%s at %s is now %s",
+                            attraction.getDisplayName(),
+                            attraction.getResortAreaCode().getParkName(),
+                            "at capacity");
+                }
+                case SPECIAL_EVENT -> {
+                    message = String.format("%s at %s is now %s",
+                            attraction.getDisplayName(),
+                            attraction.getResortAreaCode().getParkName(),
+                            "open for a special event");
+                }
+                case UNKNOWN -> {
+                    message=null;
+                }
             }
         }
 
 
+        if (message==null)return;
         // Enqueue the message for throttled sending.
         messageQueue.offer(message);
         System.out.println("Queued Discord message: " + message);
