@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 public class DiscordWebhookUtil {
 
     // Read the webhook URL from an environment variable
-    private static final String DISCORD_WEBHOOK_URL = System.getenv("DISCORD_WEBHOOK_URL");
     private static final RestTemplate restTemplate = new RestTemplate();
 
     // A thread-safe queue to hold messages waiting to be sent.
@@ -36,12 +35,13 @@ public class DiscordWebhookUtil {
                     Map<String, String> payload = new HashMap<>();
                     payload.put("content", message);
 
+                    String discordWebhookUrl = System.getenv("DISCORD_WEBHOOK_URL");
                     HttpHeaders headers = new HttpHeaders();
                     headers.setContentType(MediaType.APPLICATION_JSON);
 
                     HttpEntity<Map<String, String>> request = new HttpEntity<>(payload, headers);
 
-                    String response = restTemplate.postForObject(DISCORD_WEBHOOK_URL, request, String.class);
+                    String response = restTemplate.postForObject(discordWebhookUrl, request, String.class);
                     System.out.println("Sent queued message. Discord webhook response: " + response);
                 }
             } catch (Exception e) {
@@ -61,7 +61,8 @@ public class DiscordWebhookUtil {
      * @param attraction the attraction object containing display name, park name, and queue status.
      */
     public static void sendStatusUpdate(Attraction attraction) {
-        if (DISCORD_WEBHOOK_URL == null || DISCORD_WEBHOOK_URL.isEmpty()) {
+        String discordWebhookUrl = System.getenv("DISCORD_WEBHOOK_URL");
+        if (discordWebhookUrl == null || discordWebhookUrl.isEmpty()) {
             System.err.println("Discord webhook URL is not configured!");
             return;
         }
