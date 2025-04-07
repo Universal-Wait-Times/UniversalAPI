@@ -30,7 +30,7 @@ public class DiscordWebhookUtil {
         scheduler.scheduleAtFixedRate(() -> {
             String message = null;
             try {
-                 message = messageQueue.poll();
+                message = messageQueue.poll();
                 if (message != null) {
                     Map<String, String> payload = new HashMap<>();
                     payload.put("content", message);
@@ -71,102 +71,97 @@ public class DiscordWebhookUtil {
         // Get the first queue (assuming at least one exists).
 
 
+        String message = null;
 
-        String message=null;
 
-        if (attraction==null) {
-            message = "**RIDE STATUS UPDATES WILL NOW DISPLAY**";
-        } else {
+        String resortInfo = attraction.getResortRegion().getParkName();
+        switch (attraction.getResortRegion()) {
+            case UOR -> {
+                resortInfo = "'s " + attraction.getPark().getParkName();
 
-            String resortInfo = attraction.getResortRegion().getParkName();
-            switch (attraction.getResortRegion()) {
-                case UOR -> {
-                    resortInfo = "'s " + attraction.getPark().getParkName();
+            }
+            case USJ -> {
+                //No change in message japan only has one park
+            }
+            case USH -> {
+                resortInfo = "'s " + attraction.getPark().getParkName();
 
-                }
-                case USJ -> {
-                    //No change in message japan only has one park
-                }
-                case USH -> {
-                    resortInfo = "'s " + attraction.getPark().getParkName();
+            }
+        }
 
-                }
+        Attraction.Queue queue = attraction.getQueues().get(0);
+
+        Attraction.Queue.Status status = queue.getStatus();
+        switch (status) {
+            case BRIEF_DELAY -> {
+                message = String.format("%s at %s is now %s",
+                        attraction.getDisplayName(),
+                        resortInfo,
+                        "experiencing a brief delay");
+            }
+            case WEATHER_DELAY -> {
+                message = String.format("%s at %s is now %s",
+                        attraction.getDisplayName(),
+                        resortInfo,
+                        "experiencing a weather delay");
+                //TODO implement weather info
+            }
+            case CLOSED -> {
+                message = String.format("%s at %s is now %s",
+                        attraction.getDisplayName(),
+                        resortInfo,
+                        "closed");
+            }
+            case OPENS_AT -> {
+                message = null;
+            }
+            case RIDE_NOW -> {
+                message = String.format("%s at %s is now %s",
+                        attraction.getDisplayName(),
+                        resortInfo,
+                        "walk on");
             }
 
-            Attraction.Queue queue = attraction.getQueues().get(0);
+            case OPEN -> {
+                Attraction.Queue.Status oldStatus = oldAttraction.getQueues().get(0).getStatus();
 
-            Attraction.Queue.Status status = queue.getStatus();
-            switch (status){
-                case BRIEF_DELAY -> {
-                    message = String.format("%s at %s is now %s",
+                if (oldStatus == Attraction.Queue.Status.BRIEF_DELAY) {
+                    message = String.format("%s at %s is now %s after experiencing a brief delay",
                             attraction.getDisplayName(),
                             resortInfo,
-                            "experiencing a brief delay");
-                }
-                case WEATHER_DELAY -> {
-                    message = String.format("%s at %s is now %s",
+                            "open with wait time of " + queue.getDisplayWaitTime() + " minutes");
+                } else if (oldStatus == Attraction.Queue.Status.WEATHER_DELAY) {
+                    message = String.format("%s at %s is now %s after experiencing a weather delay",
                             attraction.getDisplayName(),
                             resortInfo,
-                            "experiencing a weather delay");
-                    //TODO implement weather info
-                }
-                case CLOSED -> {
-                    message = String.format("%s at %s is now %s",
-                            attraction.getDisplayName(),
-                            resortInfo,
-                            "closed");
-                }
-                case OPENS_AT -> {
-                    message=null;
-                }
-                case RIDE_NOW -> {
-                    message = String.format("%s at %s is now %s",
-                            attraction.getDisplayName(),
-                            resortInfo,
-                            "walk on");
-                }
+                            "open with wait time of " + queue.getDisplayWaitTime() + " minutes");
+                } else {
 
-                case OPEN -> {
-                    Attraction.Queue.Status oldStatus = oldAttraction.getQueues().get(0).getStatus();
-
-                    if (oldStatus== Attraction.Queue.Status.BRIEF_DELAY) {
-                        message = String.format("%s at %s is now %s after experiencing a brief delay",
-                                attraction.getDisplayName(),
-                                resortInfo,
-                                "open with wait time of " + queue.getDisplayWaitTime() + " minutes");
-                    } else if (oldStatus== Attraction.Queue.Status.WEATHER_DELAY) {
-                        message = String.format("%s at %s is now %s after experiencing a weather delay",
-                                attraction.getDisplayName(),
-                                resortInfo,
-                                "open with wait time of " + queue.getDisplayWaitTime() + " minutes");
-                    } else {
-
-                        message = String.format("%s at %s is now %s",
-                                attraction.getDisplayName(),
-                                resortInfo,
-                                "open with wait time of " + queue.getDisplayWaitTime() +" minutes" );
-                    }
-                }
-                case AT_CAPACITY -> {
                     message = String.format("%s at %s is now %s",
                             attraction.getDisplayName(),
                             resortInfo,
-                            "at capacity");
+                            "open with wait time of " + queue.getDisplayWaitTime() + " minutes");
                 }
-                case SPECIAL_EVENT -> {
-                    message = String.format("%s at %s is now %s",
-                            attraction.getDisplayName(),
-                            resortInfo,
-                            "open for a special event");
-                }
-                case UNKNOWN -> {
-                    message=null;
-                }
+            }
+            case AT_CAPACITY -> {
+                message = String.format("%s at %s is now %s",
+                        attraction.getDisplayName(),
+                        resortInfo,
+                        "at capacity");
+            }
+            case SPECIAL_EVENT -> {
+                message = String.format("%s at %s is now %s",
+                        attraction.getDisplayName(),
+                        resortInfo,
+                        "open for a special event");
+            }
+            case UNKNOWN -> {
+                message = null;
             }
         }
 
 
-        if (message==null)return;
+        if (message == null) return;
         // Enqueue the message for throttled sending.
         messageQueue.offer(message);
         System.out.println("Queued Discord message: " + message);

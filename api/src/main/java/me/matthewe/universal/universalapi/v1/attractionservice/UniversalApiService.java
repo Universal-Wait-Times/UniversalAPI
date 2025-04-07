@@ -100,16 +100,9 @@ public class UniversalApiService {
                 this.rides = new HashMap<>();
             }
 
-            private boolean firstRun = true;
-
-
             private  void onUpdate(Attraction oldAttraction, Attraction newAttraction, boolean show, boolean initial, RedisPublisher redisPublisher) {
                 boolean updatedStatus = false;
 
-                if (firstRun) {
-                    firstRun= false;
-                    DiscordWebhookUtil.sendStatusUpdate(null, null);
-                }
                 if (oldAttraction == null) {
                     updatedStatus = true;
 
