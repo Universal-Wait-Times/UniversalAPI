@@ -66,10 +66,12 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
           script: |
-            echo "Setting environmental variables"
-            sudo -s
-            sudo bash -c 'echo "DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }}" > /var/www/springboot/universalapi.env'
-            sudo cat /var/www/springboot/universalapi.env
+            echo "Setting environment variable file..."
+            echo "${{ secrets.SFTP_PASSWORD }}" | sudo -S bash -c 'echo "DISCORD_WEBHOOK_URL=${{ secrets.DISCORD_WEBHOOK_URL }}" > /var/www/springboot/universalapi.env'
+  
+            echo "Verifying .env file..."
+            echo "${{ secrets.SFTP_PASSWORD }}" | sudo -S cat /var/www/springboot/universalapi.env
+  
             echo "Restarting systemd service..."
             sudo /bin/systemctl restart universalapi.service
             /bin/systemctl status universalapi.service
