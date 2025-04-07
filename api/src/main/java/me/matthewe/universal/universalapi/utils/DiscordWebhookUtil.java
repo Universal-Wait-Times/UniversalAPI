@@ -162,6 +162,8 @@ public class DiscordWebhookUtil {
 
 
         if (message == null) return;
+
+        System.out.println(message);
         // Enqueue the message for throttled sending.
         messageQueue.offer(message);
         System.out.println("Queued Discord message: " + message);
