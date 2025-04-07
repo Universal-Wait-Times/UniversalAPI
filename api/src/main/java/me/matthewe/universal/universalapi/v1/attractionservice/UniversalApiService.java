@@ -107,8 +107,8 @@ public class UniversalApiService {
                 boolean updatedStatus = false;
 
                 if (firstRun) {
-                    DiscordWebhookUtil.sendStatusUpdate(null);
                     firstRun= false;
+                    DiscordWebhookUtil.sendStatusUpdate(null, null);
                 }
                 if (oldAttraction == null) {
                     updatedStatus = true;
@@ -146,7 +146,7 @@ public class UniversalApiService {
                         if (oldAttraction != null) {
 
 
-                            DiscordWebhookUtil.sendStatusUpdate(newAttraction);
+                            DiscordWebhookUtil.sendStatusUpdate(oldAttraction, newAttraction);
                         }
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
                     } catch (Exception e) {
@@ -271,6 +271,7 @@ public class UniversalApiService {
 
                     UniversalPark universalPark = UniversalPark.getByPark(park);
 
+                    attraction.setPark(universalPark);
                     if (waitTimeAttractionId.equals("ush.rides.secret_life_of_pets")) { //Dealing with strange edge case.
                         universalPark = UniversalPark.USJ;
 

@@ -3,6 +3,7 @@ package me.matthewe.universal.universalapi.v1.attractionservice;
 import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 import me.matthewe.universal.universalapi.v1.ResortRegion;
+import me.matthewe.universal.universalapi.v1.UniversalPark;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -18,6 +19,15 @@ public class Attraction {
 
 
     @JsonIgnore private UUID tempId;
+    @JsonIgnore private UniversalPark park;
+
+    public UniversalPark getPark() {
+        return park;
+    }
+
+    public void setPark(UniversalPark park) {
+        this.park = park;
+    }
 
     public UUID getTempId() {
         return tempId;
@@ -139,7 +149,7 @@ public class Attraction {
         }
 
         public static enum Status {
-            BRIEF_DELAY, CLOSED, OPENS_AT, RIDE_NOW, OPEN,AT_CAPACITY, SPECIAL_EVENT, UNKNOWN;
+            BRIEF_DELAY, CLOSED, OPENS_AT, RIDE_NOW, OPEN,AT_CAPACITY, SPECIAL_EVENT, UNKNOWN, WEATHER_DELAY;
 
             @JsonCreator
             public static Status fromString(String value) {

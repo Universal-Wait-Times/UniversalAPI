@@ -15,6 +15,9 @@ public enum UniversalPark {
     USJ("Universal Studios Japan");
 
 
+    public String getParkName() {
+        return parkName;
+    }
 
     private String parkName;
     private String[] allies;
