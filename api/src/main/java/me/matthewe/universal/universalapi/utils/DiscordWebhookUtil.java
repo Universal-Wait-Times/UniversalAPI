@@ -77,14 +77,14 @@ public class DiscordWebhookUtil {
         String resortInfo = attraction.getResortAreaCode().getParkName();
         switch (attraction.getResortAreaCode()) {
             case UOR -> {
-                resortInfo = "'s " + attraction.getPark().getParkName();
+                resortInfo += "'s " + attraction.getPark().getParkName();
 
             }
             case USJ -> {
                 //No change in message japan only has one park
             }
             case USH -> {
-                resortInfo = "'s " + attraction.getPark().getParkName();
+                resortInfo += "'s " + attraction.getPark().getParkName();
 
             }
         }
