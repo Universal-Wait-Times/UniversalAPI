@@ -28,5 +28,6 @@ services:
       - SPRING_REDIS_PORT=6379
       - SERVER_PORT=9504
       - DISCORD_WEBHOOK_URL=__DISCORD_WEBHOOK__
+      - API_KEY=__API_KEY__
 volumes:
   mongo-data:

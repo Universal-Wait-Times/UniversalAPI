@@ -118,10 +118,8 @@ public class DiscordWebhookUtil {
                             attraction.getDisplayName(),
                             resortInfo));
                 } else {
-                    if (isLocalTesting()) {
-
-                    goMessage("SINGLE RIDER DEBUG " + attraction.getDisplayName() + " @.matthewe ");
-                    }
+                 
+                    goMessage("SINGLE RIDER DEBUG " + attraction.getDisplayName() + " ("+oldSingleStatus+"->"+newSingleStatus+")");
                 }
             }
         }
