@@ -6,7 +6,14 @@ services:
     container_name: universalapi-redis
     ports:
       - "6379:6379"  # Publish Redis port to the host
-
+  mongo:
+    image: mongo:7.0
+    container_name: universalapi-mongo
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:27017:27017"  # Binds only to localhost
+    volumes:
+      - mongo-data:/data/db
   universalapi:
     build:
       context: ./api
@@ -14,9 +21,12 @@ services:
     container_name: universalapi
     depends_on:
       - redis
+      - mongo
     network_mode: host  # Use host networking so localhost is shared with the host
     environment:
       - SPRING_REDIS_HOST=localhost
       - SPRING_REDIS_PORT=6379
       - SERVER_PORT=9504
       - DISCORD_WEBHOOK_URL=__DISCORD_WEBHOOK__
+volumes:
+  mongo-data:

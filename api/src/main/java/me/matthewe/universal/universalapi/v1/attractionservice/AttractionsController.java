@@ -24,12 +24,11 @@ public class AttractionsController {
     public List<Attraction> getAttractions( @RequestParam(name = "waitTimes", defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractions(), waitTimes);
     }
-
-
-    @PostMapping
-    public void test() {
-//        publisher.publish("attraction-updates","test");
+    @GetMapping("test")
+    public String test( ) {
+        return service.fetchAttractions().size()+"";
     }
+
 
 
     private List<Attraction> applyFilters(List<Attraction> attractions, int waitTimes) {
@@ -54,20 +53,6 @@ public class AttractionsController {
                     returnList.add(attraction);
 
                 }
-            }
-        }
-        return returnList;
-    }
-
-    @GetMapping("/orlandotests")
-    public List<Attraction> getAttractionsJapanTest() {
-        List<Attraction> attractions = service.fetchAttractionsByResortPark(ResortRegion.UOR, UniversalPark.IOA);
-
-        List<Attraction> returnList = new ArrayList<Attraction>();
-
-        for (Attraction attraction : attractions) {
-            if (attraction.getQueues().size()>1){
-                returnList.add(attraction);
             }
         }
         return returnList;

@@ -211,7 +211,8 @@ public class UniversalApiService {
         refreshCache();
     }
 
-    @Scheduled(fixedRate = 10_000)
+    //Slowed down pull rate to remain compliant with Universal TOS.
+    @Scheduled(fixedRate = 20000)
     public void refreshCache() {
         try {
             ResortData resortData;
