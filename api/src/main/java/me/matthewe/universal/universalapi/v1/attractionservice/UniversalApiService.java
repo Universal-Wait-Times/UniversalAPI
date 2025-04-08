@@ -211,10 +211,27 @@ public class UniversalApiService {
         refreshCache();
     }
 
+    private static final int MIN_DELAY = 15000; // 15 seconds
+    private static final int MAX_DELAY = 30000; // 30 seconds
+
+    private long nextExecutionTime = 0;
+    private Random random = new Random();
+
+
     //Slowed down pull rate to remain compliant with Universal TOS.
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(fixedRate = 1000)
     public void refreshCache() {
+
         try {
+
+            long currentTime = System.currentTimeMillis();
+
+            if (currentTime >= nextExecutionTime) {
+
+                int delay = MIN_DELAY + random.nextInt(MAX_DELAY - MIN_DELAY);
+                nextExecutionTime = currentTime + delay;
+            }
+
             ResortData resortData;
             if (cache.get()!=null){
                 resortData=cache.get();

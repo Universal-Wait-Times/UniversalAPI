@@ -106,19 +106,35 @@ public class DiscordWebhookUtil {
             if (oldSingleStatus!=newSingleStatus) {
 
                 if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.CLOSED) {
-                    goMessage( String.format("%s's at %s Single Rider line is now closed.",
+                    goMessage( String.format("%s's at %s single rider line is now closed.",
                             attraction.getDisplayName(),
                             resortInfo));
                 } else  if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.AT_CAPACITY) {
-                    goMessage( String.format("%s's at %s Single Rider line is now at capacity.",
+                    goMessage( String.format("%s's at %s single rider line is now at capacity.",
                             attraction.getDisplayName(),
                             resortInfo));
                 }else  if (oldSingleStatus== Attraction.Queue.Status.CLOSED && newSingleStatus==Attraction.Queue.Status.OPEN) {
-                    goMessage(String.format("%s's at %s Single Rider line is now open.",
+                    goMessage(String.format("%s's at %s single rider line is now open.",
+                            attraction.getDisplayName(),
+                            resortInfo));
+                }else  if (oldSingleStatus== Attraction.Queue.Status.OPENS_AT && newSingleStatus==Attraction.Queue.Status.WEATHER_DELAY) {
+                    goMessage(String.format("%s's at %s single rider will open late due to a weather delay.",
+                            attraction.getDisplayName(),
+                            resortInfo));
+                }else  if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.WEATHER_DELAY) {
+                    goMessage(String.format("%s's at %s single rider is experiencing a weather delay.",
+                            attraction.getDisplayName(),
+                            resortInfo));
+                } else  if (oldSingleStatus== Attraction.Queue.Status.OPENS_AT && newSingleStatus==Attraction.Queue.Status.OPEN) {
+                    goMessage(String.format("%s's at %s single rider line is now open.", //TODO check if on schedule
+                            attraction.getDisplayName(),
+                            resortInfo));
+                }  else  if (oldSingleStatus== Attraction.Queue.Status.WEATHER_DELAY && newSingleStatus==Attraction.Queue.Status.OPEN) {
+                    goMessage(String.format("%s's at %s single rider line is now open after experiencing a weather delay.",
                             attraction.getDisplayName(),
                             resortInfo));
                 } else {
-                 
+
                     goMessage("SINGLE RIDER DEBUG " + attraction.getDisplayName() + " ("+oldSingleStatus+"->"+newSingleStatus+")");
                 }
             }

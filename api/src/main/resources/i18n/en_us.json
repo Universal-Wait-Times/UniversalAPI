@@ -1,0 +1,8 @@
+{
+  "alerts": {
+    "singleRider": {
+      "OPEN->CLOSED": "",
+      "CLOSED->OPEN": ""
+    }
+  }
+}
