@@ -151,7 +151,7 @@ public class Attraction {
         public static enum Status {
             BRIEF_DELAY, CLOSED, OPENS_AT, RIDE_NOW, OPEN,AT_CAPACITY, SPECIAL_EVENT, UNKNOWN, WEATHER_DELAY;
 
-            @JsonCreator
+            @JsonCreator 
             public static Status fromString(String value) {
                 try {
                     return Status.valueOf(value.toUpperCase());
