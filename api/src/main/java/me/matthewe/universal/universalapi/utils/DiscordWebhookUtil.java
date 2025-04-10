@@ -161,16 +161,16 @@ public class DiscordWebhookUtil {
         Attraction.Queue.Status status = queue.getStatus();
         switch (status) {
             case BRIEF_DELAY -> {
-                message = String.format("%s at %s is now %s",
+                message = String.format("%s at %s is now %s.",
                         attraction.getDisplayName(),
                         resortInfo,
-                        "experiencing a brief delay.");
+                        "experiencing a brief delay");
             }
             case WEATHER_DELAY -> {
-                message = String.format("%s at %s is now %s",
+                message = String.format("%s at %s is now %s.",
                         attraction.getDisplayName(),
                         resortInfo,
-                        "experiencing a weather delay.");
+                        "experiencing a weather delay");
                 //TODO implement weather info
             }
             case CLOSED -> {
@@ -183,10 +183,10 @@ public class DiscordWebhookUtil {
                 message = null;
             }
             case RIDE_NOW -> {
-                message = String.format("%s at %s is now %s",
+                message = String.format("%s at %s is now %s.",
                         attraction.getDisplayName(),
                         resortInfo,
-                        "walk on.");
+                        "walk on");
             }
 
             case OPEN -> {
@@ -196,40 +196,40 @@ public class DiscordWebhookUtil {
 
                     if( queue.getDisplayWaitTime()>500)return; // Do not display broken wait times
                     if (oldStatus == Attraction.Queue.Status.BRIEF_DELAY) {
-                        message = String.format("%s at %s is now %s after experiencing a brief delay",
+                        message = String.format("%s at %s is now %s after experiencing a brief delay.",
                                 attraction.getDisplayName(),
                                 resortInfo,
-                                "open with wait time of " + queue.getDisplayWaitTime() + " minutes.");
+                                "open with wait time of " + queue.getDisplayWaitTime() + " minutes");
                     } else if (oldStatus == Attraction.Queue.Status.WEATHER_DELAY) {
-                        message = String.format("%s at %s is now %s after experiencing a weather delay",
+                        message = String.format("%s at %s is now %s after experiencing a weather delay.",
                                 attraction.getDisplayName(),
                                 resortInfo,
-                                "open with wait time of " + queue.getDisplayWaitTime() + " minutes.");
+                                "open with wait time of " + queue.getDisplayWaitTime() + " minutes");
                     } else {
 
-                        message = String.format("%s at %s is now %s",
+                        message = String.format("%s at %s is now %s.",
                                 attraction.getDisplayName(),
                                 resortInfo,
-                                "open with wait time of " + queue.getDisplayWaitTime() + " minutes.");
+                                "open with wait time of " + queue.getDisplayWaitTime() + " minutes");
                     }
                 } else {
-                    message = String.format("%s at %s is now %s",
+                    message = String.format("%s at %s is now %s.",
                             attraction.getDisplayName(),
                             resortInfo,
-                            "open with wait time of " + queue.getDisplayWaitTime() + " minutes.");
+                            "open with wait time of " + queue.getDisplayWaitTime() + " minutes");
                 }
             }
             case AT_CAPACITY -> {
-                message = String.format("%s at %s is now %s",
+                message = String.format("%s at %s is now %s.",
                         attraction.getDisplayName(),
                         resortInfo,
-                        "at capacity.");
+                        "at capacity");
             }
             case SPECIAL_EVENT -> {
-                message = String.format("%s at %s is now %s",
+                message = String.format("%s at %s is now %s.",
                         attraction.getDisplayName(),
                         resortInfo,
-                        "open for a special event.");
+                        "open for a special event");
             }
             case UNKNOWN -> {
                 message = null;
