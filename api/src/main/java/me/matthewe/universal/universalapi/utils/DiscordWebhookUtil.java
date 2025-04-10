@@ -263,10 +263,28 @@ public class DiscordWebhookUtil {
 //        if (attraction.getResortAreaCode()!= ResortRegion.UOR)return;//ONLY HANDLING ORLANDO CURRENTLY.
         System.out.println(message);
         DiscordWebhook webhook = null;
-        if (System.getenv("DISCORD_WEBHOOK_URL")!=null){
 
-            webhook = new DiscordWebhook(System.getenv("DISCORD_WEBHOOK_URL"));
+        switch (attraction.getResortAreaCode()) {
+            case UOR -> {
+                if (System.getenv("DISCORD_ORLANDO_WEBHOOK_URL")!=null){
+
+                    webhook = new DiscordWebhook(System.getenv("DISCORD_ORLANDO_WEBHOOK_URL"));
+                }
+            }
+            case USJ -> {
+                if (System.getenv("DISCORD_JAPAN_WEBHOOK_URL")!=null){
+
+                    webhook = new DiscordWebhook(System.getenv("DISCORD_JAPAN_WEBHOOK_URL"));
+                }
+            }
+            case USH -> {
+                if (System.getenv("DISCORD_HOLLYWOOD_WEBHOOK_URL")!=null){
+
+                    webhook = new DiscordWebhook(System.getenv("DISCORD_HOLLYWOOD_WEBHOOK_URL"));
+                }
+            }
         }
+
 
 
         webhook.setAvatarUrl(attraction.getPark().getLogoSource());
