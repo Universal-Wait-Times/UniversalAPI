@@ -31,7 +31,7 @@ jobs:
             </servers> \
           </settings>" > ~/.m2/settings.xml
       - name: Deploy commons
-        run: mvn deploy install -Dmaven.test.skip=true
+        run: mvn clean deploy -Dmaven.test.skip=true
         working-directory: ./commons
       - name: Build JARs
         run: mvn clean package -Dmaven.test.skip=true
