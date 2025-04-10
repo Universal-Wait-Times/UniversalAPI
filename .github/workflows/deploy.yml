@@ -32,7 +32,7 @@ jobs:
           </settings>" > ~/.m2/settings.xml
       - name: Install all
         run: mvn install -Dmaven.test.skip=true
-        working-directory: ./
+        working-directory: ./ 
       - name: Build JARs
         run: mvn clean package -Dmaven.test.skip=true
         working-directory: ./
