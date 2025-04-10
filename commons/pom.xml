@@ -4,7 +4,7 @@
     <parent>
         <groupId>me.matthewe.universal</groupId>
         <artifactId>UniversalAPI</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>commons</artifactId>
     <name>UniversalAPI : commons</name>
