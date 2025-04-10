@@ -296,7 +296,7 @@ public class DiscordWebhookUtil {
                 .setTitle(attraction.getDisplayName())
                 .setColor(attractionColor)
                 .setTimestamp(attraction.getModifiedAt())
-                .setFooter(new Footer(attraction.getPark().getParkName() +" " + attraction.getWaitTimeAttractionId(), attraction.getPark().getLogoSource()))
+                .setFooter(new Footer(attraction.getPark().getParkName(), attraction.getPark().getLogoSource()))
                 .setDescription(message);
 
 
