@@ -1,9 +1,13 @@
 package me.matthewe.universal.commons;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 public enum UniversalPark {
 
     /*Orlando Parks*/
-    UEU("Universal Epic Universe", new String[]{"eu"}, UniversalImageSource.EPIC_UNIVERSE.getSource()),
+    UEU("Universal Epic Universe", new String[]{"eu"}, UniversalImageSource.EPIC_UNIVERSE.getSource(),
+            ),
     USF("Universal Studios Florida", new String[0],UniversalImageSource.STUDIOS_ORLANDO.getSource()),
     IOA("Islands of Adventure", new String[0],UniversalImageSource.ISLANDS_OF_ADVENTURE.getSource()),
 
@@ -22,12 +26,14 @@ public enum UniversalPark {
     private String parkName;
     private String[] allies;
     private String logoSource;
+    private Coords coords;
 
-    UniversalPark(String parkName, String[] allies, String logoSource) {
+    UniversalPark(String parkName, String[] allies, String logoSource, Coords coords) {
         this.parkName = parkName;
         this.allies = allies;
         this.logoSource = logoSource;
 
+        this.coords = coords;
     }
 
     public String getLogoSource() {
@@ -55,5 +61,23 @@ public enum UniversalPark {
 
     public String[] getAllies() {
         return allies;
+    }
+
+    @Data
+    @AllArgsConstructor
+    private static class Coords {
+        private double latitude;
+        private double longitude;
+    }
+    public double getLatitude() {
+        if (coords==null)return 0;
+
+        return coords.getLatitude();
+
+    }
+
+    public double getLongitude() {
+        if (coords==null)return 0;
+        return coords.getLongitude();
     }
 }
