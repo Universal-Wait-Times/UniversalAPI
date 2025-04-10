@@ -7,8 +7,8 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>commons</artifactId>
-    <name>UniversalAPI : commons</name>
     <version>0.0.1-SNAPSHOT</version>
+    <name>UniversalAPI : commons</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>

@@ -48,7 +48,8 @@ jobs:
           sed -i "s|__DISCORD_HOLLYWOOD_WEBHOOK_URL__|${{ secrets.DISCORD_HOLLYWOOD_WEBHOOK_URL }}|" docker-compose.yml
           sed -i "s|__DISCORD_JAPAN_WEBHOOK_URL__|${{ secrets.DISCORD_JAPAN_WEBHOOK_URL }}|" docker-compose.yml
           sed -i "s|__DISCORD_ORLANDO_WEBHOOK_URL__|${{ secrets.DISCORD_ORLANDO_WEBHOOK_URL }}|" docker-compose.yml
-          sed -i "s|__API_KEY__|${{ secrets.UNIVERSAL_API_KEY }}|" docker-compose.yml
+          sed -i "s|__API_KEY__|${{ secrets.GLOBAL_API_KEY_PRIVATE }}|" docker-compose.yml
+          sed -i "s|__DISCORD_BOT_TOKEN__|${{ secrets.DISCORD_BOT_TOKEN }}|" docker-compose.yml
       - name: Upload Dockerfile, JAR, and docker-compose.yml to server
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -56,7 +57,7 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
-          source: "api/target/UniversalAPI.jar,api/Dockerfile,docker-compose.yml"
+          source: "api/target/UniversalAPI.jar,api/Dockerfile,docker-compose.yml,discord/target/Dockerfile,discord/target/UniversalDiscord.jar"
           target: ${{ vars.UNIVERSAL_API_PATH }}
       - name: Restart universalapi service (triggers start.sh)
         uses: appleboy/ssh-action@v1.0.0

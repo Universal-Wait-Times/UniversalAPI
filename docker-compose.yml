@@ -32,5 +32,27 @@ services:
       - DISCORD_JAPAN_WEBHOOK_URL=__DISCORD_JAPAN_WEBHOOK_URL__
       - DISCORD_ORLANDO_WEBHOOK_URL=__DISCORD_ORLANDO_WEBHOOK_URL__
       - API_KEY=__API_KEY__
+      - DISCORD_BOT_TOKEN=__DISCORD_BOT_TOKEN__
+  discord:
+    build:
+      context: ./discord
+      dockerfile: Dockerfile
+    container_name: discord
+    depends_on:
+      - redis
+      - mongo
+      - universalapi
+    ports:
+      - "127.0.0.1:9506:9506"  # Only bind to localhost
+    environment:
+      - SPRING_REDIS_HOST=localhost
+      - SPRING_REDIS_PORT=6379
+      - SERVER_PORT=9506
+      - DISCORD_WEBHOOK_URL=__DISCORD_WEBHOOK__
+      - DISCORD_HOLLYWOOD_WEBHOOK_URL=__DISCORD_HOLLYWOOD_WEBHOOK_URL__
+      - DISCORD_JAPAN_WEBHOOK_URL=__DISCORD_JAPAN_WEBHOOK_URL__
+      - DISCORD_ORLANDO_WEBHOOK_URL=__DISCORD_ORLANDO_WEBHOOK_URL__
+      - API_KEY=__API_KEY__
+      - DISCORD_BOT_TOKEN=__DISCORD_BOT_TOKEN__
 volumes:
   mongo-data:
