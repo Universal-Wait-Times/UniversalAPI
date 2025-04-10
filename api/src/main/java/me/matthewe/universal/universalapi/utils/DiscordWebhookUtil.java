@@ -194,6 +194,7 @@ public class DiscordWebhookUtil {
 
                     Attraction.Queue.Status oldStatus = oldAttraction.getQueues().get(0).getStatus();
 
+                    if( queue.getDisplayWaitTime()>500)return; // Do not display broken wait times
                     if (oldStatus == Attraction.Queue.Status.BRIEF_DELAY) {
                         message = String.format("%s at %s is now %s after experiencing a brief delay",
                                 attraction.getDisplayName(),
