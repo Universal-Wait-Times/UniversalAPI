@@ -1,5 +1,6 @@
 package me.matthewe.universal.universalapi.v1.attractionservice;
 
+import me.matthewe.universal.commons.Attraction;
 import me.matthewe.universal.commons.ResortRegion;
 import me.matthewe.universal.commons.UniversalPark;
 import me.matthewe.universal.universalapi.v1.redis.RedisPublisher;
@@ -21,7 +22,7 @@ public class AttractionsController {
     }
 
     @GetMapping()
-    public List<Attraction> getAttractions( @RequestParam(name = "waitTimes", defaultValue = "-1") int waitTimes) {
+    public List<Attraction> getAttractions(@RequestParam(name = "waitTimes", defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractions(), waitTimes);
     }
     @GetMapping("test")

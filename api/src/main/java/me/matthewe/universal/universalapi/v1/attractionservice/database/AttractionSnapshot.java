@@ -3,9 +3,9 @@ package me.matthewe.universal.universalapi.v1.attractionservice.database;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import me.matthewe.universal.commons.Attraction;
 import me.matthewe.universal.commons.ResortRegion;
 import me.matthewe.universal.commons.UniversalPark;
-import me.matthewe.universal.universalapi.v1.attractionservice.Attraction;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 

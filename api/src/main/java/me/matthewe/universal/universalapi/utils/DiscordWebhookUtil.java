@@ -1,23 +1,14 @@
 package me.matthewe.universal.universalapi.utils;
 
-import me.matthewe.universal.commons.ResortRegion;
-import me.matthewe.universal.commons.UniversalImageSource;
+import me.matthewe.universal.commons.Attraction;
 import me.matthewe.universal.commons.UniversalPark;
-import me.matthewe.universal.universalapi.v1.attractionservice.Attraction;
 import me.matthewe.universal.universalapi.v1.weather.WeatherController;
 import me.matthewe.universal.universalapi.v1.weather.WeatherData;
 import me.micartey.webhookly.DiscordWebhook;
 import me.micartey.webhookly.embeds.*;
-import me.micartey.webhookly.embeds.Image;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.web.client.RestTemplate;
 
 import java.awt.*;
-import java.time.OffsetDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;

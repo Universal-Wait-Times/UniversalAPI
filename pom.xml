@@ -30,6 +30,9 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <dependencies>
+
+    </dependencies>
     <distributionManagement>
         <repository>
             <id>nexus-releases</id>

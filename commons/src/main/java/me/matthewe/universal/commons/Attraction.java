@@ -1,10 +1,10 @@
-package me.matthewe.universal.universalapi.v1.attractionservice;
+package me.matthewe.universal.commons;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.*;
-import lombok.*;
-import me.matthewe.universal.commons.ResortRegion;
-import me.matthewe.universal.commons.UniversalPark;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
