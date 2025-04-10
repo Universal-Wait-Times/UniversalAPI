@@ -306,9 +306,22 @@ public class DiscordWebhookUtil {
                 .setDescription(message);
         if (attraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.WEATHER_DELAY) {
             WeatherData weatherData = WeatherController.request(attraction.getPark());
+            String emoji = WeatherController.getWeatherEmoji(weatherData.getWeatherCode());
 
-            embed.getFields().add(new Field("Temperature", String.format("%d℉",(int) weatherData.getTemperature()),true));
-            embed.getFields().add(new Field("Wind Speed", String.format("%d℉", (int)weatherData.getWindSpeed()),true));
+            StringBuilder weatherInfo = new StringBuilder();
+            weatherInfo.append(String.format("%s %.1f℉\n", emoji, weatherData.getTemperature()));
+            weatherInfo.append(String.format("%.1f mph wind", weatherData.getWindSpeed()));
+
+            if (weatherData.getPrecipitationProbability() >= 10) {
+                weatherInfo.append(String.format("\n%.2f in rain (%d%% chance)",
+                        weatherData.getPrecipitation(),
+                        (int) weatherData.getPrecipitationProbability()
+                ));
+            }
+
+            embed.getFields().add(new Field("Weather", weatherInfo.toString(), true));
+
+
         }
 
 

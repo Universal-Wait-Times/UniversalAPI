@@ -8,4 +8,8 @@ import lombok.Getter;
 public class WeatherData {
     private double windSpeed;
     private double temperature;
+    private double precipitation;
+    private double precipitationProbability;
+    private int weatherCode;
+
 }

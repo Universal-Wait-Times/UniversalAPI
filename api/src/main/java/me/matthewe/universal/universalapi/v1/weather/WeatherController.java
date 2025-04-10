@@ -17,7 +17,7 @@ public class WeatherController {
 
 
     public static WeatherData request(UniversalPark park) {
-        if (park == null) return new WeatherData(0, 0);
+        if (park == null) return new WeatherData(0, 0,0,0,0);
 
         String parkName = park.toString(); // Assumes UniversalPark has getName()
 
@@ -28,33 +28,51 @@ public class WeatherController {
             return restTemplate.getForObject(url, WeatherData.class);
         } catch (Exception e) {
             e.printStackTrace();
-            return new WeatherData(0, 0);
+            return new WeatherData(0, 0,0,0,0);
         }
+    }
+    public static String getWeatherEmoji(int code) {
+        if (code >= 0 && code <= 1) return "☀️";          // Clear
+        if (code == 2) return "⛅";                       // Partly Cloudy
+        if (code == 3) return "☁️";                       // Overcast
+        if (code >= 45 && code <= 48) return "🌫️";        // Fog
+        if (code >= 51 && code <= 57) return "🌦️";        // Drizzle
+        if (code >= 61 && code <= 67) return "🌧️";        // Rain
+        if (code >= 71 && code <= 77) return "❄️";        // Snow
+        if (code >= 80 && code <= 82) return "🌧️";        // Rain showers
+        if (code >= 95 && code <= 99) return "⛈️";         // Thunderstorm
+        return "❓"; // Unknown
     }
 
     @GetMapping
     public WeatherData getWeatherData(String parkName) {
         UniversalPark park = UniversalPark.getByPark(parkName);
-        if (park==null)return new WeatherData(0,0);
+        if (park==null)return new WeatherData(0,0,0,0,0);
 
         double latitude = park.getLatitude();
         double longitude = park.getLongitude();
 
-        if (latitude==0&&longitude==0)return  new WeatherData(0, 0);
+        if (latitude==0&&longitude==0)return  new WeatherData(0, 0,0,0,0);
 
-        String url = String.format("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&current=temperature_2m,wind_speed_10m", latitude, longitude);
+        String url = String.format("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&current=temperature_2m,wind_speed_10m,precipitation,precipitation_probability,weather_code", latitude, longitude);
         OpenMeteoResponse response = restTemplate.getForObject(url, OpenMeteoResponse.class);
 
         if (response != null && response.getCurrent() != null) {
+
             double tempCelsius = response.getCurrent().getTemperature();
             double tempFahrenheit = (tempCelsius * 9 / 5) + 32;
             return new WeatherData(
                     response.getCurrent().getWindSpeed() * 0.621371,
-                    tempFahrenheit
+                    tempFahrenheit,
+                    response.getCurrent().precipitation * 0.0393701,
+                    response.current.precipitationProbability,
+                    response.current.weatherCode
+
+
             );
         }
 
-        return new WeatherData(0, 0); // Default or error case
+        return new WeatherData(0, 0,0,0,0); // Default or error case
     }
     @Data
     static class OpenMeteoResponse {
@@ -66,6 +84,14 @@ public class WeatherController {
             private double temperature;
             @JsonProperty("wind_speed_10m")
             private double windSpeed;
+
+            @JsonProperty("precipitation")
+            private double precipitation;
+
+            @JsonProperty("precipitation_probability")
+            private double precipitationProbability;
+            @JsonProperty("weather_code")
+            private int weatherCode;
         }
     }
 }
