@@ -126,6 +126,10 @@ public class DiscordWebhookUtil {
                         goMessage( oldAttraction,attraction,String.format("%s at %s single rider will open late due to a brief delay.",
                                 attraction.getDisplayName(),
                                 resortInfo));
+                    }else  if (oldSingleStatus== Attraction.Queue.Status.CLOSED && newSingleStatus==Attraction.Queue.Status.BRIEF_DELAY) {
+                        goMessage( oldAttraction,attraction,String.format("%s at %s single rider is experiencing a brief delay.",
+                                attraction.getDisplayName(),
+                                resortInfo));
                     }else  if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.BRIEF_DELAY) {
                         goMessage(oldAttraction, attraction, String.format("%s at %s single rider is experiencing a brief delay.",
                                 attraction.getDisplayName(),
