@@ -4,11 +4,11 @@ import me.matthewe.universal.commons.ResortRegion;
 import me.matthewe.universal.commons.UniversalImageSource;
 import me.matthewe.universal.commons.UniversalPark;
 import me.matthewe.universal.universalapi.v1.attractionservice.Attraction;
+import me.matthewe.universal.universalapi.v1.weather.WeatherController;
+import me.matthewe.universal.universalapi.v1.weather.WeatherData;
 import me.micartey.webhookly.DiscordWebhook;
-import me.micartey.webhookly.embeds.EmbedObject;
-import me.micartey.webhookly.embeds.Footer;
+import me.micartey.webhookly.embeds.*;
 import me.micartey.webhookly.embeds.Image;
-import me.micartey.webhookly.embeds.Thumbnail;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -304,6 +304,12 @@ public class DiscordWebhookUtil {
                 .setTimestamp(attraction.getModifiedAt())
                 .setFooter(new Footer(attraction.getPark().getParkName(), attraction.getPark().getLogoSource()))
                 .setDescription(message);
+        if (attraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.WEATHER_DELAY) {
+            WeatherData weatherData = WeatherController.request(attraction.getPark());
+
+            embed.getFields().add(new Field("Temperature", String.format("%d℉",(int) weatherData.getTemperature()),true));
+            embed.getFields().add(new Field("Wind Speed", String.format("%d℉", (int)weatherData.getWindSpeed()),true));
+        }
 
 
         webhook.getEmbeds().add(embed);
