@@ -66,10 +66,6 @@ public class DiscordWebhookUtil {
     public static void sendAttractionStatusUpdate(Attraction oldAttraction, Attraction attraction) {
 
 
-
-        // Get the first queue (assuming at least one exists).
-
-
         String message = null;
 
 
@@ -258,11 +254,11 @@ public class DiscordWebhookUtil {
 //        if (attraction.getResortAreaCode()!= ResortRegion.UOR)return;//ONLY HANDLING ORLANDO CURRENTLY.
         System.out.println(message);
         DiscordWebhook webhook = null;
-        if (System.getenv("DISCORD_WEBHOOK_URL")==null){
+        if (System.getenv("DISCORD_WEBHOOK_URL")!=null){
 
             webhook = new DiscordWebhook(System.getenv("DISCORD_WEBHOOK_URL"));
         }
-        if (webhook==null)return;
+
 
         webhook.setAvatarUrl(attraction.getPark().getLogoSource());
 

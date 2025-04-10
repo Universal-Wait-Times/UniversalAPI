@@ -135,7 +135,10 @@ public class UniversalApiService {
                             jsonObject.add("newAttraction", GSON.fromJson(GSON.toJson(newAttraction, Attraction.class), JsonObject.class));
                         }
 
-                        DiscordWebhookUtil.sendAttractionStatusUpdate(oldAttraction, newAttraction);
+                        if (oldAttraction!=null){
+
+                            DiscordWebhookUtil.sendAttractionStatusUpdate(oldAttraction, newAttraction);
+                        }
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
                     } catch (Exception e) {
                         // Log or handle the serialization error appropriately.
