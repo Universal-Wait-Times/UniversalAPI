@@ -179,6 +179,12 @@ public class DiscordWebhookUtil {
                         resortInfo,
                         "closed");
             }
+            case EXTENDED_CLOSURE -> {
+                message = String.format("%s at %s is now %s.",
+                        attraction.getDisplayName(),
+                        resortInfo,
+                        "facing an extended closure");
+            }
             case OPENS_AT -> {
                 message = null;
             }
