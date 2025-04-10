@@ -4,8 +4,8 @@ public enum UniversalPark {
 
     /*Orlando Parks*/
     UEU("Universal Epic Universe", new String[]{"eu"}, UniversalImageSource.EPIC_UNIVERSE.getSource()),
-    USF("Universal Studios Florida", new String[0],UniversalImageSource.DEFAULT.getSource()),
-    IOA("Islands of Adventure", new String[0],UniversalImageSource.DEFAULT.getSource()),
+    USF("Universal Studios Florida", new String[0],UniversalImageSource.STUDIOS_ORLANDO.getSource()),
+    IOA("Islands of Adventure", new String[0],UniversalImageSource.ISLANDS_OF_ADVENTURE.getSource()),
 
     /*Hollywood parks*/
     UPPER_LOT("Upper Lot", new String[0],UniversalImageSource.DEFAULT.getSource()),
