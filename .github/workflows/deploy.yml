@@ -36,6 +36,9 @@ jobs:
       - name: Build JARs
         run: mvn clean package -Dmaven.test.skip=true
         working-directory: ./
+      - name: Build Discord JARs
+        run: mvn clean package -Dmaven.test.skip=true
+        working-directory: ./discord
       - name: Deploy commons
         run: mvn deploy -Dmaven.test.skip=true
         working-directory: ./commons
