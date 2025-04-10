@@ -57,7 +57,7 @@ jobs:
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
-          source: "api/target/UniversalAPI.jar,api/Dockerfile,docker-compose.yml,discord/target/Dockerfile,discord/target/UniversalDiscord.jar"
+          source: "api/target/UniversalAPI.jar,api/Dockerfile,docker-compose.yml,discord/Dockerfile,discord/target/UniversalDiscord.jar"
           target: ${{ vars.UNIVERSAL_API_PATH }}
       - name: Restart universalapi service (triggers start.sh)
         uses: appleboy/ssh-action@v1.0.0
