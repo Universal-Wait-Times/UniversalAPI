@@ -36,9 +36,12 @@ jobs:
       - name: Build JARs
         run: mvn clean package -Dmaven.test.skip=true
         working-directory: ./
-      - name: Deploy all
+      - name: Deploy commons
         run: mvn deploy -Dmaven.test.skip=true
-        working-directory: ./
+        working-directory: ./commons
+      - name: Deploy api
+        run: mvn deploy -Dmaven.test.skip=true
+        working-directory: ./api
       - name: Inject Discord webhook into docker-compose.yml
         run: |
           sed -i "s|__DISCORD_WEBHOOK__|${{ secrets.DISCORD_WEBHOOK_URL }}|" docker-compose.yml
