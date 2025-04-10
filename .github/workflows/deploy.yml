@@ -30,25 +30,15 @@ jobs:
               <server><id>nexus-snapshots</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server> \
             </servers> \
           </settings>" > ~/.m2/settings.xml
-      - name: Deploy commons
-        run: mvn clean deploy -Dmaven.test.skip=true
-        working-directory: ./commons
+      - name: Install all
+        run: mvn install -Dmaven.test.skip=true
+        working-directory: ./
       - name: Build JARs
         run: mvn clean package -Dmaven.test.skip=true
         working-directory: ./
-      - name: Debug file output
-        run: |
-          ls -l ./api/target
-          ls -l ./api/
-          ls -l .
-      - name: Final sanity check
-        run: |
-          echo "[*] Workspace root:"
-          pwd
-          echo "[*] Confirming files exist..."
-          ls -lh api/target/UniversalAPI.jar || echo "❌ JAR missing"
-          ls -lh api/Dockerfile || echo "❌ Dockerfile missing"
-          ls -lh docker-compose.yml || echo "❌ docker-compose.yml missing"
+      - name: Deploy all
+        run: mvn deploy -Dmaven.test.skip=true
+        working-directory: ./
       - name: Inject Discord webhook into docker-compose.yml
         run: |
           sed -i "s|__DISCORD_WEBHOOK__|${{ secrets.DISCORD_WEBHOOK_URL }}|" docker-compose.yml
