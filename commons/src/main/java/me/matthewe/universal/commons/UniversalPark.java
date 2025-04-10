@@ -7,7 +7,7 @@ public enum UniversalPark {
 
     /*Orlando Parks*/
     UEU("Universal Epic Universe", new String[]{"eu"}, UniversalImageSource.EPIC_UNIVERSE.getSource(),
-         new Coords(-81.446,28.439)   ),
+         new Coords(28.439,-81.446)   ),
     USF("Universal Studios Florida", new String[0],UniversalImageSource.STUDIOS_ORLANDO.getSource(),
 
             new Coords(28.477,-81.4681)),
