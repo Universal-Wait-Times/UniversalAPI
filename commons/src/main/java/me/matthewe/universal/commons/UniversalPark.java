@@ -1,18 +1,18 @@
-package me.matthewe.universal.universalapi.v1;
+package me.matthewe.universal.commons;
 
 public enum UniversalPark {
 
     /*Orlando Parks*/
-    UEU("Universal Epic Universe", "eu"),
-    USF("Universal Studios Florida"),
-    IOA("Islands of Adventure"),
+    UEU("Universal Epic Universe", new String[]{"eu"}, UniversalImageSource.EPIC_UNIVERSE.getSource()),
+    USF("Universal Studios Florida", new String[0],UniversalImageSource.DEFAULT.getSource()),
+    IOA("Islands of Adventure", new String[0],UniversalImageSource.DEFAULT.getSource()),
 
     /*Hollywood parks*/
-    UPPER_LOT("Upper Lot"),
-    LOWER_LOT("Lower Lot"),
+    UPPER_LOT("Upper Lot", new String[0],UniversalImageSource.DEFAULT.getSource()),
+    LOWER_LOT("Lower Lot", new String[0],UniversalImageSource.DEFAULT.getSource()),
 
     /* Japan Parks */
-    USJ("Universal Studios Japan");
+    USJ("Universal Studios Japan", new String[0],UniversalImageSource.DEFAULT.getSource());
 
 
     public String getParkName() {
@@ -21,10 +21,17 @@ public enum UniversalPark {
 
     private String parkName;
     private String[] allies;
+    private String logoSource;
 
-    UniversalPark(String parkName, String... allies) {
+    UniversalPark(String parkName, String[] allies, String logoSource) {
         this.parkName = parkName;
         this.allies = allies;
+        this.logoSource = logoSource;
+
+    }
+
+    public String getLogoSource() {
+        return logoSource;
     }
 
     public static UniversalPark getByPark(String park) {

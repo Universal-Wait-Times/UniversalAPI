@@ -1,4 +1,4 @@
-package me.matthewe.universal.universalapi.v1;
+package me.matthewe.universal.commons;
 
 import lombok.Getter;
 

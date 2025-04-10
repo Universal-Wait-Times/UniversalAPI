@@ -6,7 +6,7 @@
 
     <groupId>me.matthewe.universal</groupId>
     <artifactId>UniversalAPI</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>UniversalAPI</name>
     <description>UniversalAPI</description>
     <packaging>pom</packaging>
@@ -20,6 +20,7 @@
 
 
         <module>api</module>
+        <module>commons</module>
     </modules>
 
     <pluginRepositories>
@@ -44,6 +45,10 @@
         <repository>
             <id>nexus-group</id>
             <url>https://nexus.matthewe.me/repository/group/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 

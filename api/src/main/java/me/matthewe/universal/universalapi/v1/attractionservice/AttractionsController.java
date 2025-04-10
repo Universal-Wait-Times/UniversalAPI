@@ -1,7 +1,7 @@
 package me.matthewe.universal.universalapi.v1.attractionservice;
 
-import me.matthewe.universal.universalapi.v1.ResortRegion;
-import me.matthewe.universal.universalapi.v1.UniversalPark;
+import me.matthewe.universal.commons.ResortRegion;
+import me.matthewe.universal.commons.UniversalPark;
 import me.matthewe.universal.universalapi.v1.redis.RedisPublisher;
 import org.springframework.web.bind.annotation.*;
 
