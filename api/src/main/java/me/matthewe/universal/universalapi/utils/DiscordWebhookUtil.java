@@ -103,6 +103,8 @@ public class DiscordWebhookUtil {
                         goMessage(oldAttraction, attraction, String.format("%s's at %s single rider line is now closed.",
                                 attraction.getDisplayName(),
                                 resortInfo));
+                    }   else if (oldSingleStatus== Attraction.Queue.Status.CLOSED && newSingleStatus==Attraction.Queue.Status.OPENS_AT) {
+                       //No msg
                     }   else if (oldSingleStatus== Attraction.Queue.Status.BRIEF_DELAY && newSingleStatus==Attraction.Queue.Status.CLOSED) {
                         goMessage(oldAttraction, attraction, String.format("%s's at %s single rider line is now closed.",
                                 attraction.getDisplayName(),

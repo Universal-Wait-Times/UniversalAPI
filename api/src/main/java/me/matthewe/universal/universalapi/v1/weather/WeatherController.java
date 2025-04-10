@@ -16,8 +16,27 @@ public class WeatherController {
     private final RestTemplate restTemplate = new RestTemplate();
 
 
+    public static WeatherData request(UniversalPark park) {
+        if (park == null) return new WeatherData(0, 0);
+
+        String parkName = park.toString(); // Assumes UniversalPark has getName()
+
+        String url = String.format("https://themeparks.matthewe.me/api/v1/weather?parkName=%s", parkName);
+        RestTemplate restTemplate = new RestTemplate();
+
+        try {
+            return restTemplate.getForObject(url, WeatherData.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new WeatherData(0, 0);
+        }
+    }
+
     @GetMapping
-    public WeatherData getWeatherData(UniversalPark park) {
+    public WeatherData getWeatherData(String parkName) {
+        UniversalPark park = UniversalPark.getByPark(parkName);
+        if (park==null)return new WeatherData(0,0);
+
         double latitude = park.getLatitude();
         double longitude = park.getLongitude();
 

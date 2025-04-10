@@ -7,16 +7,23 @@ public enum UniversalPark {
 
     /*Orlando Parks*/
     UEU("Universal Epic Universe", new String[]{"eu"}, UniversalImageSource.EPIC_UNIVERSE.getSource(),
+         new Coords(-81.446,28.439)   ),
+    USF("Universal Studios Florida", new String[0],UniversalImageSource.STUDIOS_ORLANDO.getSource(),
+
+            new Coords(28.477,-81.4681)),
+    IOA("Islands of Adventure", new String[0],UniversalImageSource.ISLANDS_OF_ADVENTURE.getSource(),
+            new Coords( 28.471400,-81.47134667)
             ),
-    USF("Universal Studios Florida", new String[0],UniversalImageSource.STUDIOS_ORLANDO.getSource()),
-    IOA("Islands of Adventure", new String[0],UniversalImageSource.ISLANDS_OF_ADVENTURE.getSource()),
 
     /*Hollywood parks*/
-    UPPER_LOT("Upper Lot", new String[0],UniversalImageSource.DEFAULT.getSource()),
-    LOWER_LOT("Lower Lot", new String[0],UniversalImageSource.DEFAULT.getSource()),
+    UPPER_LOT("Upper Lot", new String[0],UniversalImageSource.DEFAULT.getSource(),
+            new Coords(34.143000,-118.36)
+            ),
+    LOWER_LOT("Lower Lot", new String[0],UniversalImageSource.DEFAULT.getSource(),
+            new Coords(34.14300000, -118.36)),
 
     /* Japan Parks */
-    USJ("Universal Studios Japan", new String[0],UniversalImageSource.DEFAULT.getSource());
+    USJ("Universal Studios Japan", new String[0],UniversalImageSource.DEFAULT.getSource(), new Coords(34.6654, 135.4323));
 
 
     public String getParkName() {

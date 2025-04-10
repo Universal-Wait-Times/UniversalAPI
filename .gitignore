@@ -35,3 +35,4 @@ build/
 src/main/resources/test_data.json
 api/.env
 api/src/main/java/me/matthewe/universal/universalapi/v1/settings/ignore.json
+api/src/main/java/me/matthewe/universal/universalapi/v1/settings/ignore2.json
