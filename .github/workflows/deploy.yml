@@ -30,12 +30,12 @@ jobs:
               <server><id>nexus-snapshots</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server> \
             </servers> \
           </settings>" > ~/.m2/settings.xml
-      - name: Build JAR
+      - name: Build JARs
         run: mvn clean package -Dmaven.test.skip=true
-        working-directory: ./api
+        working-directory: ./
       - name: Deploy to Nexus
         run: mvn deploy -Dmaven.test.skip=true
-        working-directory: ./api
+        working-directory: ./
       - name: Debug file output
         run: |
           ls -l ./api/target
