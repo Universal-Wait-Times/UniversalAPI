@@ -55,7 +55,7 @@ public class WeatherController {
 
         if (latitude == 0 && longitude == 0) return null;
 
-        String url = String.format("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&current=temperature_2m,wind_speed_20m,precipitation,precipitation_probability,weather_code,wind_gusts_20m", latitude, longitude);
+        String url = String.format("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&current=temperature_2m,wind_speed_20m,precipitation,precipitation_probability,weather_code,wind_gusts_10m", latitude, longitude);
         OpenMeteoResponse response = restTemplate.getForObject(url, OpenMeteoResponse.class);
 
         if (response != null && response.getCurrent() != null) {
@@ -96,7 +96,7 @@ public class WeatherController {
             private double precipitationProbability;
             @JsonProperty("weather_code")
             private int weatherCode;
-            @JsonProperty("wind_gusts_20m")
+            @JsonProperty("wind_gusts_10m")
             private double windGusts;
         }
     }
