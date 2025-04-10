@@ -21,6 +21,7 @@
 
         <module>api</module>
         <module>commons</module>
+        <module>discord</module>
     </modules>
 
     <pluginRepositories>

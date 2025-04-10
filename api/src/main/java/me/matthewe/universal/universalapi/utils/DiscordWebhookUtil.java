@@ -328,20 +328,23 @@ public class DiscordWebhookUtil {
                 .setDescription(message);
         if (attraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.WEATHER_DELAY) {
             WeatherData weatherData = WeatherController.request(attraction.getPark());
-            String emoji = WeatherController.getWeatherEmoji(weatherData.getWeatherCode());
+            if (weatherData!=null) {
 
-            StringBuilder weatherInfo = new StringBuilder();
-            weatherInfo.append(String.format("%s %.1f℉\n", emoji, weatherData.getTemperature()));
-            weatherInfo.append(String.format("%.1f mph wind", weatherData.getWindSpeed()));
+                String emoji = WeatherController.getWeatherEmoji(weatherData.getWeatherCode());
 
-            if (weatherData.getPrecipitationProbability() >= 10) {
-                weatherInfo.append(String.format("\n%.2f in rain (%d%% chance)",
-                        weatherData.getPrecipitation(),
-                        (int) weatherData.getPrecipitationProbability()
-                ));
+                StringBuilder weatherInfo = new StringBuilder();
+                weatherInfo.append(String.format("%s %.1f℉\n", emoji, weatherData.getTemperature()));
+                weatherInfo.append(String.format("%d/mph wind (gusts %d/mph)", (int)weatherData.getWindSpeed(),(int)weatherData.getWindGusts()));
+
+                if (weatherData.getPrecipitationProbability() >= 0) {
+                    weatherInfo.append(String.format("\n%.2f in rain (%d%% chance)",
+                            weatherData.getPrecipitation(),
+                            (int) weatherData.getPrecipitationProbability()
+                    ));
+                }
+                embed.getFields().add(new Field("Weather", weatherInfo.toString(), true));
             }
 
-            embed.getFields().add(new Field("Weather", weatherInfo.toString(), true));
 
 
         }

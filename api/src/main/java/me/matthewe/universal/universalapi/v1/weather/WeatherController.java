@@ -17,7 +17,7 @@ public class WeatherController {
 
 
     public static WeatherData request(UniversalPark park) {
-        if (park == null) return new WeatherData(0, 0,0,0,0);
+        if (park == null) return null;
 
         String parkName = park.toString(); // Assumes UniversalPark has getName()
 
@@ -28,9 +28,10 @@ public class WeatherController {
             return restTemplate.getForObject(url, WeatherData.class);
         } catch (Exception e) {
             e.printStackTrace();
-            return new WeatherData(0, 0,0,0,0);
+            return null;
         }
     }
+
     public static String getWeatherEmoji(int code) {
         if (code >= 0 && code <= 1) return "☀️";          // Clear
         if (code == 2) return "⛅";                       // Partly Cloudy
@@ -47,14 +48,14 @@ public class WeatherController {
     @GetMapping
     public WeatherData getWeatherData(String parkName) {
         UniversalPark park = UniversalPark.getByPark(parkName);
-        if (park==null)return new WeatherData(0,0,0,0,0);
+        if (park == null) return null;
 
         double latitude = park.getLatitude();
         double longitude = park.getLongitude();
 
-        if (latitude==0&&longitude==0)return  new WeatherData(0, 0,0,0,0);
+        if (latitude == 0 && longitude == 0) return null;
 
-        String url = String.format("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&current=temperature_2m,wind_speed_10m,precipitation,precipitation_probability,weather_code", latitude, longitude);
+        String url = String.format("https://api.open-meteo.com/v1/forecast?latitude=%f&longitude=%f&current=temperature_2m,wind_speed_20m,precipitation,precipitation_probability,weather_code,wind_gusts_20m", latitude, longitude);
         OpenMeteoResponse response = restTemplate.getForObject(url, OpenMeteoResponse.class);
 
         if (response != null && response.getCurrent() != null) {
@@ -66,14 +67,16 @@ public class WeatherController {
                     tempFahrenheit,
                     response.getCurrent().precipitation * 0.0393701,
                     response.current.precipitationProbability,
-                    response.current.weatherCode
+                    response.current.weatherCode,
+                    response.getCurrent().getWindGusts() * 0.621371
 
 
             );
         }
 
-        return new WeatherData(0, 0,0,0,0); // Default or error case
+        return null; // Default or error case
     }
+
     @Data
     static class OpenMeteoResponse {
         private CurrentWeather current;
@@ -82,8 +85,9 @@ public class WeatherController {
         static class CurrentWeather {
             @JsonProperty("temperature_2m")
             private double temperature;
-            @JsonProperty("wind_speed_10m")
+            @JsonProperty("wind_speed_20m")
             private double windSpeed;
+
 
             @JsonProperty("precipitation")
             private double precipitation;
@@ -92,6 +96,8 @@ public class WeatherController {
             private double precipitationProbability;
             @JsonProperty("weather_code")
             private int weatherCode;
+            @JsonProperty("wind_gusts_20m")
+            private double windGusts;
         }
     }
 }

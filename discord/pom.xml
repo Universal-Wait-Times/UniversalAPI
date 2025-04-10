@@ -2,13 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.4</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <groupId>me.matthewe.universal</groupId>
+        <artifactId>UniversalAPI</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
-    <groupId>me.matthewe.universal</groupId>
+
     <artifactId>discord</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>UniversalAPI : Discord</name>
@@ -17,15 +18,27 @@
     <properties>
         <java.version>21</java.version>
     </properties>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>3.4.4</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <dependency>
-            <artifactId>commons</artifactId>
             <groupId>me.matthewe.universal</groupId>
+            <artifactId>commons</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
@@ -33,10 +46,57 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <!--            <version>3.2.0</version>-->
+            <version>3.4.4</version>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>me.micartey</groupId>
+            <artifactId>webhookly</artifactId>
+            <version>1.0-20250410.024220-2</version>
+        </dependency>
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <url>https://nexus.matthewe.me/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>https://nexus.matthewe.me/repository/maven-snapshots/</url>
+        </snapshotRepository>
+
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>nexus-group</id>
+            <url>https://nexus.matthewe.me/repository/group/</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+
     <build>
-        <finalName>UniversalDiscord</finalName>
+        <finalName>UniversalAPI</finalName>
         <plugins>
 
             <!-- Compiler plugin, etc. -->
@@ -66,7 +126,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.4.4</version>
                 <configuration>
-                    <mainClass>me.matthewe.universal.discord.DiscordApplication</mainClass>
+                    <mainClass>me.matthewe.universal.universalapi.UniversalApiApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>

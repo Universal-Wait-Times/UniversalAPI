@@ -12,4 +12,5 @@ public class WeatherData {
     private double precipitationProbability;
     private int weatherCode;
 
+    private double windGusts;
 }
