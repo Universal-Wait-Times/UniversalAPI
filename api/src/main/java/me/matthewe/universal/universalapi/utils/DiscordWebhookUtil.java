@@ -161,6 +161,12 @@ public class DiscordWebhookUtil {
                         resortInfo,
                         "experiencing a brief delay");
             }
+
+            case VIRTUAL_LINE_ONLY -> {
+                message = String.format("%s at %s now has virtual line enabled!",
+                        attraction.getDisplayName(),
+                        resortInfo);
+            }
             case WEATHER_DELAY -> {
                 message = String.format("%s at %s is now %s.",
                         attraction.getDisplayName(),
