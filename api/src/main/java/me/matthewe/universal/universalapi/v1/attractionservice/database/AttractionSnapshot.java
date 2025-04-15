@@ -36,7 +36,10 @@ public class AttractionSnapshot {
         AttractionSnapshot snapshot = new AttractionSnapshot();
         snapshot.waitTimeAttractionId = attraction.getWaitTimeAttractionId();
         snapshot.displayName = attraction.getDisplayName();
-        snapshot.modifiedAt = attraction.getModifiedAt().toInstant();
+        if (attraction.getModifiedAt() != null) {
+
+            snapshot.modifiedAt = attraction.getModifiedAt().toInstant();
+        }
         snapshot.pulledAt = OffsetDateTime.now().toInstant();
         snapshot.park = attraction.getPark();
         snapshot.resort = attraction.getResortAreaCode();
