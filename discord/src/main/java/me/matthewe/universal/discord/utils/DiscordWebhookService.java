@@ -1,35 +1,42 @@
-package me.matthewe.universal.universalapi.utils;
+package me.matthewe.universal.discord.utils;
 
+import jakarta.annotation.PostConstruct;
 import me.matthewe.universal.commons.Attraction;
 import me.matthewe.universal.commons.UniversalPark;
-import me.matthewe.universal.universalapi.v1.weather.WeatherController;
-import me.matthewe.universal.universalapi.v1.weather.WeatherData;
+
+import me.matthewe.universal.commons.weather.WeatherData;
+import me.matthewe.universal.discord.weather.WeatherService;
 import me.micartey.webhookly.DiscordWebhook;
-import me.micartey.webhookly.embeds.*;
+import me.micartey.webhookly.embeds.EmbedObject;
+import me.micartey.webhookly.embeds.Field;
+import me.micartey.webhookly.embeds.Footer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.awt.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-public class DiscordWebhookUtil {
+@Service
+public class DiscordWebhookService {
 
     // Read the webhook URL from an environment variable
-    private static final RestTemplate restTemplate = new RestTemplate();
+    private  final RestTemplate restTemplate = new RestTemplate();
 
     // A thread-safe queue to hold messages waiting to be sent.
-    private static final BlockingQueue<DiscordWebhook> messageQueue = new LinkedBlockingQueue<>();
+    private  final BlockingQueue<DiscordWebhook> messageQueue = new LinkedBlockingQueue<>();
 
     // Scheduler to process the queue.
-    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private  final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private final WeatherService weatherService;
 
+    @Autowired
+    public DiscordWebhookService(WeatherService weatherService) {
+        this.weatherService = weatherService;
+    }
 
-
-    static {
-        // Schedule a task to poll and send one message from the queue every second.
+    @PostConstruct
+    public void start() throws Exception {
         scheduler.scheduleAtFixedRate(() -> {
             DiscordWebhook message = null;
             try {
@@ -48,13 +55,14 @@ public class DiscordWebhookUtil {
         }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
+
     /**
      * Enqueues a status update message to be sent to the Discord webhook.
      * Message format: "%s at %s is now %s"
      *
      * @param attraction the attraction object containing display name, park name, and queue status.
      */
-    public static void sendAttractionStatusUpdate(Attraction oldAttraction, Attraction attraction) {
+    public  void sendAttractionStatusUpdate(Attraction oldAttraction, Attraction attraction) {
 
 
         String message = null;
@@ -247,7 +255,7 @@ public class DiscordWebhookUtil {
         goMessage( oldAttraction,attraction,message);
     }
 
-    private static boolean isLocalTesting() {
+    private boolean isLocalTesting() {
         String localTesting = System.getenv("localtesting");
         if ((localTesting != null) && localTesting.equalsIgnoreCase("true")) {
             return true;
@@ -261,7 +269,7 @@ public class DiscordWebhookUtil {
      * @param attraction never is null
      * @param message string msg to send
      */
-    private static void goMessage(Attraction oldAttraction, Attraction attraction, String message) {
+    private void goMessage(Attraction oldAttraction, Attraction attraction, String message) {
         if (message == null) return;
 
         if (isLocalTesting()) {
@@ -333,10 +341,10 @@ public class DiscordWebhookUtil {
                 .setFooter(new Footer(attraction.getPark().getParkName(), attraction.getPark().getLogoSource()))
                 .setDescription(message);
         if (attraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.WEATHER_DELAY) {
-            WeatherData weatherData = WeatherController.request(attraction.getPark());
+            WeatherData weatherData = weatherService.getWeather(attraction.getPark());
             if (weatherData!=null) {
 
-                String emoji = WeatherController.getWeatherEmoji(weatherData.getWeatherCode());
+                String emoji = weatherData.getWeatherEmoji();
 
                 StringBuilder weatherInfo = new StringBuilder();
                 weatherInfo.append(String.format("%s %.1f℉\n", emoji, weatherData.getTemperature()));

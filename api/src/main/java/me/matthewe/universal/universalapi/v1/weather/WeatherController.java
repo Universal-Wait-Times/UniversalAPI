@@ -3,6 +3,7 @@ package me.matthewe.universal.universalapi.v1.weather;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import me.matthewe.universal.commons.UniversalPark;
+import me.matthewe.universal.commons.weather.WeatherData;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,18 +33,7 @@ public class WeatherController {
         }
     }
 
-    public static String getWeatherEmoji(int code) {
-        if (code >= 0 && code <= 1) return "☀️";          // Clear
-        if (code == 2) return "⛅";                       // Partly Cloudy
-        if (code == 3) return "☁️";                       // Overcast
-        if (code >= 45 && code <= 48) return "🌫️";        // Fog
-        if (code >= 51 && code <= 57) return "🌦️";        // Drizzle
-        if (code >= 61 && code <= 67) return "🌧️";        // Rain
-        if (code >= 71 && code <= 77) return "❄️";        // Snow
-        if (code >= 80 && code <= 82) return "🌧️";        // Rain showers
-        if (code >= 95 && code <= 99) return "⛈️";         // Thunderstorm
-        return "❓"; // Unknown
-    }
+
 
     @GetMapping
     public WeatherData getWeatherData(String parkName) {

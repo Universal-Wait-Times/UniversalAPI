@@ -10,10 +10,11 @@ import me.matthewe.universal.commons.Attraction;
 import me.matthewe.universal.commons.ResortRegion;
 import me.matthewe.universal.commons.UniversalPark;
 import me.matthewe.universal.universalapi.gson.GsonUtils;
-import me.matthewe.universal.universalapi.utils.DiscordWebhookUtil;
+import me.matthewe.universal.universalapi.v1.AttractionWebhookClient;
 import me.matthewe.universal.universalapi.v1.redis.RedisPublisher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class UniversalApiService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final RedisPublisher redisPublisher;
+
+    private AttractionWebhookClient attractionWebhookClient;
+
 
 
     private final AtomicReference<ResortData> cache = new AtomicReference<>(new ResortData());
@@ -93,9 +97,12 @@ public class UniversalApiService {
             private  UniversalPark  universalPark;
             private Map<String, Attraction> shows;
             private Map<String, Attraction> rides;
+            private AttractionWebhookClient attractionWebhookClient;
 
-            public UniversalParkData(UniversalPark universalPark) {
+
+            public UniversalParkData(UniversalPark universalPark, AttractionWebhookClient attractionWebhookClient) {
                 this.universalPark = universalPark;
+                this.attractionWebhookClient = attractionWebhookClient;
                 this.shows = new HashMap<>();
                 this.rides = new HashMap<>();
             }
@@ -136,9 +143,15 @@ public class UniversalApiService {
                             jsonObject.add("newAttraction", GSON.fromJson(GSON.toJson(newAttraction, Attraction.class), JsonObject.class));
                         }
 
-                        if (oldAttraction!=null){
+                        if (newAttraction.getResortAreaCode()==ResortRegion.USH) {
+                            attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
 
-                            DiscordWebhookUtil.sendAttractionStatusUpdate(oldAttraction, newAttraction);
+                        } else {
+
+                            if (oldAttraction!=null){
+                                attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
+
+                            }
                         }
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
                     } catch (Exception e) {
@@ -186,11 +199,13 @@ public class UniversalApiService {
         }
     }
 
-    public UniversalApiService(RestTemplate restTemplate, ObjectMapper objectMapper, RedisPublisher redisPublisher) {
+    public UniversalApiService(RestTemplate restTemplate, ObjectMapper objectMapper, RedisPublisher redisPublisher,AttractionWebhookClient attractionWebhookClient) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         objectMapper.registerModule(new JavaTimeModule());
         this.redisPublisher = redisPublisher;
+        this.attractionWebhookClient = attractionWebhookClient;
+
     }
 
     public List<Attraction> fetchAttractions() {
@@ -291,7 +306,7 @@ public class UniversalApiService {
                         log.error("Universal park " + park + " doesn't exist?");
                         continue;
                     }
-                    Resort.UniversalParkData parkData = resort.map.getOrDefault(universalPark, new Resort.UniversalParkData(universalPark));
+                    Resort.UniversalParkData parkData = resort.map.getOrDefault(universalPark, new Resort.UniversalParkData(universalPark,attractionWebhookClient));
 
 
                     String type = split[2];
