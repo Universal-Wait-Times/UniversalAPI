@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.awt.*;
 import java.util.concurrent.*;
 
+
 @Service
 public class DiscordWebhookService {
 
