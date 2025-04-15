@@ -9,6 +9,7 @@ import me.matthewe.universal.commons.UniversalPark;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class AttractionSnapshot {
     private String waitTimeAttractionId;
 
     private String displayName;
-    private OffsetDateTime modifiedAt;
-    private OffsetDateTime pulledAt;
+    private Instant modifiedAt;
+    private Instant pulledAt;
 
     private UniversalPark park;
     private ResortRegion resort;
@@ -35,8 +36,8 @@ public class AttractionSnapshot {
         AttractionSnapshot snapshot = new AttractionSnapshot();
         snapshot.waitTimeAttractionId = attraction.getWaitTimeAttractionId();
         snapshot.displayName = attraction.getDisplayName();
-        snapshot.modifiedAt = attraction.getModifiedAt();
-        snapshot.pulledAt = OffsetDateTime.now();
+        snapshot.modifiedAt = attraction.getModifiedAt().toInstant();
+        snapshot.pulledAt = OffsetDateTime.now().toInstant();
         snapshot.park = attraction.getPark();
         snapshot.resort = attraction.getResortAreaCode();
         snapshot.venueId = attraction.getVenueId();
