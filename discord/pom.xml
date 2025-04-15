@@ -105,7 +105,7 @@
     </repositories>
 
     <build>
-        <finalName>UniversalAPI</finalName>
+        <finalName>UniversalDiscord</finalName>
         <plugins>
 
             <!-- Compiler plugin, etc. -->

@@ -11,6 +11,8 @@ import me.matthewe.universal.commons.ResortRegion;
 import me.matthewe.universal.commons.UniversalPark;
 import me.matthewe.universal.universalapi.gson.GsonUtils;
 import me.matthewe.universal.universalapi.v1.AttractionWebhookClient;
+import me.matthewe.universal.universalapi.v1.attractionservice.database.AttractionService;
+import me.matthewe.universal.universalapi.v1.attractionservice.database.AttractionSnapshot;
 import me.matthewe.universal.universalapi.v1.redis.RedisPublisher;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +34,7 @@ public class UniversalApiService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final RedisPublisher redisPublisher;
+    private final AttractionService attractionService;
 
     private AttractionWebhookClient attractionWebhookClient;
 
@@ -199,11 +202,12 @@ public class UniversalApiService {
         }
     }
 
-    public UniversalApiService(RestTemplate restTemplate, ObjectMapper objectMapper, RedisPublisher redisPublisher,AttractionWebhookClient attractionWebhookClient) {
+    public UniversalApiService(RestTemplate restTemplate, ObjectMapper objectMapper, RedisPublisher redisPublisher,AttractionWebhookClient attractionWebhookClient,AttractionService attractionService) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
         objectMapper.registerModule(new JavaTimeModule());
         this.redisPublisher = redisPublisher;
+        this.attractionService = attractionService;
         this.attractionWebhookClient = attractionWebhookClient;
 
     }
@@ -312,6 +316,7 @@ public class UniversalApiService {
                     String type = split[2];
                     if (type.equalsIgnoreCase("rides")) {
 
+                        attractionService.getRepository().insert(AttractionSnapshot.from(attraction));
                         parkData.update(attraction, false,redisPublisher);
                     } else {
                         parkData.update(attraction, true,redisPublisher);
