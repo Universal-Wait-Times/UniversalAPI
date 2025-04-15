@@ -300,7 +300,7 @@ public class UniversalApiService {
                     if (waitTimeAttractionId.equals("ush.rides.secret_life_of_pets")) { //Dealing with strange edge case.
                         universalPark = UniversalPark.USJ;
 
-                    }
+                    } 
                     if (universalPark==null){
                         log.warn(waitTimeAttractionId);
                         log.error("Universal park " + park + " doesn't exist?");
