@@ -135,7 +135,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>3.4.4</version>
                 <configuration>
-                    <mainClass>me.matthewe.universal.universalapi.UniversalApiApplication</mainClass>
+                    <mainClass>me.matthewe.universal.discord.DiscordApplication</mainClass>
                 </configuration>
                 <executions>
                     <execution>
