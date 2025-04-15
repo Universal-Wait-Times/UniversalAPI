@@ -317,7 +317,7 @@ public class UniversalApiService {
                     if (type.equalsIgnoreCase("rides")) {
 
                         parkData.update(attraction, false,redisPublisher);
-                        attractionService.getRepository().insert(AttractionSnapshot.from(attraction));
+//                        attractionService.getRepository().insert(AttractionSnapshot.from(attraction));
                     } else {
                         parkData.update(attraction, true,redisPublisher);
 
