@@ -55,7 +55,7 @@ jobs:
           sed -i "s|__DISCORD_BOT_TOKEN__|${{ secrets.DISCORD_BOT_TOKEN }}|" docker-compose.yml
       - name: Upload Dockerfile, JAR, and docker-compose.yml to server
         uses: appleboy/scp-action@v0.1.4
-        with:
+        with: 
           host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
