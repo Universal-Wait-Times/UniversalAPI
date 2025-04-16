@@ -380,7 +380,7 @@ public class DiscordWebhookService {
 
         List<String> urls = new ArrayList<>();
 
-        String universalEndpointVirtualQueue = System.getenv("UNIVERSAL_ENDPOINT_VIRTUAL_QUEUE");
+        String universalEndpointVirtualQueue = System.getenv("VIRTUAL_LINE_HP_WEBHOOKS");
 
         if (universalEndpointVirtualQueue.contains("@")){
             for (String s : universalEndpointVirtualQueue.split("@")) {
