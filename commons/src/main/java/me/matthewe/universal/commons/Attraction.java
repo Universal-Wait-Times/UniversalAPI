@@ -18,7 +18,11 @@ public class Attraction {
 
 
     @JsonIgnore private UUID tempId;
-    @JsonIgnore private UniversalPark park;
+
+
+    @JsonProperty("park")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private UniversalPark park;
 
     public UniversalPark getPark() {
         if (park == null) {
@@ -74,7 +78,12 @@ public class Attraction {
         return this;
     }
 
-    @JsonIgnore private ResortRegion resortRegion;
+
+    @JsonProperty("resortRegion")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private ResortRegion resortRegion;
+
+    
     @JsonProperty("wait_time_attraction_id")
     private String waitTimeAttractionId;
 
