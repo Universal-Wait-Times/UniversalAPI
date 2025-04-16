@@ -102,9 +102,11 @@ public class VirtualLineService {
     }
 
     private void onUpdate(String city, VirtualLine oldDatum, VirtualLine newDatum) {
-        if (!newDatum.getId().equals("12006")) {
+
+        if (!newDatum.isEnabled() && !newDatum.isUnavailable() && !newDatum.isProfileAware()) {
             return;
         }
+  
         attractionWebhookClient.sendVirtualQueueStatus(oldDatum, newDatum);
 
     }
