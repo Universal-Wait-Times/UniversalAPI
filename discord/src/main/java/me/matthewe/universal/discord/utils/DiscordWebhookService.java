@@ -2,6 +2,7 @@ package me.matthewe.universal.discord.utils;
 
 import jakarta.annotation.PostConstruct;
 import me.matthewe.universal.commons.Attraction;
+import me.matthewe.universal.commons.ResortRegion;
 import me.matthewe.universal.commons.UniversalPark;
 
 import me.matthewe.universal.commons.weather.WeatherData;
@@ -13,8 +14,11 @@ import me.micartey.webhookly.embeds.Footer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Attr;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 
@@ -74,7 +78,6 @@ public class DiscordWebhookService {
         final UniversalPark park = attraction.getPark();
         switch (attraction.getResortAreaCode()) {
             case UOR -> {
-
                 resortInfo=park.getParkName();
             }
             case USJ -> {
@@ -265,20 +268,11 @@ public class DiscordWebhookService {
         return false;
     }
 
-    /**
-     *
-     * @param oldAttraction may be null
-     * @param attraction never is null
-     * @param message string msg to send
-     */
-    private void goMessage(Attraction oldAttraction, Attraction attraction, String message) {
-        if (message == null) return;
 
-        if (isLocalTesting()) {
-            message = "[local] " + message;
-        }
-//        if (attraction.getResortAreaCode()!= ResortRegion.UOR)return;//ONLY HANDLING ORLANDO CURRENTLY.
-        System.out.println(message);
+    public List<DiscordWebhook> getWebHookList( Attraction attraction) {
+
+        List<DiscordWebhook> discordWebhooks =new ArrayList<>();
+
         DiscordWebhook webhook = null;
 
         switch (attraction.getResortAreaCode()) {
@@ -305,76 +299,110 @@ public class DiscordWebhookService {
 
 
         webhook.setAvatarUrl(attraction.getPark().getLogoSource());
+        discordWebhooks.add(webhook);
 
-        Color attractionColor = Color.green;
+        return discordWebhooks;
 
-        switch (attraction.getQueues().get(0).getStatus()){
-            case BRIEF_DELAY -> {
-                attractionColor = Color.YELLOW;
-            }
-            case CLOSED -> {
-                attractionColor = Color.RED;
-            }
-            case OPENS_AT -> {
-                attractionColor = Color.YELLOW;
-            }
-            case RIDE_NOW -> {
-                attractionColor = Color.GREEN;
-            }
-            case OPEN -> {
-                attractionColor = Color.GREEN;
-            }
-            case AT_CAPACITY -> {
-                attractionColor = Color.red.darker();
-            }
-            case SPECIAL_EVENT -> {
-            }
-            case UNKNOWN -> {
-                attractionColor = Color.gray.darker();
-            }
-            case WEATHER_DELAY -> {
-                attractionColor = Color.cyan.darker();
-            }
+
+    }
+
+
+    /**
+     *
+     * @param oldAttraction may be null
+     * @param attraction never is null
+     * @param message string msg to send
+     */
+    private void goMessage(Attraction oldAttraction, Attraction attraction, String message) {
+        if (message == null) return;
+
+        if (isLocalTesting()) {
+            message = "[local] " + message;
         }
-        EmbedObject embed = new EmbedObject()
-                .setTitle(attraction.getDisplayName())
-                .setColor(attractionColor)
-                .setTimestamp(attraction.getModifiedAt())
-                .setFooter(new Footer(attraction.getPark().getParkName(), attraction.getPark().getLogoSource()))
-                .setDescription(message);
-        if (attraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.WEATHER_DELAY) {
-            WeatherData weatherData = weatherService.getWeather(attraction.getPark());
-            if (weatherData!=null) {
+        List<DiscordWebhook> webHookList = getWebHookList(attraction);
+        if (attraction.getResortAreaCode()== ResortRegion.UOR&&attraction.getPark()==UniversalPark.UEU) {
+            DiscordWebhook discordWebhook = new DiscordWebhook(System.getenv("ADDITIONAL_EPIC_WEBHOOK"));
+            discordWebhook.setAvatarUrl(attraction.getPark().getLogoSource());
+            webHookList.add(discordWebhook);
+        }
+//        if (attraction.getResortAreaCode()!= ResortRegion.UOR)return;//ONLY HANDLING ORLANDO CURRENTLY.
+        System.out.println(message);
 
-                String emoji = weatherData.getWeatherEmoji();
 
-                StringBuilder weatherInfo = new StringBuilder();
-                weatherInfo.append(String.format("%s %.1f℉\n", emoji, weatherData.getTemperature()));
-                weatherInfo.append(String.format("%d/mph wind (gusts %d/mph)", (int)weatherData.getWindSpeed(),(int)weatherData.getWindGusts()));
+        for (DiscordWebhook webhook : webHookList) {
+            Color attractionColor = Color.green;
 
-                if (weatherData.getPrecipitationProbability() >= 0) {
-                    weatherInfo.append(String.format("\n%.2f in rain (%d%% chance)",
-                            weatherData.getPrecipitation(),
-                            (int) weatherData.getPrecipitationProbability()
-                    ));
+            switch (attraction.getQueues().get(0).getStatus()){
+                case BRIEF_DELAY -> {
+                    attractionColor = Color.YELLOW;
                 }
-                embed.getFields().add(new Field("Weather", weatherInfo.toString(), true));
+                case CLOSED -> {
+                    attractionColor = Color.RED;
+                }
+                case OPENS_AT -> {
+                    attractionColor = Color.YELLOW;
+                }
+                case RIDE_NOW -> {
+                    attractionColor = Color.GREEN;
+                }
+                case OPEN -> {
+                    attractionColor = Color.GREEN;
+                }
+                case AT_CAPACITY -> {
+                    attractionColor = Color.red.darker();
+                }
+                case SPECIAL_EVENT -> {
+                }
+                case UNKNOWN -> {
+                    attractionColor = Color.gray.darker();
+                }
+                case WEATHER_DELAY -> {
+                    attractionColor = Color.cyan.darker();
+                }
+            }
+            EmbedObject embed = new EmbedObject()
+                    .setTitle(attraction.getDisplayName())
+                    .setColor(attractionColor)
+                    .setTimestamp(attraction.getModifiedAt())
+                    .setFooter(new Footer(attraction.getPark().getParkName(), attraction.getPark().getLogoSource()))
+                    .setDescription(message);
+            if (attraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.WEATHER_DELAY) {
+                WeatherData weatherData = weatherService.getWeather(attraction.getPark());
+                if (weatherData!=null) {
+
+                    String emoji = weatherData.getWeatherEmoji();
+
+                    StringBuilder weatherInfo = new StringBuilder();
+                    weatherInfo.append(String.format("%s %.1f℉\n", emoji, weatherData.getTemperature()));
+                    weatherInfo.append(String.format("%d/mph wind (gusts %d/mph)", (int)weatherData.getWindSpeed(),(int)weatherData.getWindGusts()));
+
+                    if (weatherData.getPrecipitationProbability() >= 0) {
+                        weatherInfo.append(String.format("\n%.2f in rain (%d%% chance)",
+                                weatherData.getPrecipitation(),
+                                (int) weatherData.getPrecipitationProbability()
+                        ));
+                    }
+                    embed.getFields().add(new Field("Weather", weatherInfo.toString(), true));
+                }
+
+
+
             }
 
 
+            webhook.getEmbeds().add(embed);
+
+            webhook.setUsername(attraction.getPark().getParkName());
+            // Enqueue the message for throttled sending.
+
+            if (attraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.RIDE_NOW) {
+                webhook.setContent("@everyone");
+            }
+
+            boolean offer = messageQueue.offer(webhook);
 
         }
 
 
-        webhook.getEmbeds().add(embed);
-
-        webhook.setUsername(attraction.getPark().getParkName());
-        // Enqueue the message for throttled sending.
-
-        if (attraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.RIDE_NOW) {
-            webhook.setContent("@everyone");
-        }
-
-        boolean offer = messageQueue.offer(webhook);
     }
 }
