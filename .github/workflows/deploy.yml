@@ -90,11 +90,14 @@ jobs:
 
       - name: 📡 Notify Discord of deployment
         run: |
-          curl -X POST -H "Content-Type: application/json" -d '{
-            "embeds": [{
-              "title": "UniversalAPI Deployed",
-              "description": "**Branch:** `${{ github.ref_name }}`\n**By:** `${{ github.actor }}`",
-              "color": 5763719,
-              "timestamp": "'$(date -u +"%Y-%m-%dT%H:%M:%SZ")'"
-            }]
-          }' ${{ secrets.DISCORD_DEPLOYMENT_WEBHOOK }}
+          curl -X POST -H "Content-Type: application/json" -d "$(jq -n --arg branch "$GITHUB_REF_NAME" \
+            --arg actor "$GITHUB_ACTOR" \
+            --arg time "$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+            '{
+              embeds: [{
+                title: "UniversalAPI Restarted",
+                description: "**Branch:** `\($branch)`\n**By:** `\($actor)`\n**Time:** \($time)",
+                color: 5763719,
+                timestamp: $time
+              }]
+            }')" ${{ secrets.DISCORD_DEPLOYMENT_WEBHOOK }}
