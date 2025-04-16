@@ -60,7 +60,13 @@ public class VirtualLineService {
                 .map(VirtualLineResponse::getResults)
                 .doOnError(e -> log.warning("❌ Failed to update cache for " + city + ": " + e.getMessage()))
                 .subscribe(newData -> {
-                    List<VirtualLine> oldData = dataCache.get(city);
+                    List<VirtualLine> oldData = null;
+                    if (dataCache.containsKey(city)) {
+
+                        oldData = dataCache.get(city);
+
+                    }
+
 
                     boolean changed = oldData == null || !oldData.equals(newData);
                     dataCache.put(city, newData);
