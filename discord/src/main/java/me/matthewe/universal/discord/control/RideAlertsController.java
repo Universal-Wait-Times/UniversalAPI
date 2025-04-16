@@ -35,4 +35,4 @@ public class RideAlertsController {
         return "POST ATTRACTION";
     }
 
-}
+} 
