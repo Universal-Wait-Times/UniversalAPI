@@ -1,6 +1,7 @@
 package me.matthewe.universal.discord.utils;
 
 import jakarta.annotation.PostConstruct;
+import lombok.extern.java.Log;
 import me.matthewe.universal.commons.Attraction;
 import me.matthewe.universal.commons.ResortRegion;
 import me.matthewe.universal.commons.UniversalPark;
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 
+@Log
 @Service
 public class DiscordWebhookService {
 
@@ -320,13 +322,14 @@ public class DiscordWebhookService {
             message = "[local] " + message;
         }
         List<DiscordWebhook> webHookList = getWebHookList(attraction);
-        if (attraction.getResortAreaCode()== ResortRegion.UOR&&attraction.getPark()==UniversalPark.UEU) {
+        if (attraction.getResortAreaCode()== ResortRegion.UOR &&attraction.getPark()==UniversalPark.UEU) {
             DiscordWebhook discordWebhook = new DiscordWebhook(System.getenv("ADDITIONAL_EPIC_WEBHOOK"));
             discordWebhook.setAvatarUrl(attraction.getPark().getLogoSource());
             webHookList.add(discordWebhook);
+            log.severe("EPIC HOOK");
         }
 //        if (attraction.getResortAreaCode()!= ResortRegion.UOR)return;//ONLY HANDLING ORLANDO CURRENTLY.
-        System.out.println(message);
+        log.info("["+webHookList.size()+"] " + message);
 
 
         for (DiscordWebhook webhook : webHookList) {
