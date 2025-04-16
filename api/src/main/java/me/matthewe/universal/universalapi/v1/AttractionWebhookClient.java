@@ -21,6 +21,10 @@ public class AttractionWebhookClient {
     private final WebClient webClient;
 
 
+    public AttractionWebhookClient(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.baseUrl("http://localhost:9506") // Change to your actual host if needed
+                .build();
+    }
     public Mono<String> sendAttractionStatus(Attraction oldAttraction, Attraction attraction) {
         log.info("Update status of attraction " + attraction.getWaitTimeAttractionId());
 
@@ -55,5 +59,4 @@ public class AttractionWebhookClient {
                 .bodyToMono(String.class)
                 .doOnError(e -> log.severe("Webhook failed: " + e.getMessage()));
     }
-
 }
