@@ -21,14 +21,40 @@ public class Attraction {
     @JsonIgnore private UniversalPark park;
 
     public UniversalPark getPark() {
-        if (park==null){
-            switch (resortAreaCode){
+        if (park == null) {
+            switch (resortAreaCode) {
                 case UOR:
+                    if (venueId.contains("uor.usf")) {
+                        park = UniversalPark.USF;
+                    }
+                    if (venueId.contains("uor.ioa")) {
+                        park = UniversalPark.USF;
+
+                    }
+                    if (venueId.contains("uor.ioa")) {
+                        park = UniversalPark.USF;
+
+                    }
+                    if (venueId.contains("uor.usf")) {
+                        park = UniversalPark.UEU;
+                    }
+                    if (venueId.contains("uor.ueu")) {
+                        park = UniversalPark.UEU;
+                    }
+
                     break;
                 case USJ:
-                    park= UniversalPark.USJ;
+                    park = UniversalPark.USJ;
                     break;
                 case USH:
+                    if (venueId != null) {
+                        if (venueId.contains("upper_lot")) {
+                            park = UniversalPark.UPPER_LOT;
+                        } else {
+                            park = UniversalPark.LOWER_LOT;
+
+                        }
+                    }
                     break;
             }
         }
