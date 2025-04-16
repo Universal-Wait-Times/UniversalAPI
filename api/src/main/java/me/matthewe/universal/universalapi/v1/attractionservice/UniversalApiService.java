@@ -150,7 +150,8 @@ public class UniversalApiService {
                         if (oldAttraction!=null){
                             attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
                         } else {
-                            if (newAttraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.WEATHER_DELAY) {
+                            if (newAttraction.getPark()==UniversalPark.UEU) {
+
                                 attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
                             }
                         }
