@@ -18,6 +18,15 @@ public enum ResortRegion {
 
     }
 
+    public static ResortRegion getByName(String resort) {
+        for (ResortRegion value : ResortRegion.values()) {
+            if (value.name().equalsIgnoreCase(resort)) {
+                return value;
+            }
+        }
+        return null;
+    }
+
     public String getCity() {
         return city;
     }

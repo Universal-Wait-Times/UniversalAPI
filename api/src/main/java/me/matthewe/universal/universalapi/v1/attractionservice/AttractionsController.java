@@ -59,13 +59,13 @@ public class AttractionsController {
         return returnList;
     }
 
-    @GetMapping("/{resort}/")
+    @GetMapping("/{resort}")
     public List<Attraction> getAttractions(@PathVariable String resort, @RequestParam(name = "waitTimes", defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractionsByResort(ResortRegion.valueOf(resort.toUpperCase())), waitTimes);
     }
 
 
-    @GetMapping("/{resort}/{park}/")
+    @GetMapping("/{resort}/{park}")
     public List<Attraction> getAttractions(@PathVariable String resort, @PathVariable String park, @RequestParam(name = "waitTimes", defaultValue = "-1") int waitTimes) {
         return applyFilters(service.fetchAttractionsByResortPark(ResortRegion.valueOf(resort.toUpperCase()), UniversalPark.getByPark(park)), waitTimes);
     }

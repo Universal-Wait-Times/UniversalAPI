@@ -3,8 +3,11 @@ package me.matthewe.universal.universalapi.v1;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import me.matthewe.universal.commons.Attraction;
+import me.matthewe.universal.universalapi.v1.virtualline.VirtualLine;
+import me.matthewe.universal.universalapi.v1.virtualline.VirtualLineService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
@@ -32,19 +35,26 @@ public class AttractionWebhookClient {
 
     private final WebClient webClient;
     private final Queue<AttractionUpdate> queue = new ConcurrentLinkedQueue<>();
+    private final Queue<VirtualLineUpdate> lineUpdateQueue = new ConcurrentLinkedQueue<>();
+    private final VirtualLineService virtualLineService;
     private volatile boolean serviceHealthy = false;
 
-    public AttractionWebhookClient(WebClient.Builder webClientBuilder) {
+    public AttractionWebhookClient(WebClient.Builder webClientBuilder, VirtualLineService virtualLineService) {
         this.webClient = webClientBuilder
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
                         .responseTimeout(Duration.ofSeconds(5))
                 ))
                 .baseUrl("http://localhost:9506")
                 .build();
+        this.virtualLineService = virtualLineService;
     }
 
     public void queueAttractionStatus(Attraction oldAttraction, Attraction attraction) {
         queue.add(new AttractionUpdate(oldAttraction, attraction));
+    }
+
+    public void queueVirtualLineStatus(VirtualLine oldAttraction, VirtualLine attraction) {
+        lineUpdateQueue.add(new VirtualLineUpdate(oldAttraction, attraction));
     }
 
     @Scheduled(fixedDelay = 10000)
@@ -56,6 +66,11 @@ public class AttractionWebhookClient {
         AttractionUpdate update;
         while ((update = queue.poll()) != null) {
             sendAttractionStatus(update.oldAttraction, update.attraction);
+        }
+
+        VirtualLineUpdate update1;
+        while ((update1 = lineUpdateQueue.poll()) != null) {
+            sendVirtualQueueStatus(update1.oldAttraction, update1.attraction);
         }
     }
 
@@ -74,6 +89,53 @@ public class AttractionWebhookClient {
                     log.info("Health check OK");
                     serviceHealthy = true;
                 });
+    }
+
+    public void sendVirtualQueueStatus(VirtualLine oldLine, VirtualLine newLine) {
+
+        if (!serviceHealthy) {
+            queueVirtualLineStatus(oldLine, newLine);
+            return;
+        }
+
+        Map<String, Object> body = new HashMap<>();
+        if (oldLine != null) {
+            body.put("oldLine", oldLine);
+        }
+        body.put("attraction", newLine);
+        body.put("key", System.getenv("API_KEY"));
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+        try {
+            String jsonBody = mapper.writeValueAsString(body);
+            log.info("Final JSON body: " + jsonBody);
+
+             webClient.post()
+                    .uri("/api/v1/discord/line_alerts")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(jsonBody)
+                    .retrieve()
+                    .onStatus(
+                            status -> !status.is2xxSuccessful(),
+                            response -> {
+                                log.severe("Failed with status code: " + response.statusCode());
+                                return response.bodyToMono(String.class)
+                                        .doOnNext(errorBody -> log.severe("Error response body: " + errorBody))
+                                        .then(Mono.error(new RuntimeException("Non-successful response")));
+                            }
+                    )
+                    .bodyToMono(String.class)
+                    .doOnNext(response -> log.info("Webhook response: " + response))
+                    .block(Duration.ofSeconds(3));
+        } catch (JsonProcessingException e) {
+            log.severe("Failed to serialize body: " + e.getMessage());
+            return ;
+        } catch (Exception e) {
+            log.severe("Error during webhook call: " + e.getMessage());
+            return ;
+        }
     }
 
     public String sendAttractionStatus(Attraction oldAttraction, Attraction attraction) {
@@ -125,13 +187,17 @@ public class AttractionWebhookClient {
     }
 
 
+    @AllArgsConstructor
     private static class AttractionUpdate {
         Attraction oldAttraction;
         Attraction attraction;
+    }
 
-        public AttractionUpdate(Attraction oldAttraction, Attraction attraction) {
-            this.oldAttraction = oldAttraction;
-            this.attraction = attraction;
-        }
+    @AllArgsConstructor
+    private static class VirtualLineUpdate {
+        VirtualLine oldAttraction;
+        VirtualLine attraction;
+
+
     }
 }
