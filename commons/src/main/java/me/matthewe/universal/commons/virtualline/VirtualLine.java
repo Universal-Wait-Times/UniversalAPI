@@ -1,5 +1,6 @@
 package me.matthewe.universal.commons.virtualline;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -49,6 +50,22 @@ public class VirtualLine {
     @JsonProperty("IsProfileAware")
     private boolean profileAware;
 
+
+
+    @JsonIgnore
+    public VirtualLineStatus getStatus() {
+        if (!enabled) {
+            return VirtualLineStatus.DISABLED;
+        }
+        if (enabled) {
+            if (unavailable) {
+                return VirtualLineStatus.OPEN_NOT_AVAILABLE;
+            }
+            return VirtualLineStatus.OPEN_AVAILABLE;
+        }
+        return VirtualLineStatus.CLOSED;
+
+    }
 
 
 

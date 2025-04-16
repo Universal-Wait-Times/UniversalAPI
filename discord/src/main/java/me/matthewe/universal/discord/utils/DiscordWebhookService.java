@@ -6,6 +6,8 @@ import me.matthewe.universal.commons.Attraction;
 import me.matthewe.universal.commons.ResortRegion;
 import me.matthewe.universal.commons.UniversalPark;
 
+import me.matthewe.universal.commons.virtualline.VirtualLine;
+import me.matthewe.universal.commons.virtualline.VirtualLineStatus;
 import me.matthewe.universal.commons.weather.WeatherData;
 import me.matthewe.universal.discord.weather.WeatherService;
 import me.micartey.webhookly.DiscordWebhook;
@@ -15,9 +17,9 @@ import me.micartey.webhookly.embeds.Footer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.w3c.dom.Attr;
 
 import java.awt.*;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -28,13 +30,13 @@ import java.util.concurrent.*;
 public class DiscordWebhookService {
 
     // Read the webhook URL from an environment variable
-    private  final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate = new RestTemplate();
 
     // A thread-safe queue to hold messages waiting to be sent.
-    private  final BlockingQueue<DiscordWebhook> messageQueue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<DiscordWebhook> messageQueue = new LinkedBlockingQueue<>();
 
     // Scheduler to process the queue.
-    private  final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private final WeatherService weatherService;
 
     @Autowired
@@ -69,7 +71,7 @@ public class DiscordWebhookService {
      *
      * @param attraction the attraction object containing display name, park name, and queue status.
      */
-    public  void sendAttractionStatusUpdate(Attraction oldAttraction, Attraction attraction) {
+    public void sendAttractionStatusUpdate(Attraction oldAttraction, Attraction attraction) {
 
 
         String message = null;
@@ -80,7 +82,7 @@ public class DiscordWebhookService {
         final UniversalPark park = attraction.getPark();
         switch (attraction.getResortAreaCode()) {
             case UOR -> {
-                resortInfo=park.getParkName();
+                resortInfo = park.getParkName();
             }
             case USJ -> {
                 resortInfo = "Universal Studios Japan";
@@ -90,7 +92,7 @@ public class DiscordWebhookService {
             }
         }
 
-        if (oldAttraction!=null){
+        if (oldAttraction != null) {
 
             if ((oldAttraction.getQueues().size() > 1) && (attraction.getQueues().size() > 1)) {
                 Attraction.Queue singleQueueOld = oldAttraction.getQueues().get(0);
@@ -99,68 +101,75 @@ public class DiscordWebhookService {
                 Attraction.Queue singleQueueNew = attraction.getQueues().get(0);
                 Attraction.Queue.Status newSingleStatus = singleQueueNew.getStatus();
 
-                if (oldSingleStatus!=newSingleStatus) {
+                if (oldSingleStatus != newSingleStatus) {
 
-                    if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.CLOSED) {
+                    if (oldSingleStatus == Attraction.Queue.Status.OPEN && newSingleStatus == Attraction.Queue.Status.CLOSED) {
                         goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is now closed.",
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    }   else if (oldSingleStatus== Attraction.Queue.Status.WEATHER_DELAY && newSingleStatus==Attraction.Queue.Status.CLOSED) {
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.WEATHER_DELAY && newSingleStatus == Attraction.Queue.Status.CLOSED) {
                         goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is now closed.",
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    }   else if (oldSingleStatus== Attraction.Queue.Status.CLOSED && newSingleStatus==Attraction.Queue.Status.OPENS_AT) {
-                       //No msg
-                    }   else if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.OPENS_AT) {
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.CLOSED && newSingleStatus == Attraction.Queue.Status.OPENS_AT) {
                         //No msg
-                    }   else if (oldSingleStatus== Attraction.Queue.Status.BRIEF_DELAY && newSingleStatus==Attraction.Queue.Status.CLOSED) {
+                    } else if (oldSingleStatus == Attraction.Queue.Status.OPENS_AT && newSingleStatus == Attraction.Queue.Status.CLOSED) {
+                        //No msgOPENS_AT->CLOSED
+                    } else if (oldSingleStatus == Attraction.Queue.Status.OPEN && newSingleStatus == Attraction.Queue.Status.OPENS_AT) {
+                        //No msg
+                    } else if (oldSingleStatus == Attraction.Queue.Status.BRIEF_DELAY && newSingleStatus == Attraction.Queue.Status.CLOSED) {
                         goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is now closed.",
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    }   else if (oldSingleStatus== Attraction.Queue.Status.BRIEF_DELAY && newSingleStatus==Attraction.Queue.Status.OPEN) {
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.BRIEF_DELAY && newSingleStatus == Attraction.Queue.Status.OPEN) {
                         goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is now open after experiencing a brief delay.",
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    } else  if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.AT_CAPACITY) {
-                        goMessage(  oldAttraction,attraction,String.format("%s at %s single rider line is now at capacity.",
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.OPEN && newSingleStatus == Attraction.Queue.Status.AT_CAPACITY) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is now at capacity.",
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    }else  if (oldSingleStatus== Attraction.Queue.Status.CLOSED && newSingleStatus==Attraction.Queue.Status.OPEN) {
-                        goMessage( oldAttraction,attraction,String.format("%s at %s single rider line is now open.",
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.CLOSED && newSingleStatus == Attraction.Queue.Status.OPEN) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is now open.",
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    }else  if (oldSingleStatus== Attraction.Queue.Status.OPENS_AT && newSingleStatus==Attraction.Queue.Status.WEATHER_DELAY) {
-                        goMessage( oldAttraction,attraction,String.format("%s at %s single rider will open late due to a weather delay.",
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.OPENS_AT && newSingleStatus == Attraction.Queue.Status.WEATHER_DELAY) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider will open late due to a weather delay.",
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    }else  if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.WEATHER_DELAY) {
-                        goMessage( oldAttraction,attraction,String.format("%s at %s single rider is experiencing a weather delay.",
+                                resortInfo), MessageType.ATTRACTION);
+
+                    } else if (oldSingleStatus == Attraction.Queue.Status.CLOSED && newSingleStatus == Attraction.Queue.Status.WEATHER_DELAY) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is experiencing a weather delay.",
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    }else  if (oldSingleStatus== Attraction.Queue.Status.OPENS_AT && newSingleStatus==Attraction.Queue.Status.BRIEF_DELAY) {
-                        goMessage( oldAttraction,attraction,String.format("%s at %s single rider will open late due to a brief delay.",
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.OPEN && newSingleStatus == Attraction.Queue.Status.WEATHER_DELAY) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider is experiencing a weather delay.",
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    }else  if (oldSingleStatus== Attraction.Queue.Status.CLOSED && newSingleStatus==Attraction.Queue.Status.BRIEF_DELAY) {
-                        goMessage( oldAttraction,attraction,String.format("%s at %s single rider is experiencing a brief delay.",
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.OPENS_AT && newSingleStatus == Attraction.Queue.Status.BRIEF_DELAY) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider will open late due to a brief delay.",
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    }else  if (oldSingleStatus== Attraction.Queue.Status.OPEN && newSingleStatus==Attraction.Queue.Status.BRIEF_DELAY) {
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.CLOSED && newSingleStatus == Attraction.Queue.Status.BRIEF_DELAY) {
                         goMessage(oldAttraction, attraction, String.format("%s at %s single rider is experiencing a brief delay.",
                                 attraction.getDisplayName(),
-                                resortInfo));
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.OPEN && newSingleStatus == Attraction.Queue.Status.BRIEF_DELAY) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider is experiencing a brief delay.",
+                                attraction.getDisplayName(),
+                                resortInfo), MessageType.ATTRACTION);
 
-                    } else  if (oldSingleStatus== Attraction.Queue.Status.OPENS_AT && newSingleStatus==Attraction.Queue.Status.OPEN) {
-                        goMessage( oldAttraction,attraction,String.format("%s at %s single rider line is now open.", //TODO check if on schedule
+                    } else if (oldSingleStatus == Attraction.Queue.Status.OPENS_AT && newSingleStatus == Attraction.Queue.Status.OPEN) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is now open.", //TODO check if on schedule
                                 attraction.getDisplayName(),
-                                resortInfo));
-                    }  else  if (oldSingleStatus== Attraction.Queue.Status.WEATHER_DELAY && newSingleStatus==Attraction.Queue.Status.OPEN) {
-                        goMessage( oldAttraction,attraction,String.format("%s at %s single rider line is now open after experiencing a weather delay.",
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.WEATHER_DELAY && newSingleStatus == Attraction.Queue.Status.OPEN) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is now open after experiencing a weather delay.",
                                 attraction.getDisplayName(),
-                                resortInfo));
+                                resortInfo), MessageType.ATTRACTION);
                     } else {
 
-                        goMessage( oldAttraction,attraction,"SINGLE RIDER DEBUG " + attraction.getDisplayName() + " ("+oldSingleStatus+"->"+newSingleStatus+")");
+                        goMessage(oldAttraction, attraction, "SINGLE RIDER DEBUG " + attraction.getDisplayName() + " (" + oldSingleStatus + "->" + newSingleStatus + ")", MessageType.ATTRACTION);
                     }
                 }
             }
@@ -212,11 +221,11 @@ public class DiscordWebhookService {
             }
 
             case OPEN -> {
-                if (oldAttraction!=null) {
+                if (oldAttraction != null) {
 
                     Attraction.Queue.Status oldStatus = oldAttraction.getQueues().get(0).getStatus();
 
-                    if( queue.getDisplayWaitTime()>500)return; // Do not display broken wait times
+                    if (queue.getDisplayWaitTime() > 500) return; // Do not display broken wait times
                     if (oldStatus == Attraction.Queue.Status.BRIEF_DELAY) {
                         message = String.format("%s at %s is now %s after experiencing a brief delay.",
                                 attraction.getDisplayName(),
@@ -259,7 +268,7 @@ public class DiscordWebhookService {
         }
 
 
-        goMessage( oldAttraction,attraction,message);
+        goMessage(oldAttraction, attraction, message, MessageType.ATTRACTION);
     }
 
     private boolean isLocalTesting() {
@@ -271,33 +280,32 @@ public class DiscordWebhookService {
     }
 
 
-    public List<DiscordWebhook> getWebHookList( Attraction attraction) {
+    public List<DiscordWebhook> getWebHookList(Attraction attraction) {
 
-        List<DiscordWebhook> discordWebhooks =new ArrayList<>();
+        List<DiscordWebhook> discordWebhooks = new ArrayList<>();
 
         DiscordWebhook webhook = null;
 
         switch (attraction.getResortAreaCode()) {
             case UOR -> {
-                if (System.getenv("DISCORD_ORLANDO_WEBHOOK_URL")!=null){
+                if (System.getenv("DISCORD_ORLANDO_WEBHOOK_URL") != null) {
 
                     webhook = new DiscordWebhook(System.getenv("DISCORD_ORLANDO_WEBHOOK_URL"));
                 }
             }
             case USJ -> {
-                if (System.getenv("DISCORD_JAPAN_WEBHOOK_URL")!=null){
+                if (System.getenv("DISCORD_JAPAN_WEBHOOK_URL") != null) {
 
                     webhook = new DiscordWebhook(System.getenv("DISCORD_JAPAN_WEBHOOK_URL"));
                 }
             }
             case USH -> {
-                if (System.getenv("DISCORD_HOLLYWOOD_WEBHOOK_URL")!=null){
+                if (System.getenv("DISCORD_HOLLYWOOD_WEBHOOK_URL") != null) {
 
                     webhook = new DiscordWebhook(System.getenv("DISCORD_HOLLYWOOD_WEBHOOK_URL"));
                 }
             }
         }
-
 
 
         webhook.setAvatarUrl(attraction.getPark().getLogoSource());
@@ -309,33 +317,109 @@ public class DiscordWebhookService {
     }
 
 
-    /**
-     *
-     * @param oldAttraction may be null
-     * @param attraction never is null
-     * @param message string msg to send
-     */
-    private void goMessage(Attraction oldAttraction, Attraction attraction, String message) {
-        if (message == null) return;
+    public enum MessageType {
+        ATTRACTION, VIRTUAL_LINE
+    }
 
-        if (isLocalTesting()) {
-            message = "[local] " + message;
+    public void goVirtualLineMessage(VirtualLine oldVirtualLine, VirtualLine virtualLine ) {
+        boolean send = false;
+        if (oldVirtualLine==null) {
+
+            send =true;
+
+        } else {
+            VirtualLineStatus status = virtualLine.getStatus();
+            VirtualLineStatus virtualLineStatus = oldVirtualLine.getStatus();
+            if (!status.equals(virtualLineStatus)) {
+                send=true;
+            }
+
         }
+        if (!send)return;
+
+
+        List<DiscordWebhook> webHookList = getWebHookList(virtualLine);
+
+
+
+
+        for (DiscordWebhook webhook : webHookList) {
+            Color attractionColor = Color.green;
+
+
+
+
+
+
+            EmbedObject embed = new EmbedObject()
+                    .setTitle(virtualLine.getName())
+                    .setColor(attractionColor)
+                    .setTimestamp(OffsetDateTime.now())
+                    .setFooter(new Footer(UniversalPark.UEU.getParkName(), UniversalPark.UEU.getLogoSource())) //For now since nowhere else uses virtual lines
+                    .setDescription("Virtual line is now " + virtualLine.getStatus().getName().toLowerCase( ) +".");
+
+
+
+
+            webhook.getEmbeds().add(embed);
+
+
+            if (virtualLine.getStatus()==VirtualLineStatus.OPEN_AVAILABLE) {
+                webhook.setContent("@everyone");
+            } else {
+                webhook.setContent(" ");
+            }
+
+            boolean offer = messageQueue.offer(webhook);
+        }
+
+    }
+
+    private List<DiscordWebhook> getWebHookList(VirtualLine virtualLine) {
+        List<DiscordWebhook> discordWebhooks = new ArrayList<>();
+
+        List<String> urls = new ArrayList<>();
+
+        String universalEndpointVirtualQueue = System.getenv("UNIVERSAL_ENDPOINT_VIRTUAL_QUEUE");
+
+        if (universalEndpointVirtualQueue.contains("@")){
+            for (String s : universalEndpointVirtualQueue.split("@")) {
+                urls.add(s.trim());
+            }
+        } else {
+            urls.add(universalEndpointVirtualQueue.trim());
+        }
+
+        for (String url : urls) {
+            DiscordWebhook discordWebhook = new DiscordWebhook(url);
+            discordWebhook.setUsername("Virtual Line Updates");
+            discordWebhook.setAvatarUrl("https://i.imgur.com/jPvBkcc.png");
+            discordWebhooks.add(discordWebhook);
+        }
+        return discordWebhooks;
+
+    }
+
+
+
+
+
+    public void goAttractionMessage(Attraction oldAttraction, Attraction attraction, String message) {
         List<DiscordWebhook> webHookList = getWebHookList(attraction);
-        if (attraction.getResortAreaCode()== ResortRegion.UOR &&attraction.getPark()==UniversalPark.UEU) {
+        if (attraction.getResortAreaCode() == ResortRegion.UOR && attraction.getPark() == UniversalPark.UEU) {
             DiscordWebhook discordWebhook = new DiscordWebhook(System.getenv("ADDITIONAL_EPIC_WEBHOOK"));
             discordWebhook.setAvatarUrl(attraction.getPark().getLogoSource());
             webHookList.add(discordWebhook);
             log.severe("EPIC HOOK");
         }
 //        if (attraction.getResortAreaCode()!= ResortRegion.UOR)return;//ONLY HANDLING ORLANDO CURRENTLY.
-        log.info("["+webHookList.size()+"] " + message);
+        log.info("[" + webHookList.size() + "] " + message);
 
 
         for (DiscordWebhook webhook : webHookList) {
             Color attractionColor = Color.green;
 
-            switch (attraction.getQueues().get(0).getStatus()){
+            switch (attraction.getQueues().get(0).getStatus()) {
                 case BRIEF_DELAY -> {
                     attractionColor = Color.YELLOW;
                 }
@@ -369,15 +453,15 @@ public class DiscordWebhookService {
                     .setTimestamp(attraction.getModifiedAt())
                     .setFooter(new Footer(attraction.getPark().getParkName(), attraction.getPark().getLogoSource()))
                     .setDescription(message);
-            if (attraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.WEATHER_DELAY) {
+            if (attraction.getQueues().get(0).getStatus() == Attraction.Queue.Status.WEATHER_DELAY) {
                 WeatherData weatherData = weatherService.getWeather(attraction.getPark());
-                if (weatherData!=null) {
+                if (weatherData != null) {
 
                     String emoji = weatherData.getWeatherEmoji();
 
                     StringBuilder weatherInfo = new StringBuilder();
                     weatherInfo.append(String.format("%s %.1f℉\n", emoji, weatherData.getTemperature()));
-                    weatherInfo.append(String.format("%d/mph wind (gusts %d/mph)", (int)weatherData.getWindSpeed(),(int)weatherData.getWindGusts()));
+                    weatherInfo.append(String.format("%d/mph wind (gusts %d/mph)", (int) weatherData.getWindSpeed(), (int) weatherData.getWindGusts()));
 
                     if (weatherData.getPrecipitationProbability() >= 0) {
                         weatherInfo.append(String.format("\n%.2f in rain (%d%% chance)",
@@ -389,7 +473,6 @@ public class DiscordWebhookService {
                 }
 
 
-
             }
 
 
@@ -398,14 +481,37 @@ public class DiscordWebhookService {
             webhook.setUsername(attraction.getPark().getParkName());
             // Enqueue the message for throttled sending.
 
-            if (attraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.RIDE_NOW) {
+            if (attraction.getQueues().get(0).getStatus() == Attraction.Queue.Status.RIDE_NOW) {
                 webhook.setContent("@everyone");
             }
 
             boolean offer = messageQueue.offer(webhook);
 
         }
+    }
 
+    public void sendVirtualLineStatusUpdate(VirtualLine oldVirtualLine, VirtualLine virtualLine) {
+
+        goVirtualLineMessage(oldVirtualLine, virtualLine);
+    }
+
+
+    /**
+     * @param oldAttraction may be null
+     * @param attraction    never is null
+     * @param message       string msg to send
+     */
+    private void goMessage(Object oldAttraction, Object attraction, String message, MessageType messageType) {
+        if (message == null) return;
+
+        if (isLocalTesting()) {
+            message = "[local] " + message;
+        }
+        if (messageType==MessageType.ATTRACTION){
+            goAttractionMessage((Attraction) oldAttraction, (Attraction) attraction,message);
+        }
 
     }
+
 }
+

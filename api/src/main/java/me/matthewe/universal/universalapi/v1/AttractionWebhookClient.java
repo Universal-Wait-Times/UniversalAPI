@@ -90,7 +90,7 @@ public class AttractionWebhookClient {
         if (oldLine != null) {
             body.put("oldLine", oldLine);
         }
-        body.put("attraction", newLine);
+        body.put("newLine", newLine);
         body.put("key", System.getenv("API_KEY"));
 
         ObjectMapper mapper = new ObjectMapper();
