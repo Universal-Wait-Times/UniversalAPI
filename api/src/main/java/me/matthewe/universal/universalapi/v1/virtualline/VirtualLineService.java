@@ -42,7 +42,7 @@ public class VirtualLineService {
 
     private void loopUpdate(String city) {
         updateCache(city);
-        long delay = 500 + random.nextInt(501); // 500–1000 ms
+        long delay = 1500 + random.nextInt(801);
         Mono.delay(Duration.ofMillis(delay))
                 .doOnNext(i -> loopUpdate(city))
                 .subscribe();
@@ -66,8 +66,8 @@ public class VirtualLineService {
                     dataCache.put(city, newData);
                     lastUpdatedCache.put(city, System.currentTimeMillis());
 
+                    onVirtualLineUpdate(city, oldData, newData);
                     if (changed) {
-                        onVirtualLineUpdate(city, oldData, newData);
                         log.info("✅ " + city + " cache updated (changed).");
                     } else {
                         log.info("ℹ️ " + city + " cache polled (no changes).");
