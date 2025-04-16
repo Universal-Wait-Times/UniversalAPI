@@ -1,51 +1,59 @@
----
 name: Build, Deploy, and Notify
+
 on:
   push:
     branches:
       - master
-  workflow_dispatch: null
+  workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Set up Java
         uses: actions/setup-java@v3
         with:
           java-version: "21"
           distribution: temurin
-      - name: Set up Maven auth
-        run: >
-          mkdir -p ~/.m2
 
-          echo "<settings xmlns=\"http://maven.apache.org/SETTINGS/1.0.0\" \
-            xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \
-            xsi:schemaLocation=\"http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd\"> \
-            <servers> \
-              <server><id>nexus-releases</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server> \
-              <server><id>nexus-snapshots</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server> \
-            </servers> \
-          </settings>" > ~/.m2/settings.xml
-      - name: Install all
-        run: mvn install -Dmaven.test.skip=true
+      - name: Cache Maven packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Set up Maven auth
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+            <servers>
+              <server><id>nexus-releases</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server>
+              <server><id>nexus-snapshots</id><username>${{ secrets.NEXUS_USERNAME }}</username><password>${{ secrets.NEXUS_PASSWORD }}</password></server>
+            </servers>
+          </settings>
+          EOF
+
+      - name: Build all modules
+        run: mvn clean install -DskipTests
         working-directory: ./
-      - name: Build JARs
-        run: mvn clean package -Dmaven.test.skip=true
-        working-directory: ./
-      - name: Build Discord JARs
-        run: mvn clean package -Dmaven.test.skip=true
-        working-directory: ./discord
-      - name: Deploy commons
-        run: mvn deploy -Dmaven.test.skip=true
-        working-directory: ./commons
-      - name: Deploy api
-        run: mvn deploy -Dmaven.test.skip=true
-        working-directory: ./api
-      - name: Inject Discord webhook into docker-compose.yml
+
+      - name: Deploy modules in parallel
+        run: |
+          mvn deploy -pl commons -DskipTests &
+          mvn deploy -pl api -DskipTests &
+          wait
+
+      - name: Inject secrets into docker-compose
         run: |
           sed -i "s|__DISCORD_WEBHOOK__|${{ secrets.DISCORD_WEBHOOK_URL }}|" docker-compose.yml
           sed -i "s|__DISCORD_HOLLYWOOD_WEBHOOK_URL__|${{ secrets.DISCORD_HOLLYWOOD_WEBHOOK_URL }}|" docker-compose.yml
@@ -53,16 +61,23 @@ jobs:
           sed -i "s|__DISCORD_ORLANDO_WEBHOOK_URL__|${{ secrets.DISCORD_ORLANDO_WEBHOOK_URL }}|" docker-compose.yml
           sed -i "s|__API_KEY__|${{ secrets.GLOBAL_API_KEY_PRIVATE }}|" docker-compose.yml
           sed -i "s|__DISCORD_BOT_TOKEN__|${{ secrets.DISCORD_BOT_TOKEN }}|" docker-compose.yml
-      - name: Upload Dockerfile, JAR, and docker-compose.yml to server
+
+      - name: Upload files to server
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.SFTP_HOST }}
           username: ${{ secrets.SFTP_USERNAME }}
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
-          source: "api/target/UniversalAPI.jar,api/Dockerfile,docker-compose.yml,discord/Dockerfile,discord/target/UniversalDiscord.jar"
+          source: |
+            api/target/UniversalAPI.jar,
+            api/Dockerfile,
+            docker-compose.yml,
+            discord/Dockerfile,
+            discord/target/UniversalDiscord.jar
           target: ${{ vars.UNIVERSAL_API_PATH }}
-      - name: Restart universalapi service (triggers start.sh)
+
+      - name: Restart universalapi service
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SFTP_HOST }}
@@ -70,11 +85,11 @@ jobs:
           password: ${{ secrets.SFTP_PASSWORD }}
           port: ${{ secrets.SFTP_PORT }}
           script: |
-            echo "Restarting systemd service..."
-            sudo /bin/systemctl restart universalapi.service
-            /bin/systemctl status universalapi.service
+            sudo systemctl restart universalapi.service
+            systemctl status universalapi.service
+
       - name: 📡 Notify Discord of deployment
-        run: >
+        run: |
           curl -X POST -H "Content-Type: application/json" -d '{
             "embeds": [{
               "title": "UniversalAPI Deployed",
