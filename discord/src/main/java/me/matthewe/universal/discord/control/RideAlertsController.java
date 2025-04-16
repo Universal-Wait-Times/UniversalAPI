@@ -25,17 +25,31 @@ public class RideAlertsController {
     }
 
     @PostMapping
-    public String post(@RequestBody Map<String, Object> body ) {
+    public String post(@RequestBody Map<String, Object> body) {
         String apiKey = System.getenv("API_KEY");
         if (apiKey == null) {
             return "Unable to post due to API_KEY not being setup.";
         }
-        AttractionWebhookRequest request = AttractionWebhookRequest.valueOf(body);
+
+        AttractionWebhookRequest request;
+        try {
+            request = AttractionWebhookRequest.valueOf(body);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Failed to parse request: " + e.getMessage();
+        }
+
         if (!apiKey.equals(request.getKey())) {
             return "API Key is invalid";
         }
-        System.out.println(request.getKey() +" : " + request.getAttraction().getWaitTimeAttractionId());
-        webhookService.sendAttractionStatusUpdate(request.getOldAttraction(), request.getAttraction());
+
+        Attraction attraction = request.getAttraction();
+        if (attraction == null) {
+            return "Missing attraction data.";
+        }
+
+        System.out.println("Posting alert: " + attraction.getWaitTimeAttractionId());
+        webhookService.sendAttractionStatusUpdate(request.getOldAttraction(), attraction);
         return "POST ATTRACTION";
     }
 
