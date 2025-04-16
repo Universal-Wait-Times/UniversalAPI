@@ -1,5 +1,6 @@
 package me.matthewe.universal.discord.control;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import me.matthewe.universal.commons.Attraction;
 
@@ -11,15 +12,17 @@ public class AttractionWebhookRequest {
     private Attraction attraction;
     private String key;
 
-    public static AttractionWebhookRequest valueOf(Map<String, Object> body) {
-        AttractionWebhookRequest attractionWebhookRequest = new AttractionWebhookRequest();
+    public static AttractionWebhookRequest valueOf(Map<String, Object> map) {
+        ObjectMapper mapper = new ObjectMapper();
+        AttractionWebhookRequest req = new AttractionWebhookRequest();
 
-        attractionWebhookRequest.setKey((String) body.get("key"));
-        attractionWebhookRequest.setAttraction((Attraction) body.get("attraction"));
-        if (body.containsKey("oldAttraction")) {
-            attractionWebhookRequest.setOldAttraction((Attraction) body.get("oldAttraction"));
+        req.setKey((String) map.get("key"));
+        req.setAttraction(mapper.convertValue(map.get("attraction"), Attraction.class));
+
+        if (map.containsKey("oldAttraction") && map.get("oldAttraction") != null) {
+            req.setOldAttraction(mapper.convertValue(map.get("oldAttraction"), Attraction.class));
         }
-        return attractionWebhookRequest;
 
+        return req;
     }
 }
