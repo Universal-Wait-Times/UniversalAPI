@@ -102,7 +102,7 @@ public class VirtualLineService {
     }
 
     private void onUpdate(String city, VirtualLine oldDatum, VirtualLine newDatum) {
-        if (!oldDatum.getId().equals("12006")) {
+        if (!newDatum.getId().equals("12006")) {
             return;
         }
         attractionWebhookClient.sendVirtualQueueStatus(oldDatum, newDatum);
