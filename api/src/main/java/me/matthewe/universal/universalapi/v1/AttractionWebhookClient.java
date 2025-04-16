@@ -36,17 +36,15 @@ public class AttractionWebhookClient {
     private final WebClient webClient;
     private final Queue<AttractionUpdate> queue = new ConcurrentLinkedQueue<>();
     private final Queue<VirtualLineUpdate> lineUpdateQueue = new ConcurrentLinkedQueue<>();
-    private final VirtualLineService virtualLineService;
     private volatile boolean serviceHealthy = false;
 
-    public AttractionWebhookClient(WebClient.Builder webClientBuilder, VirtualLineService virtualLineService) {
+    public AttractionWebhookClient(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
                         .responseTimeout(Duration.ofSeconds(5))
                 ))
                 .baseUrl("http://localhost:9506")
                 .build();
-        this.virtualLineService = virtualLineService;
     }
 
     public void queueAttractionStatus(Attraction oldAttraction, Attraction attraction) {
