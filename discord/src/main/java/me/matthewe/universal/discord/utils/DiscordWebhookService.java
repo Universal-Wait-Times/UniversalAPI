@@ -74,6 +74,7 @@ public class DiscordWebhookService {
         final UniversalPark park = attraction.getPark();
         switch (attraction.getResortAreaCode()) {
             case UOR -> {
+
                 resortInfo=park.getParkName();
             }
             case USJ -> {

@@ -21,6 +21,17 @@ public class Attraction {
     @JsonIgnore private UniversalPark park;
 
     public UniversalPark getPark() {
+        if (park==null){
+            switch (resortAreaCode){
+                case UOR:
+                    break;
+                case USJ:
+                    park= UniversalPark.USJ;
+                    break;
+                case USH:
+                    break;
+            }
+        }
         return park;
     }
 
