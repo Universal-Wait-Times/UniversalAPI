@@ -147,17 +147,9 @@ public class UniversalApiService {
                             jsonObject.add("newAttraction", GSON.fromJson(GSON.toJson(newAttraction, Attraction.class), JsonObject.class));
                         }
 
-                        if (newAttraction.getResortAreaCode()==ResortRegion.USH) {
-                            attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
-
-                        } else {
-
-                            if (oldAttraction!=null){
-                               attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
-
-
-                            }
-                        }
+//                        if (oldAttraction!=null){
+//                        }
+                        attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
                     } catch (Exception e) {
                         // Log or handle the serialization error appropriately.

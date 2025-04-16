@@ -83,7 +83,7 @@ public class Attraction {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private ResortRegion resortRegion;
 
-    
+
     @JsonProperty("wait_time_attraction_id")
     private String waitTimeAttractionId;
 
