@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RequestMapping("/api/v1/discord/ride_alerts")
 @RestController()
 public class RideAlertsController {
@@ -23,11 +25,12 @@ public class RideAlertsController {
     }
 
     @PostMapping
-    public String post(@RequestBody AttractionWebhookRequest request) {
+    public String post(@RequestBody Map<String, Object> body ) {
         String apiKey = System.getenv("API_KEY");
         if (apiKey == null) {
             return "Unable to post due to API_KEY not being setup.";
         }
+        AttractionWebhookRequest request = AttractionWebhookRequest.valueOf(body);
         if (!apiKey.equals(request.getKey())) {
             return "API Key is invalid";
         }

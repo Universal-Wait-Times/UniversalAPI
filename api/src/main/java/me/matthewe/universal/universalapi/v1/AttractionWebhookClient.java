@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Log
 @Service
@@ -23,13 +25,20 @@ public class AttractionWebhookClient {
 
     public Mono<String> sendAttractionStatus(Attraction oldAttraction, Attraction attraction) {
         log.info("Update status of attraction " + attraction.getWaitTimeAttractionId());
+        Map<String, Object> body =new HashMap<>();
+        if (oldAttraction != null) {
+
+            body.put("oldAttraction", oldAttraction);
+        }
+        if (attraction!=null){
+            body.put("attraction", attraction);
+        }
+        body.put("key", System.getenv("API_KEY"));
+
+
         Mono<String> stringMono = webClient.post()
                 .uri("/api/v1/discord/ride_alerts")
-                .bodyValue(Map.of(
-                        "oldAttraction", oldAttraction,
-                        "attraction", attraction,
-                        "key", System.getenv("API_KEY")
-                ))
+                .bodyValue(body)
                 .retrieve()
                 .bodyToMono(String.class);
 
