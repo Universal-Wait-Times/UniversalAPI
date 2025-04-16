@@ -83,6 +83,7 @@ public class AttractionWebhookClient {
             queueAttractionStatus(oldAttraction, attraction);
             return "NOT READY";
         }
+
         Map<String, Object> body = new HashMap<>();
         if (oldAttraction != null) {
             body.put("oldAttraction", oldAttraction);
@@ -97,44 +98,28 @@ public class AttractionWebhookClient {
             String jsonBody = mapper.writeValueAsString(body);
             log.info("Final JSON body: " + jsonBody);
 
-            URL url = new URL("http://localhost:9506/api/v1/discord/ride_alerts");
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setConnectTimeout(3000);
-            conn.setReadTimeout(3000);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setDoOutput(true);
-
-            try (OutputStream os = conn.getOutputStream()) {
-                byte[] input = jsonBody.getBytes(StandardCharsets.UTF_8);
-                os.write(input);
-            }
-
-            int status = conn.getResponseCode();
-            log.info("HTTP response code: " + status);
-
-            if (status >= 200 && status < 300) {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
-                    StringBuilder response = new StringBuilder();
-                    String responseLine;
-                    while ((responseLine = br.readLine()) != null) {
-                        response.append(responseLine.trim());
-                    }
-                    return response.toString();
-                }
-            } else {
-                try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), StandardCharsets.UTF_8))) {
-                    StringBuilder errorResponse = new StringBuilder();
-                    String responseLine;
-                    while ((responseLine = br.readLine()) != null) {
-                        errorResponse.append(responseLine.trim());
-                    }
-                    log.severe("Error response: " + errorResponse);
-                    throw new IOException("HTTP error: " + status);
-                }
-            }
+            return webClient.post()
+                    .uri("/api/v1/discord/ride_alerts")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(jsonBody)
+                    .retrieve()
+                    .onStatus(
+                            status -> !status.is2xxSuccessful(),
+                            response -> {
+                                log.severe("Failed with status code: " + response.statusCode());
+                                return response.bodyToMono(String.class)
+                                        .doOnNext(errorBody -> log.severe("Error response body: " + errorBody))
+                                        .then(Mono.error(new RuntimeException("Non-successful response")));
+                            }
+                    )
+                    .bodyToMono(String.class)
+                    .doOnNext(response -> log.info("Webhook response: " + response))
+                    .block(Duration.ofSeconds(3));
+        } catch (JsonProcessingException e) {
+            log.severe("Failed to serialize body: " + e.getMessage());
+            return null;
         } catch (Exception e) {
-            log.severe("Failed to send webhook: " + e.getMessage());
+            log.severe("Error during webhook call: " + e.getMessage());
             return null;
         }
     }

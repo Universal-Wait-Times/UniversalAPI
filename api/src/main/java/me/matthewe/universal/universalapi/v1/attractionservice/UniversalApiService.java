@@ -147,9 +147,13 @@ public class UniversalApiService {
                             jsonObject.add("newAttraction", GSON.fromJson(GSON.toJson(newAttraction, Attraction.class), JsonObject.class));
                         }
 
-//                        if (oldAttraction!=null){
-//                        }
-                        attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
+                        if (oldAttraction!=null){
+                            attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
+                        } else {
+                            if (newAttraction.getQueues().get(0).getStatus()== Attraction.Queue.Status.WEATHER_DELAY) {
+                                attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
+                            }
+                        }
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
                     } catch (Exception e) {
                         // Log or handle the serialization error appropriately.
