@@ -6,10 +6,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.java.Log;
 import me.matthewe.universal.commons.Attraction;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.netty.http.client.HttpClient;
 
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -22,9 +27,14 @@ public class AttractionWebhookClient {
 
 
     public AttractionWebhookClient(WebClient.Builder webClientBuilder) {
-        this.webClient = webClientBuilder.baseUrl("http://localhost:9506") // Change to your actual host if needed
+        this.webClient = webClientBuilder
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
+                        .responseTimeout(Duration.ofSeconds(5))
+                ))
+                .baseUrl("http://localhost:9506")
                 .build();
     }
+
     public Mono<String> sendAttractionStatus(Attraction oldAttraction, Attraction attraction) {
         log.info("Update status of attraction " + attraction.getWaitTimeAttractionId());
 
@@ -49,7 +59,8 @@ public class AttractionWebhookClient {
         return webClient.post()
                 .uri("/api/v1/discord/ride_alerts")
                 .header("Content-Type", "application/json")
-                .bodyValue(jsonBody) // <-- raw JSON string
+                .accept(MediaType.APPLICATION_JSON)
+                .body(BodyInserters.fromValue(jsonBody))
                 .retrieve()
                 .onStatus(status -> status.isError(), response ->
                         response.bodyToMono(String.class).flatMap(errorBody -> {
