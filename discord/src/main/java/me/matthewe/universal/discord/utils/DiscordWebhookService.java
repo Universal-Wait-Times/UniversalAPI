@@ -448,7 +448,7 @@ public class DiscordWebhookService {
             EmbedObject embed = new EmbedObject()
                     .setTitle(attraction.getDisplayName())
                     .setColor(attractionColor)
-                    .setTimestamp(attraction.getModifiedAt())
+                    .setTimestamp(OffsetDateTime.now())
                     .setFooter(new Footer(attraction.getPark().getParkName(), attraction.getPark().getLogoSource()))
                     .setDescription(message);
             if (attraction.getQueues().get(0).getStatus() == Attraction.Queue.Status.WEATHER_DELAY) {
