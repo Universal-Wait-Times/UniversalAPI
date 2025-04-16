@@ -31,8 +31,9 @@ public class RideAlertsController {
         if (!apiKey.equals(request.getKey())) {
             return "API Key is invalid";
         }
+        System.out.println(request.getKey() +" : " + request.getAttraction().getWaitTimeAttractionId());
         webhookService.sendAttractionStatusUpdate(request.getOldAttraction(), request.getAttraction());
         return "POST ATTRACTION";
     }
 
-} 
+}
