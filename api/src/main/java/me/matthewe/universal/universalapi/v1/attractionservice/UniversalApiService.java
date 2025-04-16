@@ -28,8 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @EnableScheduling
 @Service
 public class UniversalApiService {
-
-    private static final String URL = "https://assets.universalparks.com/%s/wait-time/wait-time-attraction-list.json";
+    private static final String URL = System.getenv("UNIVERSAL_ENDPOINT_WAIT_TIMES");
     private static final Logger log = LogManager.getLogger(UniversalApiService.class);
 
     private final RestTemplate restTemplate;
@@ -147,13 +146,8 @@ public class UniversalApiService {
                             jsonObject.add("newAttraction", GSON.fromJson(GSON.toJson(newAttraction, Attraction.class), JsonObject.class));
                         }
 
-                        if (oldAttraction!=null){
+                        if (oldAttraction!=null) {
                             attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
-                        } else {
-                            if (newAttraction.getPark()==UniversalPark.UEU) {
-
-                                attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
-                            }
                         }
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
                     } catch (Exception e) {
