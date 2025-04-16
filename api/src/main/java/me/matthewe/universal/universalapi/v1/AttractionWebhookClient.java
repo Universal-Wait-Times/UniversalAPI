@@ -15,6 +15,13 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.netty.http.client.HttpClient;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -48,10 +55,7 @@ public class AttractionWebhookClient {
         }
         AttractionUpdate update;
         while ((update = queue.poll()) != null) {
-            sendAttractionStatus(update.oldAttraction, update.attraction).subscribe(
-                    success -> log.info("Webhook sent successfully: " + success),
-                    error -> log.severe("Webhook failed: " + error.getMessage())
-            );
+            sendAttractionStatus(update.oldAttraction, update.attraction);
         }
     }
 
@@ -72,9 +76,13 @@ public class AttractionWebhookClient {
                 });
     }
 
-    public Mono<String> sendAttractionStatus(Attraction oldAttraction, Attraction attraction) {
+    public String sendAttractionStatus(Attraction oldAttraction, Attraction attraction) {
         log.info("Update status of attraction " + attraction.getWaitTimeAttractionId());
 
+        if (!serviceHealthy) {
+            queueAttractionStatus(oldAttraction, attraction);
+            return "NOT READY";
+        }
         Map<String, Object> body = new HashMap<>();
         if (oldAttraction != null) {
             body.put("oldAttraction", oldAttraction);
@@ -84,29 +92,53 @@ public class AttractionWebhookClient {
 
         ObjectMapper mapper = new ObjectMapper();
         mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        String jsonBody;
-        try {
-            jsonBody = mapper.writeValueAsString(body);
-            log.info("Final JSON body: " + jsonBody);
-        } catch (JsonProcessingException e) {
-            log.severe("JSON serialization failed: " + e.getMessage());
-            return Mono.error(e);
-        }
 
-        return webClient.post()
-                .uri("/api/v1/discord/ride_alerts")
-                .header("Content-Type", "application/json")
-                .accept(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromValue(jsonBody))
-                .retrieve()
-                .onStatus(status -> status.isError(), response ->
-                        response.bodyToMono(String.class).flatMap(errorBody -> {
-                            log.severe("Error response: " + errorBody);
-                            return Mono.error(new RuntimeException("HTTP " + response.statusCode()));
-                        }))
-                .bodyToMono(String.class)
-                .doOnError(e -> log.severe("Webhook failed: " + e.getMessage()));
+        try {
+            String jsonBody = mapper.writeValueAsString(body);
+            log.info("Final JSON body: " + jsonBody);
+
+            URL url = new URL("http://localhost:9506/api/v1/discord/ride_alerts");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(3000);
+            conn.setReadTimeout(3000);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoOutput(true);
+
+            try (OutputStream os = conn.getOutputStream()) {
+                byte[] input = jsonBody.getBytes(StandardCharsets.UTF_8);
+                os.write(input);
+            }
+
+            int status = conn.getResponseCode();
+            log.info("HTTP response code: " + status);
+
+            if (status >= 200 && status < 300) {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                    StringBuilder response = new StringBuilder();
+                    String responseLine;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                    return response.toString();
+                }
+            } else {
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream(), StandardCharsets.UTF_8))) {
+                    StringBuilder errorResponse = new StringBuilder();
+                    String responseLine;
+                    while ((responseLine = br.readLine()) != null) {
+                        errorResponse.append(responseLine.trim());
+                    }
+                    log.severe("Error response: " + errorResponse);
+                    throw new IOException("HTTP error: " + status);
+                }
+            }
+        } catch (Exception e) {
+            log.severe("Failed to send webhook: " + e.getMessage());
+            return null;
+        }
     }
+
 
     private static class AttractionUpdate {
         Attraction oldAttraction;

@@ -148,17 +148,14 @@ public class UniversalApiService {
                         }
 
                         if (newAttraction.getResortAreaCode()==ResortRegion.USH) {
-                            Mono<String> stringMono = attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
-                            String block = stringMono.block();
+                            attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
 
-                            log.info(block);
                         } else {
 
                             if (oldAttraction!=null){
-                                Mono<String> stringMono = attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
-                                String stringMono1 = stringMono.block();
+                               attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
 
-                                log.info(stringMono1);
+
                             }
                         }
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
