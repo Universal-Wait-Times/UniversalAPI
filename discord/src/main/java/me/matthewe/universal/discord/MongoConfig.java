@@ -23,7 +23,7 @@ public class MongoConfig {
         CodecRegistry combinedRegistry = CodecRegistries.fromRegistries(defaultRegistry, jsr310Registry);
 
         MongoClientSettings settings = MongoClientSettings.builder()
-                .applyConnectionString(new ConnectionString("mongodb://localhost:27017"))
+                .applyConnectionString(new ConnectionString(System.getenv("SPRING_DATA_MONGODB_URI")))
                 .codecRegistry(combinedRegistry)
                 .build();
 
