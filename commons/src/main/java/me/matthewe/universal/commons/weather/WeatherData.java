@@ -19,6 +19,17 @@ public class WeatherData {
     private int weatherCode;
     private double windGusts;
 
+
+
+    public WeatherData(double windSpeed, double temperature, double precipitation, double precipitationProbability, int weatherCode, double windGusts) {
+        this.windSpeed = windSpeed;
+        this.temperature = temperature;
+        this.precipitation = precipitation;
+        this.precipitationProbability = precipitationProbability;
+        this.weatherCode = weatherCode;
+        this.windGusts = windGusts;
+    }
+
     @JsonProperty("weatherEmoji")
     private String weatherEmoji;
 
