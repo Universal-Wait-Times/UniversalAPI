@@ -1,4 +1,4 @@
-package me.matthewe.universal.universalapi.v1.virtualline;
+package me.matthewe.universal.commons.virtualline;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

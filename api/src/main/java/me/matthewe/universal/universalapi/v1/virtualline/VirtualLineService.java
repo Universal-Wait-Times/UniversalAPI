@@ -2,6 +2,7 @@ package me.matthewe.universal.universalapi.v1.virtualline;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.java.Log;
+import me.matthewe.universal.commons.virtualline.VirtualLine;
 import me.matthewe.universal.universalapi.v1.AttractionWebhookClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -55,7 +56,8 @@ public class VirtualLineService {
                         .queryParam("pageSize", "All")
                         .build())
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<VirtualLine>>() {})
+                .bodyToMono(VirtualLineResponse.class)
+                .map(VirtualLineResponse::getResults)
                 .doOnError(e -> log.warning("❌ Failed to update cache for " + city + ": " + e.getMessage()))
                 .subscribe(newData -> {
                     List<VirtualLine> oldData = dataCache.get(city);

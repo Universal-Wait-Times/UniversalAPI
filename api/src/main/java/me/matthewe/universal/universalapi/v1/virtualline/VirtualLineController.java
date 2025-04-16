@@ -1,6 +1,7 @@
 package me.matthewe.universal.universalapi.v1.virtualline;
 
 import me.matthewe.universal.commons.ResortRegion;
+import me.matthewe.universal.commons.virtualline.VirtualLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping("/api/v1/virtual_line")
 @RestController()
