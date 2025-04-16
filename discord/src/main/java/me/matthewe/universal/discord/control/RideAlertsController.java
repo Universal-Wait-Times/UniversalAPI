@@ -6,10 +6,7 @@ import me.matthewe.universal.discord.jda.JDAService;
 import me.matthewe.universal.discord.settings.SettingService;
 import me.matthewe.universal.discord.utils.DiscordWebhookService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -25,6 +22,10 @@ public class RideAlertsController {
         this.jdaService = jdaService;
         this.settingService = settingService;
         this.webhookService = webhookService;
+    }
+    @GetMapping("/health")
+    public ResponseEntity<String> health() {
+        return ResponseEntity.ok("{\"status\":\"UP\"}");
     }
 
     @PostMapping
