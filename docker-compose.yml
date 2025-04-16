@@ -22,6 +22,7 @@ services:
     depends_on:
       - redis
       - mongo
+      - discord
     network_mode: host  # Use host networking so localhost is shared with the host
     environment:
       - SPRING_REDIS_HOST=localhost
@@ -41,7 +42,6 @@ services:
     depends_on:
       - redis
       - mongo
-      - universalapi
     ports:
       - "127.0.0.1:9506:9506"  # Only bind to localhost
     environment:

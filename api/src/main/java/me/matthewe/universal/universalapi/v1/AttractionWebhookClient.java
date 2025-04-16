@@ -23,14 +23,16 @@ public class AttractionWebhookClient {
 
     public Mono<String> sendAttractionStatus(Attraction oldAttraction, Attraction attraction) {
         log.info("Update status of attraction " + attraction.getWaitTimeAttractionId());
-        return webClient.post()
+        Mono<String> stringMono = webClient.post()
                 .uri("/api/v1/discord/ride_alerts")
                 .bodyValue(Map.of(
                         "oldAttraction", oldAttraction,
                         "attraction", attraction,
-                        "key",  System.getenv("API_KEY")
+                        "key", System.getenv("API_KEY")
                 ))
                 .retrieve()
                 .bodyToMono(String.class);
+
+        return stringMono;
     }
 }

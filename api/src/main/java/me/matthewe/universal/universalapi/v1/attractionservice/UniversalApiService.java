@@ -21,6 +21,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -147,13 +148,17 @@ public class UniversalApiService {
                         }
 
                         if (newAttraction.getResortAreaCode()==ResortRegion.USH) {
-                            attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
+                            Mono<String> stringMono = attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
+                            String block = stringMono.block();
 
+                            log.info(block);
                         } else {
 
                             if (oldAttraction!=null){
-                                attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
+                                Mono<String> stringMono = attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
+                                String stringMono1 = stringMono.block();
 
+                                log.info(stringMono1);
                             }
                         }
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
