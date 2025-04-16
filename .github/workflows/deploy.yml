@@ -60,7 +60,7 @@ jobs:
           sed -i "s|__DISCORD_JAPAN_WEBHOOK_URL__|${{ secrets.DISCORD_JAPAN_WEBHOOK_URL }}|" docker-compose.yml
           sed -i "s|__DISCORD_ORLANDO_WEBHOOK_URL__|${{ secrets.DISCORD_ORLANDO_WEBHOOK_URL }}|" docker-compose.yml
           sed -i "s|__API_KEY__|${{ secrets.GLOBAL_API_KEY_PRIVATE }}|" docker-compose.yml
-          sed -i "s|__DISCORD_BOT_TOKEN__|${{ secrets.DISCORD_BOT_TOKEN }}|" docker-compose.yml
+          sed -i "s|__DISCORD_BOT_TOKEN__|${{ secrets.DISCORD_BOT_TOKEN }}|" docker-compose.yml 
           sed -i "s|__ADDITIONAL_EPIC_WEBHOOK__|${{ secrets.ADDITIONAL_EPIC_WEBHOOK }}|" docker-compose.yml
           sed -i "s|__VIRTUAL_LINE_HP_WEBHOOKS__|${{ secrets.VIRTUAL_LINE_HP_WEBHOOKS }}|" docker-compose.yml
 

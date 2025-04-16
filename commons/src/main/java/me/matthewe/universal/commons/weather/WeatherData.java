@@ -19,26 +19,9 @@ public class WeatherData {
     private int weatherCode;
     private double windGusts;
 
-
-
-    public WeatherData(double windSpeed, double temperature, double precipitation, double precipitationProbability, int weatherCode, double windGusts) {
-        this.windSpeed = windSpeed;
-        this.temperature = temperature;
-        this.precipitation = precipitation;
-        this.precipitationProbability = precipitationProbability;
-        this.weatherCode = weatherCode;
-        this.windGusts = windGusts;
-    }
-
     @JsonProperty("weatherEmoji")
-    private String weatherEmoji;
-
     public String getWeatherEmoji() {
-        if (weatherEmoji != null) {
-            return weatherEmoji;
-        }
-        weatherEmoji = buildEmote(weatherCode);
-        return weatherEmoji;
+        return buildEmote(weatherCode);
     }
 
     private String buildEmote(int weatherCode) {
