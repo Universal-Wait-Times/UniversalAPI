@@ -168,7 +168,7 @@ public class UniversalApiService {
                     }
                 }
             }
- 
+
 
             public boolean update(Attraction attraction, boolean show, RedisPublisher redisPublisher) {
                 if (show) {

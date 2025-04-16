@@ -23,15 +23,16 @@ public class RideAlertsController {
     }
 
     @PostMapping
-    public String post(Attraction oldAttraction, Attraction attraction, String key) {
+    public String post(@RequestBody AttractionWebhookRequest request) {
         String apiKey = System.getenv("API_KEY");
-        if (apiKey==null) {
+        if (apiKey == null) {
             return "Unable to post due to API_KEY not being setup.";
         }
-        if (!key.equals(apiKey)) {
+        if (!apiKey.equals(request.getKey())) {
             return "API Key is invalid";
         }
-        webhookService.sendAttractionStatusUpdate(oldAttraction, attraction);
+        webhookService.sendAttractionStatusUpdate(request.getOldAttraction(), request.getAttraction());
         return "POST ATTRACTION";
     }
+
 }
