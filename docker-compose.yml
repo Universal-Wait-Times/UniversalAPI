@@ -5,7 +5,7 @@ services:
     image: redis:7.2
     container_name: universalapi-redis
     ports:
-      - "6379:6379"  # Publish Redis port to the host
+      - "127.0.0.1:6379:6379"  # Publish Redis port to the host
   mongo:
     image: mongo:7.0
     container_name: universalapi-mongo
