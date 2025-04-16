@@ -323,14 +323,13 @@ public class DiscordWebhookService {
 
     public void goVirtualLineMessage(VirtualLine oldVirtualLine, VirtualLine virtualLine ) {
         boolean send = false;
+        VirtualLineStatus virtualLineStatus = virtualLine.getStatus();
         if (oldVirtualLine==null) {
 
             send =true;
 
         } else {
-            VirtualLineStatus status = virtualLine.getStatus();
-            VirtualLineStatus virtualLineStatus = oldVirtualLine.getStatus();
-            if (!status.equals(virtualLineStatus)) {
+            if (!virtualLineStatus.equals(oldVirtualLine.getStatus())) {
                 send=true;
             }
 
@@ -344,7 +343,6 @@ public class DiscordWebhookService {
 
 
         for (DiscordWebhook webhook : webHookList) {
-            Color attractionColor = Color.green;
 
 
 
@@ -353,10 +351,10 @@ public class DiscordWebhookService {
 
             EmbedObject embed = new EmbedObject()
                     .setTitle(virtualLine.getName())
-                    .setColor(attractionColor)
+                    .setColor(virtualLineStatus.getColor())
                     .setTimestamp(OffsetDateTime.now())
                     .setFooter(new Footer(UniversalPark.UEU.getParkName(), UniversalPark.UEU.getLogoSource())) //For now since nowhere else uses virtual lines
-                    .setDescription("Virtual line is now " + virtualLine.getStatus().getName().toLowerCase( ) +".");
+                    .setDescription("Virtual line is now " + virtualLineStatus.getName().toLowerCase( ) +".");
 
 
 
@@ -364,7 +362,7 @@ public class DiscordWebhookService {
             webhook.getEmbeds().add(embed);
 
 
-            if (virtualLine.getStatus()==VirtualLineStatus.OPEN_AVAILABLE) {
+            if (virtualLineStatus ==VirtualLineStatus.OPEN_AVAILABLE) {
                 webhook.setContent("@everyone");
             } else {
                 webhook.setContent(" ");
