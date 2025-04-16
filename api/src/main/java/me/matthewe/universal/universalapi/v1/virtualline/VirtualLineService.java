@@ -106,6 +106,8 @@ public class VirtualLineService {
         if (!newDatum.isEnabled() && !newDatum.isUnavailable() && !newDatum.isProfileAware()) {
             return;
         }
+        if (newDatum.getId().equals("10102"))return;
+        if (newDatum.getId().equals("10101"))return;
 
         attractionWebhookClient.sendVirtualQueueStatus(oldDatum, newDatum);
 
