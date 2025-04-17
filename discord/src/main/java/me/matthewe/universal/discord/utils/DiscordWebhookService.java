@@ -150,6 +150,18 @@ public class DiscordWebhookService {
                         goMessage(oldAttraction, attraction, String.format("%s at %s single rider will open late due to a brief delay.",
                                 attraction.getDisplayName(),
                                 resortInfo), MessageType.ATTRACTION);
+                        //VIRTUAL_LINE_ONLY
+                    } else if (oldSingleStatus == Attraction.Queue.Status.VIRTUAL_LINE_ONLY && newSingleStatus == Attraction.Queue.Status.CLOSED) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is now closed.",
+                                attraction.getDisplayName(),
+                                resortInfo), MessageType.ATTRACTION);
+                    } else if (oldSingleStatus == Attraction.Queue.Status.AT_CAPACITY && newSingleStatus == Attraction.Queue.Status.CLOSED) {
+                        goMessage(oldAttraction, attraction, String.format("%s at %s single rider line is now closed.",
+                                attraction.getDisplayName(),
+                                resortInfo), MessageType.ATTRACTION);
+
+                    } else if (oldSingleStatus == Attraction.Queue.Status.WEATHER_DELAY && newSingleStatus == Attraction.Queue.Status.BRIEF_DELAY) {
+
                     } else if (oldSingleStatus == Attraction.Queue.Status.CLOSED && newSingleStatus == Attraction.Queue.Status.BRIEF_DELAY) {
                         goMessage(oldAttraction, attraction, String.format("%s at %s single rider is experiencing a brief delay.",
                                 attraction.getDisplayName(),
