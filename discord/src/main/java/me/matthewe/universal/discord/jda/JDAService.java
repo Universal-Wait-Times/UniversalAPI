@@ -23,6 +23,7 @@ public class JDAService {
         jda.awaitReady(); // wait for JDA to be fully loaded
         jda.getPresence().setActivity(Activity.watching("Wait Times at Epic Universe"));
         log.info("JDA started");
+        jda.getSelfUser().getManager().setName("Universal Bot Unofficial").queue();
     }
 
     public JDA getJda() {
