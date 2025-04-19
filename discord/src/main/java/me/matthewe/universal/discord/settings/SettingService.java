@@ -19,20 +19,26 @@ public class SettingService {
         loadAllSettings();
     }
 
+    public boolean isSettingSet(String key) {
+        return settings.containsKey(key.toLowerCase());
+    }
+
     public Object getSetting(String key) {
-        return settings.get(key);
+        return settings.get(key.toLowerCase());
     }
 
     public void setSetting(String key, Object value) {
-        settings.put(key, value);
-        settingRepository.save(new Setting(key, value));
-        log.info("Saved setting: " + key);
+
+        String keyLowerCase = key.toLowerCase();
+        settings.put(keyLowerCase, value);
+        settingRepository.save(new Setting(keyLowerCase, value));
+        log.info("Saved setting: " + keyLowerCase);
     }
 
     private void loadAllSettings() {
         for (Setting setting : settingRepository.findAll()) {
-            settings.put(setting.getKey(), setting.getValue());
-            log.info("Loaded setting: " + setting.getKey());
+            settings.put(setting.getKey().toLowerCase(), setting.getValue());
+            log.info("Loaded setting: " + setting.getKey().toLowerCase());
         }
     }
 }

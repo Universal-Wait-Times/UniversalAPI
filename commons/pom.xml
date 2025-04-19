@@ -22,7 +22,11 @@
             <artifactId>jackson-core</artifactId>
             <version>2.15.3</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.openai</groupId>
+            <artifactId>openai-java</artifactId>
+            <version>0.31.0</version>
+        </dependency>
         <!-- Jackson Databind (handles ObjectMapper, @JsonProperty, etc.) -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

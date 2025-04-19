@@ -16,7 +16,7 @@ import jakarta.annotation.PostConstruct;
 @Log
 public class JDAService {
 
-    private JDA jda;
+    public JDA jda;
 
     @PostConstruct
     public void start() throws Exception {
