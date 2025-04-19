@@ -379,7 +379,7 @@ public class DiscordWebhookService {
 
 
             if (virtualLineStatus ==VirtualLineStatus.OPEN_AVAILABLE) {
-                webhook.setContent("<@158445315412852736>");
+                webhook.setContent("<@&1363206630321422466>");
             } else {
                 webhook.setContent(" ");
             }
