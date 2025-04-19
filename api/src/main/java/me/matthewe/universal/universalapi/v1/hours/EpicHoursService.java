@@ -41,12 +41,12 @@ public class EpicHoursService {
     }
 
     @PostConstruct
-    public void start() throws ExecutionException, InterruptedException {
+    public void start() {
         updateHours();
     }
 
     @Scheduled(initialDelay = 0, fixedDelay = 1000 * 60 * 60 * 24) // Once a day
-    public void updateHours() throws ExecutionException, InterruptedException {
+    public void updateHours() {
         log.info("Updating Epic Universe park hours...");
 
         OpenAIClientAsync client = openAIService.getClient();
@@ -73,7 +73,6 @@ public class EpicHoursService {
                 .maxTokens(500)
                 .addUserMessage(s).build();
 
-        ChatCompletion chatCompletion = client.chat().completions().create(params).get();
         CompletableFuture<ChatCompletion> future = client.chat().completions().create(params);
 
         future.whenComplete((response, throwable) -> {
@@ -88,6 +87,7 @@ public class EpicHoursService {
                     log.severe("No content returned from GPT.");
                     return;
                 }
+                System.err.println(content.get());
 
                 List<Map<String, String>> list = objectMapper.readValue(
                         content.get(),
