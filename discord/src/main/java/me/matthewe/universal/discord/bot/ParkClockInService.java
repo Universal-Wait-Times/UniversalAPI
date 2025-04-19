@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Log
@@ -73,14 +74,20 @@ public class ParkClockInService extends ListenerAdapter {
         Guild guild = event.getGuild();
 
         if (member == null || guild == null) {
-            event.reply("Error: Could not process your request.").setEphemeral(true).queue();
+            event.reply("Error: Could not process your request.") .setEphemeral(true)
+                    .queue(interactionHook ->
+                            interactionHook.deleteOriginal().queueAfter(3, TimeUnit.SECONDS)
+                    );
             return;
         }
 
         Role clockInRole = guild.getRoleById(1363206630321422466L); // Your role ID
 
         if (clockInRole == null) {
-            event.reply("Error: Clock-in role not found.").setEphemeral(true).queue();
+            event.reply("Error: Clock-in role not found.") .setEphemeral(true)
+                    .queue(interactionHook ->
+                            interactionHook.deleteOriginal().queueAfter(3, TimeUnit.SECONDS)
+                    );
             return;
         }
 
@@ -88,26 +95,41 @@ public class ParkClockInService extends ListenerAdapter {
             case "clock_in":
                 if (!member.getRoles().contains(clockInRole)) {
                     guild.addRoleToMember(member, clockInRole).queue();
-                    event.reply("✅ You have clocked in and the role has been assigned.").setEphemeral(true).queue();
+                    event.reply("✅ You have clocked in and the role has been assigned.") .setEphemeral(true)
+                            .queue(interactionHook ->
+                                    interactionHook.deleteOriginal().queueAfter(3, TimeUnit.SECONDS)
+                            );
                 } else {
-                    event.reply("⚠️ You are already clocked in.").setEphemeral(true).queue();
+                    event.reply("⚠️ You are already clocked in.") .setEphemeral(true)
+                            .queue(interactionHook ->
+                                    interactionHook.deleteOriginal().queueAfter(3, TimeUnit.SECONDS)
+                            );
                 }
-            
+
                 break;
 
             case "cancel":
                 if (member.getRoles().contains(clockInRole)) {
                     guild.removeRoleFromMember(member, clockInRole).queue();
-                    event.reply("❌ You have clocked out and the role has been removed.").setEphemeral(true).queue();
+                    event.reply("❌ You have clocked out and the role has been removed.") .setEphemeral(true)
+                            .queue(interactionHook ->
+                                    interactionHook.deleteOriginal().queueAfter(3, TimeUnit.SECONDS)
+                            );
                 } else {
-                    event.reply("⚠️ You weren't clocked in.").setEphemeral(true).queue();
+                    event.reply("⚠️ You weren't clocked in.").setEphemeral(true)
+                            .queue(interactionHook ->
+                                    interactionHook.deleteOriginal().queueAfter(3, TimeUnit.SECONDS)
+                            );
                 }
 
 
                 break;
 
             default:
-                event.reply("Unknown action.").setEphemeral(true).queue();
+                event.reply("Unknown action.") .setEphemeral(true)
+                        .queue(interactionHook ->
+                                interactionHook.deleteOriginal().queueAfter(3, TimeUnit.SECONDS)
+                        );
                 break;
         }
     }
