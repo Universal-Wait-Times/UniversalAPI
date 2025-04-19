@@ -15,6 +15,8 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.OffsetDateTime;
+
 @Service
 @Log
 public class ParkClockInService {
@@ -49,7 +51,9 @@ public class ParkClockInService {
 
         textChannel.sendMessageEmbeds(new EmbedBuilder()
                         .setColor(UniversalPark.UEU.getColor())
-                        .setDescription("Epic Universe Clock-In")
+                        .setDescription("Epic Universe Virtual Queue Clock-In")
+                        .setTimestamp(OffsetDateTime.now())
+                        .setFooter("Virtual Queue", "https://i.imgur.com/jPvBkcc.png")
                         .build())
                 .setActionRow(
                         Button.primary("clock_in", "Clock In"),
