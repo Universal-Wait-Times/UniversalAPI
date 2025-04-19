@@ -73,16 +73,16 @@ public class VirtualLineService {
                     lastUpdatedCache.put(city, System.currentTimeMillis());
 
                     onVirtualLineUpdate(city, oldData, newData);
-                    if (changed) {
-                        log.info("✅ " + city + " cache updated (changed).");
-                    } else {
-                        log.info("ℹ️ " + city + " cache polled (no changes).");
-                    }
+//                    if (changed) {
+//                        log.de("✅ " + city + " cache updated (changed).");
+//                    } else {
+//                        log.info("ℹ️ " + city + " cache polled (no changes).");
+//                    }
                 });
     }
 
     private void onVirtualLineUpdate(String city, List<VirtualLine> oldData, List<VirtualLine> newData) {
-        log.info("🔄 Virtual Line Update Detected for " + city);
+//        log.info("🔄 Virtual Line Update Detected for " + city);
 
         if (oldData!=null) {
 
