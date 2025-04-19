@@ -56,7 +56,7 @@ public class ParkClockInService extends ListenerAdapter {
                         .build())
                 .setActionRow(
                         Button.primary("clock_in", "Clock In"),
-                        Button.danger("cancel", "Cancel")
+                        Button.danger("cancel", "Clock Out")
                 )
                 .queue();
 
@@ -92,6 +92,12 @@ public class ParkClockInService extends ListenerAdapter {
                 } else {
                     event.reply("⚠️ You are already clocked in.").setEphemeral(true).queue();
                 }
+                event.getChannel().sendMessageEmbeds(new EmbedBuilder()
+                        .setDescription(event.getUser().getAsMention() + " has now entered **EPIC UNIVERSE** 🌍")
+                        .setColor(0x00FF00) // green
+                        .setTimestamp(OffsetDateTime.now())
+                        .setFooter("Virtual Queue", "https://i.imgur.com/jPvBkcc.png")
+                        .build()).queue();
                 break;
 
             case "cancel":
@@ -101,6 +107,13 @@ public class ParkClockInService extends ListenerAdapter {
                 } else {
                     event.reply("⚠️ You weren't clocked in.").setEphemeral(true).queue();
                 }
+                event.getChannel().sendMessageEmbeds(new EmbedBuilder()
+                        .setDescription(event.getUser().getAsMention() + " has now left **EPIC UNIVERSE** 🚪")
+                        .setColor(0xFF0000) // red
+                        .setTimestamp(OffsetDateTime.now())
+                        .setFooter("Virtual Queue", "https://i.imgur.com/jPvBkcc.png")
+                        .build()).queue();
+
                 break;
 
             default:
