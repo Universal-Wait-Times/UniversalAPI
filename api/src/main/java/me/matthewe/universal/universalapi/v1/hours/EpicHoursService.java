@@ -45,6 +45,7 @@ public class EpicHoursService {
         updateHours();
     }
 
+    
     @Scheduled(initialDelay = 0, fixedDelay = 1000 * 60 * 60 * 24) // Once a day
     public void updateHours() {
         log.info("Updating Epic Universe park hours...");
@@ -54,7 +55,7 @@ public class EpicHoursService {
         String s= """
                             Go to: https://www.universalorlando.com/web/en/us/plan-your-visit/hours-information/park-hours/epic-universe
                             
-                            Extract all Epic Universe preview hours from **April 17, 2025 to May 10, 2025**.
+                            Extract all Epic Universe preview hours.
 
                             Return the result as a JSON array with this structure:
                             [
@@ -69,8 +70,9 @@ public class EpicHoursService {
                             """;
 
         ChatCompletionCreateParams params = ChatCompletionCreateParams.builder()
-                .model(ChatModel.GPT_4O_MINI)
+                .model(ChatModel.GPT_4O)
                 .maxTokens(500)
+
                 .addUserMessage(s).build();
 
         CompletableFuture<ChatCompletion> future = client.chat().completions().create(params);
