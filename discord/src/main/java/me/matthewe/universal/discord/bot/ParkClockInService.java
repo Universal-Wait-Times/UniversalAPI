@@ -2,11 +2,16 @@ package me.matthewe.universal.discord.bot;
 
 import jakarta.annotation.PostConstruct;
 import lombok.extern.java.Log;
+import me.matthewe.universal.commons.UniversalPark;
 import me.matthewe.universal.discord.jda.JDAService;
 import me.matthewe.universal.discord.settings.SettingService;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,12 +42,23 @@ public class ParkClockInService {
             log.info("ERROR (2)");
             return;
         }
+        MessageHistory complete = textChannel.getHistoryAfter(1362520266806264099L, 100).complete();
+        for (Message message : complete.getRetrievedHistory()) {
+            message.delete().complete();
+        }
 
-        textChannel.getHistoryAfter(1362520266806264099L, 100).queue(messageHistory -> {
-            for (Message message : messageHistory.getRetrievedHistory()) {
-                message.delete().queue();
-            }
-        });
+        textChannel.sendMessageEmbeds(new EmbedBuilder()
+                        .setColor(UniversalPark.UEU.getColor())
+                        .setDescription("Epic Universe Clock-In")
+                        .build())
+                .setActionRow(
+                        Button.primary("clock_in", "Clock In"),
+                        Button.danger("cancel", "Cancel")
+                )
+                .queue();
+
+
+
 
 
     }
