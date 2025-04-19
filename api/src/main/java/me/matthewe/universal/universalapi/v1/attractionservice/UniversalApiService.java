@@ -240,7 +240,7 @@ public class UniversalApiService {
         nextExecutionTime = currentTime + delay;
         try {
 
-         
+
             ResortData resortData;
             if (cache.get()!=null){
                 resortData=cache.get();
