@@ -1,0 +1,1245 @@
+{
+  "TotalCount": 2,
+  "Pages": 1,
+  "PreviousPage": "",
+  "NextPage": "",
+  "Results": [
+    {
+      "MblDisplayName": "Universal CityWalk",
+      "ContainedLands": [
+        {
+          "MblDisplayName": "Universal CityWalk",
+          "ContainingVenueId": 13824,
+          "GpsBoundary": [
+            {
+              "Latitude": 34.143000000000001,
+              "Longitude": -118.36
+            },
+            {
+              "Latitude": 34.142000000000003,
+              "Longitude": -118.34999999999999
+            },
+            {
+              "Latitude": 34.139000000000003,
+              "Longitude": -118.34399999999999
+            },
+            {
+              "Latitude": 34.131,
+              "Longitude": -118.349
+            },
+            {
+              "Latitude": 34.137,
+              "Longitude": -118.36199999999999
+            },
+            {
+              "Latitude": 34.143000000000001,
+              "Longitude": -118.35899999999999
+            }
+          ],
+          "Longitude": 0,
+          "Latitude": 0,
+          "ExternalIds": {
+            "Tridion13": "101-57428",
+            "ContentId": "com.uo.cw.lands.universal_citywalk"
+          },
+          "Id": 13827
+        }
+      ],
+      "StreetAddress": {
+        "AddressLine1": "100 Universal City Plaza",
+        "City": "Universal City",
+        "State": "CA",
+        "ZipCode": "91608"
+      },
+      "GpsBoundary": [
+        {
+          "Latitude": 34.143000000000001,
+          "Longitude": -118.36
+        },
+        {
+          "Latitude": 34.142000000000003,
+          "Longitude": -118.34999999999999
+        },
+        {
+          "Latitude": 34.139000000000003,
+          "Longitude": -118.34399999999999
+        },
+        {
+          "Latitude": 34.131,
+          "Longitude": -118.349
+        },
+        {
+          "Latitude": 34.137,
+          "Longitude": -118.36199999999999
+        },
+        {
+          "Latitude": 34.143000000000001,
+          "Longitude": -118.35899999999999
+        }
+      ],
+      "GpsBoundaryCircle": {
+        "RadiusInMeters": 1018.0399608658282,
+        "Latitude": 34.139166666666668,
+        "Longitude": -118.354
+      },
+      "Hours": [
+        {
+          "Date": "2025-04-18",
+          "OpenTimeString": "2025-04-18T14:00:00-04:00",
+          "CloseTimeString": "2025-04-19T01:00:00-04:00",
+          "OpenTimeUnix": 1744999200,
+          "CloseTimeUnix": 1745038800,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-19",
+          "OpenTimeString": "2025-04-19T14:00:00-04:00",
+          "CloseTimeString": "2025-04-20T01:00:00-04:00",
+          "OpenTimeUnix": 1745085600,
+          "CloseTimeUnix": 1745125200,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-20",
+          "OpenTimeString": "2025-04-20T14:00:00-04:00",
+          "CloseTimeString": "2025-04-21T01:00:00-04:00",
+          "OpenTimeUnix": 1745172000,
+          "CloseTimeUnix": 1745211600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-21",
+          "OpenTimeString": "2025-04-21T14:00:00-04:00",
+          "CloseTimeString": "2025-04-22T00:00:00-04:00",
+          "OpenTimeUnix": 1745258400,
+          "CloseTimeUnix": 1745294400,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-22",
+          "OpenTimeString": "2025-04-22T14:00:00-04:00",
+          "CloseTimeString": "2025-04-23T00:00:00-04:00",
+          "OpenTimeUnix": 1745344800,
+          "CloseTimeUnix": 1745380800,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-23",
+          "OpenTimeString": "2025-04-23T14:00:00-04:00",
+          "CloseTimeString": "2025-04-24T00:00:00-04:00",
+          "OpenTimeUnix": 1745431200,
+          "CloseTimeUnix": 1745467200,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-24",
+          "OpenTimeString": "2025-04-24T14:00:00-04:00",
+          "CloseTimeString": "2025-04-25T00:00:00-04:00",
+          "OpenTimeUnix": 1745517600,
+          "CloseTimeUnix": 1745553600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-25",
+          "OpenTimeString": "2025-04-25T14:00:00-04:00",
+          "CloseTimeString": "2025-04-26T01:00:00-04:00",
+          "OpenTimeUnix": 1745604000,
+          "CloseTimeUnix": 1745643600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-26",
+          "OpenTimeString": "2025-04-26T14:00:00-04:00",
+          "CloseTimeString": "2025-04-27T01:00:00-04:00",
+          "OpenTimeUnix": 1745690400,
+          "CloseTimeUnix": 1745730000,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-27",
+          "OpenTimeString": "2025-04-27T14:00:00-04:00",
+          "CloseTimeString": "2025-04-28T00:00:00-04:00",
+          "OpenTimeUnix": 1745776800,
+          "CloseTimeUnix": 1745812800,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-28",
+          "OpenTimeString": "2025-04-28T14:00:00-04:00",
+          "CloseTimeString": "2025-04-29T00:00:00-04:00",
+          "OpenTimeUnix": 1745863200,
+          "CloseTimeUnix": 1745899200,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-29",
+          "OpenTimeString": "2025-04-29T14:00:00-04:00",
+          "CloseTimeString": "2025-04-30T00:00:00-04:00",
+          "OpenTimeUnix": 1745949600,
+          "CloseTimeUnix": 1745985600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-30",
+          "OpenTimeString": "2025-04-30T14:00:00-04:00",
+          "CloseTimeString": "2025-05-01T00:00:00-04:00",
+          "OpenTimeUnix": 1746036000,
+          "CloseTimeUnix": 1746072000,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-01",
+          "OpenTimeString": "2025-05-01T14:00:00-04:00",
+          "CloseTimeString": "2025-05-02T00:00:00-04:00",
+          "OpenTimeUnix": 1746122400,
+          "CloseTimeUnix": 1746158400,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-02",
+          "OpenTimeString": "2025-05-02T14:00:00-04:00",
+          "CloseTimeString": "2025-05-03T01:00:00-04:00",
+          "OpenTimeUnix": 1746208800,
+          "CloseTimeUnix": 1746248400,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-03",
+          "OpenTimeString": "2025-05-03T14:00:00-04:00",
+          "CloseTimeString": "2025-05-04T01:00:00-04:00",
+          "OpenTimeUnix": 1746295200,
+          "CloseTimeUnix": 1746334800,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-04",
+          "OpenTimeString": "2025-05-04T14:00:00-04:00",
+          "CloseTimeString": "2025-05-05T00:00:00-04:00",
+          "OpenTimeUnix": 1746381600,
+          "CloseTimeUnix": 1746417600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-05",
+          "OpenTimeString": "2025-05-05T14:00:00-04:00",
+          "CloseTimeString": "2025-05-06T00:00:00-04:00",
+          "OpenTimeUnix": 1746468000,
+          "CloseTimeUnix": 1746504000,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-06",
+          "OpenTimeString": "2025-05-06T14:00:00-04:00",
+          "CloseTimeString": "2025-05-07T00:00:00-04:00",
+          "OpenTimeUnix": 1746554400,
+          "CloseTimeUnix": 1746590400,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-07",
+          "OpenTimeString": "2025-05-07T14:00:00-04:00",
+          "CloseTimeString": "2025-05-08T00:00:00-04:00",
+          "OpenTimeUnix": 1746640800,
+          "CloseTimeUnix": 1746676800,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-08",
+          "OpenTimeString": "2025-05-08T14:00:00-04:00",
+          "CloseTimeString": "2025-05-09T00:00:00-04:00",
+          "OpenTimeUnix": 1746727200,
+          "CloseTimeUnix": 1746763200,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-09",
+          "OpenTimeString": "2025-05-09T14:00:00-04:00",
+          "CloseTimeString": "2025-05-10T01:00:00-04:00",
+          "OpenTimeUnix": 1746813600,
+          "CloseTimeUnix": 1746853200,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-10",
+          "OpenTimeString": "2025-05-10T14:00:00-04:00",
+          "CloseTimeString": "2025-05-11T01:00:00-04:00",
+          "OpenTimeUnix": 1746900000,
+          "CloseTimeUnix": 1746939600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-11",
+          "OpenTimeString": "2025-05-11T14:00:00-04:00",
+          "CloseTimeString": "2025-05-12T00:00:00-04:00",
+          "OpenTimeUnix": 1746986400,
+          "CloseTimeUnix": 1747022400,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-12",
+          "OpenTimeString": "2025-05-12T14:00:00-04:00",
+          "CloseTimeString": "2025-05-13T00:00:00-04:00",
+          "OpenTimeUnix": 1747072800,
+          "CloseTimeUnix": 1747108800,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-13",
+          "OpenTimeString": "2025-05-13T14:00:00-04:00",
+          "CloseTimeString": "2025-05-14T00:00:00-04:00",
+          "OpenTimeUnix": 1747159200,
+          "CloseTimeUnix": 1747195200,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-14",
+          "OpenTimeString": "2025-05-14T14:00:00-04:00",
+          "CloseTimeString": "2025-05-15T00:00:00-04:00",
+          "OpenTimeUnix": 1747245600,
+          "CloseTimeUnix": 1747281600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-15",
+          "OpenTimeString": "2025-05-15T14:00:00-04:00",
+          "CloseTimeString": "2025-05-16T00:00:00-04:00",
+          "OpenTimeUnix": 1747332000,
+          "CloseTimeUnix": 1747368000,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-16",
+          "OpenTimeString": "2025-05-16T14:00:00-04:00",
+          "CloseTimeString": "2025-05-17T01:00:00-04:00",
+          "OpenTimeUnix": 1747418400,
+          "CloseTimeUnix": 1747458000,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-17",
+          "OpenTimeString": "2025-05-17T14:00:00-04:00",
+          "CloseTimeString": "2025-05-18T01:00:00-04:00",
+          "OpenTimeUnix": 1747504800,
+          "CloseTimeUnix": 1747544400,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-18",
+          "OpenTimeString": "2025-05-18T14:00:00-04:00",
+          "CloseTimeString": "2025-05-19T00:00:00-04:00",
+          "OpenTimeUnix": 1747591200,
+          "CloseTimeUnix": 1747627200,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-19",
+          "OpenTimeString": "2025-05-19T14:00:00-04:00",
+          "CloseTimeString": "2025-05-20T00:00:00-04:00",
+          "OpenTimeUnix": 1747677600,
+          "CloseTimeUnix": 1747713600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-20",
+          "OpenTimeString": "2025-05-20T14:00:00-04:00",
+          "CloseTimeString": "2025-05-21T00:00:00-04:00",
+          "OpenTimeUnix": 1747764000,
+          "CloseTimeUnix": 1747800000,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-21",
+          "OpenTimeString": "2025-05-21T14:00:00-04:00",
+          "CloseTimeString": "2025-05-22T00:00:00-04:00",
+          "OpenTimeUnix": 1747850400,
+          "CloseTimeUnix": 1747886400,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-22",
+          "OpenTimeString": "2025-05-22T14:00:00-04:00",
+          "CloseTimeString": "2025-05-23T00:00:00-04:00",
+          "OpenTimeUnix": 1747936800,
+          "CloseTimeUnix": 1747972800,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-23",
+          "OpenTimeString": "2025-05-23T14:00:00-04:00",
+          "CloseTimeString": "2025-05-24T01:00:00-04:00",
+          "OpenTimeUnix": 1748023200,
+          "CloseTimeUnix": 1748062800,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-24",
+          "OpenTimeString": "2025-05-24T14:00:00-04:00",
+          "CloseTimeString": "2025-05-25T01:00:00-04:00",
+          "OpenTimeUnix": 1748109600,
+          "CloseTimeUnix": 1748149200,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-25",
+          "OpenTimeString": "2025-05-25T14:00:00-04:00",
+          "CloseTimeString": "2025-05-26T01:00:00-04:00",
+          "OpenTimeUnix": 1748196000,
+          "CloseTimeUnix": 1748235600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-26",
+          "OpenTimeString": "2025-05-26T14:00:00-04:00",
+          "CloseTimeString": "2025-05-27T00:00:00-04:00",
+          "OpenTimeUnix": 1748282400,
+          "CloseTimeUnix": 1748318400,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-27",
+          "OpenTimeString": "2025-05-27T14:00:00-04:00",
+          "CloseTimeString": "2025-05-28T00:00:00-04:00",
+          "OpenTimeUnix": 1748368800,
+          "CloseTimeUnix": 1748404800,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-28",
+          "OpenTimeString": "2025-05-28T14:00:00-04:00",
+          "CloseTimeString": "2025-05-29T00:00:00-04:00",
+          "OpenTimeUnix": 1748455200,
+          "CloseTimeUnix": 1748491200,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-29",
+          "OpenTimeString": "2025-05-29T14:00:00-04:00",
+          "CloseTimeString": "2025-05-30T00:00:00-04:00",
+          "OpenTimeUnix": 1748541600,
+          "CloseTimeUnix": 1748577600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-30",
+          "OpenTimeString": "2025-05-30T14:00:00-04:00",
+          "CloseTimeString": "2025-05-31T01:00:00-04:00",
+          "OpenTimeUnix": 1748628000,
+          "CloseTimeUnix": 1748667600,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-31",
+          "OpenTimeString": "2025-05-31T14:00:00-04:00",
+          "CloseTimeString": "2025-06-01T01:00:00-04:00",
+          "OpenTimeUnix": 1748714400,
+          "CloseTimeUnix": 1748754000,
+          "EarlyEntryUnix": 0,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        }
+      ],
+      "AdmissionRequired": false,
+      "DetailImages": [],
+      "Longitude": -81,
+      "Latitude": 28,
+      "VenueType": "Entertainment-District",
+      "ExternalIds": {
+        "Tridion13": "101-57191",
+        "ParkHoursDb": "201",
+        "ContentId": "com.uo.cw.venues.universal_citywalk",
+        "PlaceId": "ush.cw"
+      },
+      "Url": "http://services.universalorlando.com/api/Venues/13824?api-version=1.0",
+      "Id": 13824
+    },
+    {
+      "MblDisplayName": "Universal Studios",
+      "ContainedLands": [
+        {
+          "MblDisplayName": "Lower Lot",
+          "ContainingVenueId": 13825,
+          "GpsBoundary": [
+            {
+              "Latitude": 34.143000000000001,
+              "Longitude": -118.36
+            },
+            {
+              "Latitude": 34.142000000000003,
+              "Longitude": -118.34999999999999
+            },
+            {
+              "Latitude": 34.139000000000003,
+              "Longitude": -118.34399999999999
+            },
+            {
+              "Latitude": 34.131,
+              "Longitude": -118.349
+            },
+            {
+              "Latitude": 34.137,
+              "Longitude": -118.36199999999999
+            },
+            {
+              "Latitude": 34.143000000000001,
+              "Longitude": -118.35899999999999
+            }
+          ],
+          "Longitude": 0,
+          "Latitude": 0,
+          "ExternalIds": {
+            "Tridion13": "101-57477",
+            "ContentId": "com.uo.us.lands.lower_lot"
+          },
+          "Id": 13826
+        },
+        {
+          "MblDisplayName": "Upper Lot",
+          "ContainingVenueId": 13825,
+          "GpsBoundary": [
+            {
+              "Latitude": 34.143000000000001,
+              "Longitude": -118.36
+            },
+            {
+              "Latitude": 34.142000000000003,
+              "Longitude": -118.34999999999999
+            },
+            {
+              "Latitude": 34.139000000000003,
+              "Longitude": -118.34399999999999
+            },
+            {
+              "Latitude": 34.131,
+              "Longitude": -118.349
+            },
+            {
+              "Latitude": 34.137,
+              "Longitude": -118.36199999999999
+            },
+            {
+              "Latitude": 34.143000000000001,
+              "Longitude": -118.35899999999999
+            }
+          ],
+          "Longitude": 0,
+          "Latitude": 0,
+          "ExternalIds": {
+            "Tridion13": "101-57259",
+            "ContentId": "com.uo.us.lands.upper_lot"
+          },
+          "Id": 13828
+        }
+      ],
+      "StreetAddress": {
+        "AddressLine1": "100 Universal City Plaza",
+        "City": "Universal City",
+        "State": "CA",
+        "ZipCode": "91608"
+      },
+      "GpsBoundary": [
+        {
+          "Latitude": 34.143000000000001,
+          "Longitude": -118.36
+        },
+        {
+          "Latitude": 34.142000000000003,
+          "Longitude": -118.34999999999999
+        },
+        {
+          "Latitude": 34.139000000000003,
+          "Longitude": -118.34399999999999
+        },
+        {
+          "Latitude": 34.131,
+          "Longitude": -118.349
+        },
+        {
+          "Latitude": 34.137,
+          "Longitude": -118.36199999999999
+        },
+        {
+          "Latitude": 34.143000000000001,
+          "Longitude": -118.35899999999999
+        }
+      ],
+      "GpsBoundaryCircle": {
+        "RadiusInMeters": 1018.0399608658282,
+        "Latitude": 34.139166666666668,
+        "Longitude": -118.354
+      },
+      "Hours": [
+        {
+          "Date": "2025-04-18",
+          "OpenTimeString": "2025-04-18T12:00:00-04:00",
+          "CloseTimeString": "2025-04-19T00:00:00-04:00",
+          "EarlyEntryString": "2025-04-18T11:00:00-04:00",
+          "OpenTimeUnix": 1744992000,
+          "CloseTimeUnix": 1745035200,
+          "EarlyEntryUnix": 1744988400,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-19",
+          "OpenTimeString": "2025-04-19T12:00:00-04:00",
+          "CloseTimeString": "2025-04-20T00:00:00-04:00",
+          "EarlyEntryString": "2025-04-19T11:00:00-04:00",
+          "OpenTimeUnix": 1745078400,
+          "CloseTimeUnix": 1745121600,
+          "EarlyEntryUnix": 1745074800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-20",
+          "OpenTimeString": "2025-04-20T12:00:00-04:00",
+          "CloseTimeString": "2025-04-21T00:00:00-04:00",
+          "EarlyEntryString": "2025-04-20T11:00:00-04:00",
+          "OpenTimeUnix": 1745164800,
+          "CloseTimeUnix": 1745208000,
+          "EarlyEntryUnix": 1745161200,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-21",
+          "OpenTimeString": "2025-04-21T12:00:00-04:00",
+          "CloseTimeString": "2025-04-21T23:00:00-04:00",
+          "EarlyEntryString": "2025-04-21T11:00:00-04:00",
+          "OpenTimeUnix": 1745251200,
+          "CloseTimeUnix": 1745290800,
+          "EarlyEntryUnix": 1745247600,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-22",
+          "OpenTimeString": "2025-04-22T12:00:00-04:00",
+          "CloseTimeString": "2025-04-22T22:00:00-04:00",
+          "EarlyEntryString": "2025-04-22T11:00:00-04:00",
+          "OpenTimeUnix": 1745337600,
+          "CloseTimeUnix": 1745373600,
+          "EarlyEntryUnix": 1745334000,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-23",
+          "OpenTimeString": "2025-04-23T12:00:00-04:00",
+          "CloseTimeString": "2025-04-23T22:00:00-04:00",
+          "EarlyEntryString": "2025-04-23T11:00:00-04:00",
+          "OpenTimeUnix": 1745424000,
+          "CloseTimeUnix": 1745460000,
+          "EarlyEntryUnix": 1745420400,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-24",
+          "OpenTimeString": "2025-04-24T12:00:00-04:00",
+          "CloseTimeString": "2025-04-24T23:00:00-04:00",
+          "EarlyEntryString": "2025-04-24T11:00:00-04:00",
+          "OpenTimeUnix": 1745510400,
+          "CloseTimeUnix": 1745550000,
+          "EarlyEntryUnix": 1745506800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-25",
+          "OpenTimeString": "2025-04-25T11:00:00-04:00",
+          "CloseTimeString": "2025-04-25T21:00:00-04:00",
+          "EarlyEntryString": "2025-04-25T10:00:00-04:00",
+          "OpenTimeUnix": 1745593200,
+          "CloseTimeUnix": 1745629200,
+          "EarlyEntryUnix": 1745589600,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-26",
+          "OpenTimeString": "2025-04-26T11:00:00-04:00",
+          "CloseTimeString": "2025-04-26T21:00:00-04:00",
+          "EarlyEntryString": "2025-04-26T10:00:00-04:00",
+          "OpenTimeUnix": 1745679600,
+          "CloseTimeUnix": 1745715600,
+          "EarlyEntryUnix": 1745676000,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-27",
+          "OpenTimeString": "2025-04-27T11:00:00-04:00",
+          "CloseTimeString": "2025-04-27T21:00:00-04:00",
+          "EarlyEntryString": "2025-04-27T10:00:00-04:00",
+          "OpenTimeUnix": 1745766000,
+          "CloseTimeUnix": 1745802000,
+          "EarlyEntryUnix": 1745762400,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-28",
+          "OpenTimeString": "2025-04-28T13:00:00-04:00",
+          "CloseTimeString": "2025-04-28T22:00:00-04:00",
+          "EarlyEntryString": "2025-04-28T12:00:00-04:00",
+          "OpenTimeUnix": 1745859600,
+          "CloseTimeUnix": 1745892000,
+          "EarlyEntryUnix": 1745856000,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-29",
+          "OpenTimeString": "2025-04-29T13:00:00-04:00",
+          "CloseTimeString": "2025-04-29T21:00:00-04:00",
+          "EarlyEntryString": "2025-04-29T12:00:00-04:00",
+          "OpenTimeUnix": 1745946000,
+          "CloseTimeUnix": 1745974800,
+          "EarlyEntryUnix": 1745942400,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-04-30",
+          "OpenTimeString": "2025-04-30T13:00:00-04:00",
+          "CloseTimeString": "2025-04-30T21:00:00-04:00",
+          "EarlyEntryString": "2025-04-30T12:00:00-04:00",
+          "OpenTimeUnix": 1746032400,
+          "CloseTimeUnix": 1746061200,
+          "EarlyEntryUnix": 1746028800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-01",
+          "OpenTimeString": "2025-05-01T12:00:00-04:00",
+          "CloseTimeString": "2025-05-01T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-01T11:00:00-04:00",
+          "OpenTimeUnix": 1746115200,
+          "CloseTimeUnix": 1746151200,
+          "EarlyEntryUnix": 1746111600,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-02",
+          "OpenTimeString": "2025-05-02T12:00:00-04:00",
+          "CloseTimeString": "2025-05-02T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-02T11:00:00-04:00",
+          "OpenTimeUnix": 1746201600,
+          "CloseTimeUnix": 1746234000,
+          "EarlyEntryUnix": 1746198000,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-03",
+          "OpenTimeString": "2025-05-03T11:00:00-04:00",
+          "CloseTimeString": "2025-05-03T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-03T10:00:00-04:00",
+          "OpenTimeUnix": 1746284400,
+          "CloseTimeUnix": 1746320400,
+          "EarlyEntryUnix": 1746280800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-04",
+          "OpenTimeString": "2025-05-04T11:00:00-04:00",
+          "CloseTimeString": "2025-05-04T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-04T10:00:00-04:00",
+          "OpenTimeUnix": 1746370800,
+          "CloseTimeUnix": 1746406800,
+          "EarlyEntryUnix": 1746367200,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-05",
+          "OpenTimeString": "2025-05-05T13:00:00-04:00",
+          "CloseTimeString": "2025-05-05T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-05T12:00:00-04:00",
+          "OpenTimeUnix": 1746464400,
+          "CloseTimeUnix": 1746493200,
+          "EarlyEntryUnix": 1746460800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-06",
+          "OpenTimeString": "2025-05-06T13:00:00-04:00",
+          "CloseTimeString": "2025-05-06T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-06T12:00:00-04:00",
+          "OpenTimeUnix": 1746550800,
+          "CloseTimeUnix": 1746579600,
+          "EarlyEntryUnix": 1746547200,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-07",
+          "OpenTimeString": "2025-05-07T13:00:00-04:00",
+          "CloseTimeString": "2025-05-07T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-07T12:00:00-04:00",
+          "OpenTimeUnix": 1746637200,
+          "CloseTimeUnix": 1746666000,
+          "EarlyEntryUnix": 1746633600,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-08",
+          "OpenTimeString": "2025-05-08T12:00:00-04:00",
+          "CloseTimeString": "2025-05-08T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-08T11:00:00-04:00",
+          "OpenTimeUnix": 1746720000,
+          "CloseTimeUnix": 1746756000,
+          "EarlyEntryUnix": 1746716400,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-09",
+          "OpenTimeString": "2025-05-09T12:00:00-04:00",
+          "CloseTimeString": "2025-05-09T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-09T11:00:00-04:00",
+          "OpenTimeUnix": 1746806400,
+          "CloseTimeUnix": 1746838800,
+          "EarlyEntryUnix": 1746802800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-10",
+          "OpenTimeString": "2025-05-10T11:00:00-04:00",
+          "CloseTimeString": "2025-05-10T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-10T10:00:00-04:00",
+          "OpenTimeUnix": 1746889200,
+          "CloseTimeUnix": 1746925200,
+          "EarlyEntryUnix": 1746885600,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-11",
+          "OpenTimeString": "2025-05-11T11:00:00-04:00",
+          "CloseTimeString": "2025-05-11T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-11T10:00:00-04:00",
+          "OpenTimeUnix": 1746975600,
+          "CloseTimeUnix": 1747011600,
+          "EarlyEntryUnix": 1746972000,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-12",
+          "OpenTimeString": "2025-05-12T13:00:00-04:00",
+          "CloseTimeString": "2025-05-12T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-12T12:00:00-04:00",
+          "OpenTimeUnix": 1747069200,
+          "CloseTimeUnix": 1747101600,
+          "EarlyEntryUnix": 1747065600,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-13",
+          "OpenTimeString": "2025-05-13T13:00:00-04:00",
+          "CloseTimeString": "2025-05-13T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-13T12:00:00-04:00",
+          "OpenTimeUnix": 1747155600,
+          "CloseTimeUnix": 1747188000,
+          "EarlyEntryUnix": 1747152000,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-14",
+          "OpenTimeString": "2025-05-14T12:00:00-04:00",
+          "CloseTimeString": "2025-05-14T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-14T11:00:00-04:00",
+          "OpenTimeUnix": 1747238400,
+          "CloseTimeUnix": 1747270800,
+          "EarlyEntryUnix": 1747234800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-15",
+          "OpenTimeString": "2025-05-15T12:00:00-04:00",
+          "CloseTimeString": "2025-05-15T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-15T11:00:00-04:00",
+          "OpenTimeUnix": 1747324800,
+          "CloseTimeUnix": 1747357200,
+          "EarlyEntryUnix": 1747321200,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-16",
+          "OpenTimeString": "2025-05-16T12:00:00-04:00",
+          "CloseTimeString": "2025-05-16T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-16T11:00:00-04:00",
+          "OpenTimeUnix": 1747411200,
+          "CloseTimeUnix": 1747443600,
+          "EarlyEntryUnix": 1747407600,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-17",
+          "OpenTimeString": "2025-05-17T11:00:00-04:00",
+          "CloseTimeString": "2025-05-17T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-17T10:00:00-04:00",
+          "OpenTimeUnix": 1747494000,
+          "CloseTimeUnix": 1747530000,
+          "EarlyEntryUnix": 1747490400,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-18",
+          "OpenTimeString": "2025-05-18T11:00:00-04:00",
+          "CloseTimeString": "2025-05-18T21:00:00-04:00",
+          "EarlyEntryString": "2025-05-18T10:00:00-04:00",
+          "OpenTimeUnix": 1747580400,
+          "CloseTimeUnix": 1747616400,
+          "EarlyEntryUnix": 1747576800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-19",
+          "OpenTimeString": "2025-05-19T13:00:00-04:00",
+          "CloseTimeString": "2025-05-19T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-19T12:00:00-04:00",
+          "OpenTimeUnix": 1747674000,
+          "CloseTimeUnix": 1747706400,
+          "EarlyEntryUnix": 1747670400,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-20",
+          "OpenTimeString": "2025-05-20T13:00:00-04:00",
+          "CloseTimeString": "2025-05-20T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-20T12:00:00-04:00",
+          "OpenTimeUnix": 1747760400,
+          "CloseTimeUnix": 1747792800,
+          "EarlyEntryUnix": 1747756800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-21",
+          "OpenTimeString": "2025-05-21T13:00:00-04:00",
+          "CloseTimeString": "2025-05-21T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-21T12:00:00-04:00",
+          "OpenTimeUnix": 1747846800,
+          "CloseTimeUnix": 1747879200,
+          "EarlyEntryUnix": 1747843200,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-22",
+          "OpenTimeString": "2025-05-22T12:00:00-04:00",
+          "CloseTimeString": "2025-05-22T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-22T11:00:00-04:00",
+          "OpenTimeUnix": 1747929600,
+          "CloseTimeUnix": 1747965600,
+          "EarlyEntryUnix": 1747926000,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-23",
+          "OpenTimeString": "2025-05-23T12:00:00-04:00",
+          "CloseTimeString": "2025-05-23T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-23T11:00:00-04:00",
+          "OpenTimeUnix": 1748016000,
+          "CloseTimeUnix": 1748052000,
+          "EarlyEntryUnix": 1748012400,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-24",
+          "OpenTimeString": "2025-05-24T12:00:00-04:00",
+          "CloseTimeString": "2025-05-24T23:00:00-04:00",
+          "EarlyEntryString": "2025-05-24T11:00:00-04:00",
+          "OpenTimeUnix": 1748102400,
+          "CloseTimeUnix": 1748142000,
+          "EarlyEntryUnix": 1748098800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-25",
+          "OpenTimeString": "2025-05-25T12:00:00-04:00",
+          "CloseTimeString": "2025-05-25T23:00:00-04:00",
+          "EarlyEntryString": "2025-05-25T11:00:00-04:00",
+          "OpenTimeUnix": 1748188800,
+          "CloseTimeUnix": 1748228400,
+          "EarlyEntryUnix": 1748185200,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-26",
+          "OpenTimeString": "2025-05-26T12:00:00-04:00",
+          "CloseTimeString": "2025-05-26T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-26T11:00:00-04:00",
+          "OpenTimeUnix": 1748275200,
+          "CloseTimeUnix": 1748311200,
+          "EarlyEntryUnix": 1748271600,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-27",
+          "OpenTimeString": "2025-05-27T12:00:00-04:00",
+          "CloseTimeString": "2025-05-27T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-27T11:00:00-04:00",
+          "OpenTimeUnix": 1748361600,
+          "CloseTimeUnix": 1748397600,
+          "EarlyEntryUnix": 1748358000,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-28",
+          "OpenTimeString": "2025-05-28T12:00:00-04:00",
+          "CloseTimeString": "2025-05-28T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-28T11:00:00-04:00",
+          "OpenTimeUnix": 1748448000,
+          "CloseTimeUnix": 1748484000,
+          "EarlyEntryUnix": 1748444400,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-29",
+          "OpenTimeString": "2025-05-29T12:00:00-04:00",
+          "CloseTimeString": "2025-05-29T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-29T11:00:00-04:00",
+          "OpenTimeUnix": 1748534400,
+          "CloseTimeUnix": 1748570400,
+          "EarlyEntryUnix": 1748530800,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-30",
+          "OpenTimeString": "2025-05-30T12:00:00-04:00",
+          "CloseTimeString": "2025-05-30T22:00:00-04:00",
+          "EarlyEntryString": "2025-05-30T11:00:00-04:00",
+          "OpenTimeUnix": 1748620800,
+          "CloseTimeUnix": 1748656800,
+          "EarlyEntryUnix": 1748617200,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        },
+        {
+          "Date": "2025-05-31",
+          "OpenTimeString": "2025-05-31T12:00:00-04:00",
+          "CloseTimeString": "2025-06-01T00:00:00-04:00",
+          "EarlyEntryString": "2025-05-31T11:00:00-04:00",
+          "OpenTimeUnix": 1748707200,
+          "CloseTimeUnix": 1748750400,
+          "EarlyEntryUnix": 1748703600,
+          "SpecialEntryUnix": 0,
+          "Holiday": false,
+          "IsShowScheduled": false
+        }
+      ],
+      "AdmissionRequired": true,
+      "DetailImages": [],
+      "Longitude": -81,
+      "Latitude": 28,
+      "VenueType": "Entertainment-District",
+      "ExternalIds": {
+        "Tridion13": "101-57473",
+        "ParkHoursDb": "200",
+        "ContentId": "com.uo.us.venues.universal_studios",
+        "PlaceId": "ush.ush"
+      },
+      "Url": "http://services.universalorlando.com/api/Venues/13825?api-version=1.0",
+      "Id": 13825
+    }
+  ]
+}

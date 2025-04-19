@@ -33,6 +33,7 @@ public class AttractionWebhookClient {
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.create()
                         .responseTimeout(Duration.ofSeconds(5))
                 ))
+
                 .baseUrl("http://localhost:9506")
                 .build();
     }
@@ -69,8 +70,13 @@ public class AttractionWebhookClient {
                 .retrieve()
                 .bodyToMono(String.class)
                 .timeout(Duration.ofSeconds(3))
+                .onErrorResume(e -> Mono.empty())
+                .onErrorComplete(throwable -> {
+                    serviceHealthy = false;
+                    return true;
+                })
                 .doOnError(err -> {
-                    log.warning("Health check failed: " + err.getMessage());
+                    log.warning("Health check failed:");
                     serviceHealthy = false;
                 })
                 .subscribe(body -> {
@@ -103,6 +109,7 @@ public class AttractionWebhookClient {
              webClient.post()
                     .uri("/api/v1/discord/line_alerts")
                     .contentType(MediaType.APPLICATION_JSON)
+
                     .bodyValue(jsonBody)
                     .retrieve()
                     .onStatus(

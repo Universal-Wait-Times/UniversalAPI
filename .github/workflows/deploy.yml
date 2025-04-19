@@ -66,6 +66,7 @@ jobs:
           sed -i "s|__UNIVERSAL_ENDPOINT_WAIT_TIMES__|${{ vars.UNIVERSAL_ENDPOINT_WAIT_TIMES }}|" docker-compose.yml
           sed -i "s|__UNIVERSAL_ENDPOINT_VIRTUAL_QUEUE__|${{ vars.UNIVERSAL_ENDPOINT_VIRTUAL_QUEUE }}|" docker-compose.yml
           sed -i "s|__OPENAI_API_KEY__|${{ secrets.OPENAI_API_KEY }}|" docker-compose.yml
+          sed -i "s|__EPIC_HOURS_ALERT__|${{ secrets.EPIC_HOURS_ALERT }}|" docker-compose.yml
 
       - name: Upload files to server
         uses: appleboy/scp-action@v0.1.4
