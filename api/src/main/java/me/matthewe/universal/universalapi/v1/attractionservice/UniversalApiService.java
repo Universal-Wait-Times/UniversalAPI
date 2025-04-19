@@ -233,17 +233,14 @@ public class UniversalApiService {
     //Slowed down pull rate to remain compliant with Universal TOS.
     @Scheduled(fixedRate = 1000)
     public void refreshCache() {
+        long currentTime = System.currentTimeMillis();
+        if (currentTime < nextExecutionTime) return; // Do nothing
 
+        int delay = MIN_DELAY + random.nextInt(MAX_DELAY - MIN_DELAY);
+        nextExecutionTime = currentTime + delay;
         try {
 
-            long currentTime = System.currentTimeMillis();
-
-            if (currentTime >= nextExecutionTime) {
-
-                int delay = MIN_DELAY + random.nextInt(MAX_DELAY - MIN_DELAY);
-                nextExecutionTime = currentTime + delay;
-            }
-
+         
             ResortData resortData;
             if (cache.get()!=null){
                 resortData=cache.get();
@@ -325,6 +322,7 @@ public class UniversalApiService {
 
             cache.set(resortData);
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("Failed to refresh attraction cache: " + e.getMessage());
         }
     }

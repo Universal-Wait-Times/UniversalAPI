@@ -22,6 +22,7 @@ public class VirtualLineService {
 
     private final WebClient webClient = WebClient.builder()
             .baseUrl(System.getenv("UNIVERSAL_ENDPOINT_VIRTUAL_QUEUE"))
+
             .build();
 
     private AttractionWebhookClient attractionWebhookClient;
@@ -56,9 +57,13 @@ public class VirtualLineService {
                         .queryParam("pageSize", "All")
                         .build())
                 .retrieve()
+                .onStatus(status -> status.value() == 401, clientResponse -> {
+                    log.warning("❌ [" + city + "] Unauthorized (401) when fetching virtual line data.");
+                    return Mono.empty(); // Swallow error, proceed without crashing
+                })
                 .bodyToMono(VirtualLineResponse.class)
-                .map(VirtualLineResponse::getResults)
                 .doOnError(e -> log.warning("❌ Failed to update cache for " + city + ": " + e.getMessage()))
+                .map(VirtualLineResponse::getResults)
                 .subscribe(newData -> {
                     List<VirtualLine> oldData = null;
                     if (dataCache.containsKey(city)) {

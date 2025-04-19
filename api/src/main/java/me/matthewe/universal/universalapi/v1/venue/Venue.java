@@ -1,8 +1,11 @@
 package me.matthewe.universal.universalapi.v1.venue;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +43,7 @@ public class Venue {
     @JsonProperty("VenueType")  private String venueType;
 
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Data
     public static class Hours {
         @JsonProperty("Date")  private Date date;
@@ -47,6 +51,20 @@ public class Venue {
         @JsonProperty("CloseTimeString")  private String closeTimeString;
         @JsonProperty("OpenTimeUnix")  private long openTimeUnix;
         @JsonProperty("CloseTimeUnix")  private long closeTimeUnix;
+
+        @JsonProperty("ReadableString")
+        public String getReadableString() {
+            try {
+                OffsetDateTime openTime = OffsetDateTime.parse(openTimeString);
+                OffsetDateTime closeTime = OffsetDateTime.parse(closeTimeString);
+
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h a");
+
+                return openTime.format(formatter) + " - " + closeTime.format(formatter);
+            } catch (Exception e) {
+                return "Closed";
+            }
+        }
     }
     @Data
     public static class GpsBoundaryCircle {
