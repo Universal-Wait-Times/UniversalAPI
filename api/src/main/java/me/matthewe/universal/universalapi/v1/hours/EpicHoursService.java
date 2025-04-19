@@ -41,8 +41,8 @@ public class EpicHoursService {
     }
 
     @PostConstruct
-    public void start() {
-
+    public void start() throws ExecutionException, InterruptedException {
+        updateHours();
     }
 
     @Scheduled(initialDelay = 0, fixedDelay = 1000 * 60 * 60 * 24) // Once a day
