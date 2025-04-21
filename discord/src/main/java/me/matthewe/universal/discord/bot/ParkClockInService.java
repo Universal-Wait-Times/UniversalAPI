@@ -3,6 +3,8 @@ package me.matthewe.universal.discord.bot;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.java.Log;
 import me.matthewe.universal.commons.UniversalPark;
+import me.matthewe.universal.discord.config.GuildConfig;
+import me.matthewe.universal.discord.config.GuildConfigService;
 import me.matthewe.universal.discord.jda.JDAService;
 import me.matthewe.universal.discord.settings.SettingService;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -22,44 +24,57 @@ import java.util.concurrent.TimeUnit;
 public class ParkClockInService extends ListenerAdapter {
     private JDAService service;
     private SettingService settingService;
+    private GuildConfigService configService;
 
     @Autowired
-    public ParkClockInService(JDAService service, SettingService settingService) {
+    public ParkClockInService(JDAService service, SettingService settingService, GuildConfigService configService) {
         this.service = service;
         this.settingService = settingService;
+        this.configService = configService;
     }
 
     @PostConstruct
     public void start() throws Exception {
-        settingService.setSetting("guildID", 1356312025223135292L);
+        for (GuildConfig allConfig : configService.getAllConfigs()) {
 
-        Guild guild = service.jda.getGuildById((long) (settingService.getSetting("guildID")));
-        if (guild==null){
-            log.info("ERROR (1)");
+            Guild guild = service.jda.getGuildById(allConfig.getGuildId());
+            if (guild==null){
+                log.info("ERROR (1)");
 
-            return;
-        }
-        TextChannel textChannel = guild.getTextChannelById(1362519999662653501L);
-        if (textChannel==null) {
-            log.info("ERROR (2)");
-            return;
-        }
-        MessageHistory complete = textChannel.getHistoryAfter(1362520266806264099L, 100).complete();
-        for (Message message : complete.getRetrievedHistory()) {
-            message.delete().complete();
+                continue;
+            }
+            TextChannel textChannel = guild.getTextChannelById(allConfig.getParkClockInChannelId());
+            if (textChannel==null) {
+                log.info("ERROR (2)");
+                continue;
+            }
+            MessageHistory complete = textChannel.getHistory();
+            for (Message message : complete.getRetrievedHistory()) {
+                message.delete().complete();
+            }
+            textChannel.sendMessageEmbeds(new EmbedBuilder()
+                            .setColor(UniversalPark.UEU.getColor())
+                            .setDescription("Use this channel to clock into specific parks. A bot message will appear with buttons — click the button for the park you're visiting.\n" +
+                                    "\n" +
+                                    "Clocking in grants access to Battle of the Ministry virtual queue alerts only. You'll be notified when the ride becomes available or queue times change significantly.")
+                            .setTimestamp(OffsetDateTime.now())
+                            .setFooter("Virtual Queue", "https://i.imgur.com/jPvBkcc.png")
+                            .build())
+                    .complete();
+
+            textChannel.sendMessageEmbeds(new EmbedBuilder()
+                            .setColor(UniversalPark.UEU.getColor())
+                            .setDescription("Epic Universe Virtual Queue Clock-In")
+                            .setTimestamp(OffsetDateTime.now())
+                            .setFooter("Virtual Queue", "https://i.imgur.com/jPvBkcc.png")
+                            .build())
+                    .setActionRow(
+                            Button.primary("clock_in", "Clock In"),
+                            Button.danger("cancel", "Clock Out")
+                    )
+                    .queue();
         }
 
-        textChannel.sendMessageEmbeds(new EmbedBuilder()
-                        .setColor(UniversalPark.UEU.getColor())
-                        .setDescription("Epic Universe Virtual Queue Clock-In")
-                        .setTimestamp(OffsetDateTime.now())
-                        .setFooter("Virtual Queue", "https://i.imgur.com/jPvBkcc.png")
-                        .build())
-                .setActionRow(
-                        Button.primary("clock_in", "Clock In"),
-                        Button.danger("cancel", "Clock Out")
-                )
-                .queue();
 
 
         service.jda.addEventListener(this);
@@ -81,7 +96,10 @@ public class ParkClockInService extends ListenerAdapter {
             return;
         }
 
-        Role clockInRole = guild.getRoleById(1363206630321422466L); // Your role ID
+        GuildConfig config = configService.getConfig(guild.getIdLong());
+        if (config==null)return;
+
+        Role clockInRole = guild.getRoleById(config.getRoleId()); // Your role ID
 
         if (clockInRole == null) {
             event.reply("Error: Clock-in role not found.") .setEphemeral(true)
