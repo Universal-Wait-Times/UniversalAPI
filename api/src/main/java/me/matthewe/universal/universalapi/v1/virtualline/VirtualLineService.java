@@ -38,7 +38,7 @@ public class VirtualLineService {
     @PostConstruct
     public void startUpdater() {
         Schedulers.parallel().schedule(() -> loopUpdate("Orlando"));
-        Schedulers.parallel().schedule(() -> loopUpdate("Hollywood"));
+//        Schedulers.parallel().schedule(() -> loopUpdate("Hollywood"));
     }
 
     private void loopUpdate(String city) {
