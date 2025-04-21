@@ -122,7 +122,7 @@ public class AttractionWebhookClient {
                             }
                     )
                     .bodyToMono(String.class)
-                    .doOnNext(response -> log.info("Webhook response: " + response))
+                    .doOnNext(response -> {})
                      .doOnError(error -> log.warning("❌ Webhook call failed: " + error.getMessage()))
                      .subscribe();
         } catch (JsonProcessingException e) {
