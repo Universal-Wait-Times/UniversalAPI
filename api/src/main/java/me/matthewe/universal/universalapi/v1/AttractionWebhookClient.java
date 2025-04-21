@@ -154,7 +154,7 @@ public class AttractionWebhookClient {
 
         try {
             String jsonBody = mapper.writeValueAsString(body);
-            log.info("Final JSON body: " + jsonBody);
+//            log.info("Final JSON body: " + jsonBody);
 
             return webClient.post()
                     .uri("/api/v1/discord/ride_alerts")
