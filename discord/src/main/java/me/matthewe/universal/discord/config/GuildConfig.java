@@ -14,4 +14,7 @@ public class GuildConfig {
 
     @JsonProperty("roleId")
     private long roleId;
+
+    @JsonProperty("virtualLineChannel")
+    private long virtualLineChannel;
 }
