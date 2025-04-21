@@ -9,11 +9,20 @@ import me.matthewe.universal.commons.UniversalPark;
 import me.matthewe.universal.commons.virtualline.VirtualLine;
 import me.matthewe.universal.commons.virtualline.VirtualLineStatus;
 import me.matthewe.universal.commons.weather.WeatherData;
+import me.matthewe.universal.discord.config.GuildConfig;
+import me.matthewe.universal.discord.config.GuildConfigService;
+import me.matthewe.universal.discord.jda.JDAService;
 import me.matthewe.universal.discord.weather.WeatherService;
 import me.micartey.webhookly.DiscordWebhook;
 import me.micartey.webhookly.embeds.EmbedObject;
 import me.micartey.webhookly.embeds.Field;
 import me.micartey.webhookly.embeds.Footer;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -39,9 +48,13 @@ public class DiscordWebhookService {
     private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private final WeatherService weatherService;
 
+    private JDAService jdaService;
+    private GuildConfigService configService;
     @Autowired
-    public DiscordWebhookService(WeatherService weatherService) {
+    public DiscordWebhookService(WeatherService weatherService, JDAService jdaService, GuildConfigService configService) {
         this.weatherService = weatherService;
+        this.jdaService = jdaService;
+        this.configService = configService;
     }
 
     @PostConstruct
@@ -353,38 +366,34 @@ public class DiscordWebhookService {
         if (!send)return;
 
 
-        List<DiscordWebhook> webHookList = getWebHookList(virtualLine);
+        for (GuildConfig allConfig : configService.getAllConfigs()) {
+            Guild guildById = jdaService.jda.getGuildById(allConfig.getGuildId());
+            if (guildById==null)continue;
+            TextChannel textChannelById = guildById.getTextChannelById(allConfig.getVirtualLineChannel());
+            if (textChannelById==null)continue;
 
 
-
-
-        for (DiscordWebhook webhook : webHookList) {
-
-
-
-
-
-
-            EmbedObject embed = new EmbedObject()
+            MessageEmbed embed = new EmbedBuilder()
                     .setTitle(virtualLine.getName())
                     .setColor(virtualLineStatus.getColor())
                     .setTimestamp(OffsetDateTime.now())
-                    .setFooter(new Footer(UniversalPark.UEU.getParkName(), UniversalPark.UEU.getLogoSource())) //For now since nowhere else uses virtual lines
-                    .setDescription("Virtual line is now " + virtualLineStatus.getName().toLowerCase( ) +".");
+                    .setFooter(UniversalPark.UEU.getParkName(), UniversalPark.UEU.getLogoSource()) //For now since nowhere else uses virtual lines
+                    .setDescription("Virtual line is now " + virtualLineStatus.getName().toLowerCase() + ".").build();
+
+            Role role = guildById.getRoleById(allConfig.getRoleId());
+            if (role==null) continue;
 
 
 
 
-            webhook.getEmbeds().add(embed);
+            String mention = virtualLineStatus == VirtualLineStatus.OPEN_AVAILABLE
+                    ? "<@&" + role.getId() + ">"
+                    : "";
 
+            textChannelById.sendMessage(mention)
+                    .setEmbeds(embed)
+                    .queue();
 
-            if (virtualLineStatus ==VirtualLineStatus.OPEN_AVAILABLE) {
-                webhook.setContent("<@&1363206630321422466>");
-            } else {
-                webhook.setContent(" ");
-            }
-
-            boolean offer = messageQueue.offer(webhook);
         }
 
     }
