@@ -48,7 +48,8 @@ public class ParkClockInService extends ListenerAdapter {
                 log.info("ERROR (2)");
                 continue;
             }
-            MessageHistory complete = textChannel.getHistory();
+
+            MessageHistory complete = textChannel.getHistoryFromBeginning(100).complete();
             for (Message message : complete.getRetrievedHistory()) {
                 message.delete().complete();
             }
