@@ -199,8 +199,12 @@ public class DiscordWebhookService {
                     } else {
 
                         goMessage(oldAttraction, attraction, "SINGLE RIDER DEBUG " + attraction.getDisplayName() + " (" + oldSingleStatus + "->" + newSingleStatus + ")", MessageType.ATTRACTION);
+
                     }
                 }
+            } else {
+//                goMessage(oldAttraction, attraction, "SINGLE RIDER DEBUG " + attraction.getDisplayName() + " (" + oldSingleStatus + "->" + newSingleStatus + ")", MessageType.ATTRACTION);
+
             }
         }
 
@@ -254,7 +258,7 @@ public class DiscordWebhookService {
 
                     Attraction.Queue.Status oldStatus = oldAttraction.getQueues().get(0).getStatus();
 
-                    if (queue.getDisplayWaitTime() > 500) return; // Do not display broken wait times
+//                    if (queue.getDisplayWaitTime() > 500) return; // Do not display broken wait times
                     if (oldStatus == Attraction.Queue.Status.BRIEF_DELAY) {
                         message = String.format("%s at %s is now %s after experiencing a brief delay.",
                                 attraction.getDisplayName(),
@@ -505,8 +509,9 @@ public class DiscordWebhookService {
             // Enqueue the message for throttled sending.
 
             if (attraction.getQueues().get(0).getStatus() == Attraction.Queue.Status.RIDE_NOW) {
-                webhook.setContent("@everyone");
+//                webhook.setContent("@everyone");
             }
+            webhook.setContent(" ");
 
             boolean offer = messageQueue.offer(webhook);
 
@@ -525,7 +530,10 @@ public class DiscordWebhookService {
      * @param message       string msg to send
      */
     private void goMessage(Object oldAttraction, Object attraction, String message, MessageType messageType) {
-        if (message == null) return;
+        if (message == null) {
+
+            return;
+        }
 
         if (isLocalTesting()) {
             message = "[local] " + message;

@@ -147,8 +147,8 @@ public class UniversalApiService {
                         }
 
                         if (oldAttraction!=null) {
-                            attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
                         }
+                        attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
                     } catch (Exception e) {
                         // Log or handle the serialization error appropriately.

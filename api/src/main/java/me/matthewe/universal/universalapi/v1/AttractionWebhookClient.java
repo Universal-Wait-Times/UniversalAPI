@@ -133,11 +133,11 @@ public class AttractionWebhookClient {
             return ;
         }
     }
-
     public String sendAttractionStatus(Attraction oldAttraction, Attraction attraction) {
         log.info("Update status of attraction " + attraction.getWaitTimeAttractionId());
 
         if (!serviceHealthy) {
+            log.warning("Webhook unhealthy — requeuing update for " + attraction.getDisplayName());
             queueAttractionStatus(oldAttraction, attraction);
             return "NOT READY";
         }
@@ -149,38 +149,26 @@ public class AttractionWebhookClient {
         body.put("attraction", attraction);
         body.put("key", System.getenv("API_KEY"));
 
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
-        try {
-            String jsonBody = mapper.writeValueAsString(body);
-//            log.info("Final JSON body: " + jsonBody);
-
-            return webClient.post()
-                    .uri("/api/v1/discord/ride_alerts")
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .bodyValue(jsonBody)
-                    .retrieve()
-                    .onStatus(
-                            status -> !status.is2xxSuccessful(),
-                            response -> {
-                                log.severe("Failed with status code: " + response.statusCode());
-                                return response.bodyToMono(String.class)
-                                        .doOnNext(errorBody -> log.severe("Error response body: " + errorBody))
-                                        .then(Mono.error(new RuntimeException("Non-successful response")));
-                            }
-                    )
-                    .bodyToMono(String.class)
-                    .doOnNext(response -> log.info("Webhook response: " + response))
-                    .block(Duration.ofSeconds(3));
-        } catch (JsonProcessingException e) {
-            log.severe("Failed to serialize body: " + e.getMessage());
-            return null;
-        } catch (Exception e) {
-            log.severe("Error during webhook call: " + e.getMessage());
-            return null;
-        }
+        return webClient.post()
+                .uri("/api/v1/discord/ride_alerts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(body) // ✅ Corrected here
+                .retrieve()
+                .onStatus(
+                        status -> !status.is2xxSuccessful(),
+                        response -> {
+                            log.severe("Failed with status code: " + response.statusCode());
+                            return response.bodyToMono(String.class)
+                                    .doOnNext(errorBody -> log.severe("Error response body: " + errorBody))
+                                    .then(Mono.error(new RuntimeException("Non-successful response")));
+                        }
+                )
+                .bodyToMono(String.class)
+                .doOnNext(response -> log.info("✅ Webhook response: " + response))
+                .doOnError(error -> log.warning("❌ Webhook failed: " + error.getMessage()))
+                .block(Duration.ofSeconds(3));
     }
+
 
 
     @AllArgsConstructor
