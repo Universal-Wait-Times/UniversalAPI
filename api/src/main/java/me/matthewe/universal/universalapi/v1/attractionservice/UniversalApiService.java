@@ -291,6 +291,10 @@ public class UniversalApiService {
 
                     UniversalPark universalPark = UniversalPark.getByPark(park);
 
+                    if( waitTimeAttractionId.equals("ush.ffn.bttf_place")) {
+                        universalPark = UniversalPark.UPPER_LOT;
+                    }
+
                     attraction.setPark(universalPark);
                     if (waitTimeAttractionId.equals("ush.rides.secret_life_of_pets")) { //Dealing with strange edge case.
                         universalPark = UniversalPark.USJ;
