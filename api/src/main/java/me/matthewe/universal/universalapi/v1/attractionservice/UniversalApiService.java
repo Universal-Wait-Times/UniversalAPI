@@ -147,8 +147,8 @@ public class UniversalApiService {
                         }
 
                         if (oldAttraction!=null) {
+                            attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
                         }
-                        attractionWebhookClient.sendAttractionStatus(oldAttraction, newAttraction);
 //                        redisPublisher.publish("ride-status-update", GSON.toJson(jsonObject));
                     } catch (Exception e) {
                         // Log or handle the serialization error appropriately.
@@ -291,7 +291,7 @@ public class UniversalApiService {
 
                     UniversalPark universalPark = UniversalPark.getByPark(park);
 
-                    if( waitTimeAttractionId.startsWith("ush.ffn")) {
+                    if (waitTimeAttractionId.startsWith("ush.ffn")) {
                         universalPark = UniversalPark.getByPark(attraction.getVenueId().split("ush.")[1].trim());
                     }
 

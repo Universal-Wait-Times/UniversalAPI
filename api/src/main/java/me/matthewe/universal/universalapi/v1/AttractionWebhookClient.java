@@ -80,7 +80,7 @@ public class AttractionWebhookClient {
                     serviceHealthy = false;
                 })
                 .subscribe(body -> {
-                    log.info("Health check OK");
+//                    log.info("Health check OK");
                     serviceHealthy = true;
                 });
     }
@@ -104,7 +104,7 @@ public class AttractionWebhookClient {
 
         try {
             String jsonBody = mapper.writeValueAsString(body);
-            log.info("Final JSON body: " + jsonBody);
+//            log.info("Final JSON body: " + jsonBody);
 
              webClient.post()
                     .uri("/api/v1/discord/line_alerts")
