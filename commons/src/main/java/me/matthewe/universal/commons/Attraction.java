@@ -185,8 +185,7 @@ public class Attraction {
         @JsonProperty("opens_at")
         @JsonSetter(nulls = Nulls.SKIP)
         @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-
-        private OffsetDateTime opensAt;
+        private String opensAt;
 
 
         public int getDisplayWaitTime() {
