@@ -291,8 +291,8 @@ public class UniversalApiService {
 
                     UniversalPark universalPark = UniversalPark.getByPark(park);
 
-                    if( waitTimeAttractionId.equals("ush.ffn.bttf_place")) {
-                        universalPark = UniversalPark.LOWER_LOT;
+                    if( waitTimeAttractionId.startsWith("ush.ffn")) {
+                        universalPark = UniversalPark.getByPark(attraction.getVenueId().split("ush.")[1].trim());
                     }
 
                     attraction.setPark(universalPark);
