@@ -269,10 +269,19 @@
         const index = allEntries.findIndex(([date]) => date === search);
         if (index >= 0) {
             highlightedDate = search;
-            renderPage(Math.floor(index / ROWS_PER_PAGE) + 1);
-            setTimeout(() => { highlightedDate = null; renderPage(currentPage); }, 2000);
+            const targetPage = Math.floor(index / ROWS_PER_PAGE) + 1;
+            if (currentPage !== targetPage) {
+                currentPage = targetPage;
+                setupPagination();
+            }
+            renderPage(currentPage);
+            setTimeout(() => {
+                highlightedDate = null;
+                renderPage(currentPage);
+            }, 2000);
         }
     });
+
 
     updateThemeIcon();
     fetchDataAndUpdate();
