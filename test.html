@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Epic Ticket Availability Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px rgba(0,0,0,0.3);
+        }
+        #ticket-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto;
+        }
+        #ticket-table th,
+        #ticket-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+        }
+        #ticket-table th {
+            background: rgba(0,0,0,0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        #ticket-table tr:nth-child(even) {
+            background: rgba(255,255,255,0.1);
+        }
+        .updated {
+            animation: highlight 1s ease;
+        }
+        @keyframes highlight {
+            0% { background-color: #ff0; }
+            100% { background-color: transparent; }
+        }
+    </style>
+</head>
+<body>
+<h1>Epic Ticket Availability Dashboard</h1>
+<table id="ticket-table">
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Available</th>
+        <th>Capacity</th>
+        <th>Types Remaining</th>
+        <th>% Sold</th>
+    </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+<script>
+    const RESORT = 'USF'; // replace with your resort code
+    const API_ENDPOINT = `/${RESORT}/all`;
+    let prevData = {};
+
+    async function fetchData() {
+        try {
+            const res = await fetch(API_ENDPOINT);
+            const data = await res.json();
+            updateTable(data);
+        } catch (e) {
+            console.error('Fetch error', e);
+        }
+    }
+
+    function updateTable(data) {
+        const tbody = document.querySelector('#ticket-table tbody');
+        tbody.innerHTML = '';
+        Object.entries(data).forEach(([date, td]) => {
+            const row = document.createElement('tr');
+            const soldPercent = ((td.capacity - td.available) / td.capacity * 100).toFixed(2);
+            row.innerHTML = `
+          <td>${date}</td>
+          <td>${td.available}</td>
+          <td>${td.capacity}</td>
+          <td>${td.typesRemaining}</td>
+          <td>${soldPercent}%</td>
+        `;
+            // highlight updated cells
+            if (prevData[date]) {
+                ['available','capacity','typesRemaining'].forEach((key, i) => {
+                    const cell = row.cells[i+1];
+                    if (prevData[date][key] !== td[key]) {
+                        cell.classList.add('updated');
+                        setTimeout(() => cell.classList.remove('updated'), 1000);
+                    }
+                });
+            }
+            tbody.appendChild(row);
+        });
+        prevData = JSON.parse(JSON.stringify(data));
+    }
+
+    // initial load & refresh every 5 seconds
+    fetchData();
+    setInterval(fetchData, 5000);
+</script>
+</body>
+</html>
