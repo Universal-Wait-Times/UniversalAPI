@@ -9,10 +9,11 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
+import java.util.*;
 
 public class TicketDataAPI {
 
@@ -178,14 +179,22 @@ public class TicketDataAPI {
     double percentSold = ((double) sold / capacity) * 100;
 
 // print it, escaping the % sign as %% in the format string
-    System.out.println(String.format(
-            "Capacity on %s: capacity=%d, available=%d, sold=%d (%.2f%% sold)",
+
+    String dayOfWeek =  getDayOfWeek(ticketData.getDate());
+    String msg = String.format(
+            "Capacity on %s (%s): capacity=%d, available=%d, sold=%d (%.2f%% sold)",
             ticketData.getDate(),
+            dayOfWeek,
             capacity,
             available,
             sold,
             percentSold
-    ));
+    );
+
+    if (dayOfWeek.equalsIgnoreCase("Saturday")) {
+      msg+="\n";
+    }
+    System.out.println(msg);
   }
 
   public static void main(String[] args) throws Exception {
@@ -196,8 +205,15 @@ public class TicketDataAPI {
 
     ticketDataAPI.printCool( data.get("05-23-2025"));
     ticketDataAPI.printCool( data.get("05-24-2025"));
+    ticketDataAPI.printCool( data.get("05-25-2025"));
     ticketDataAPI.printCool( data.get("05-26-2025"));
     ticketDataAPI.printCool( data.get("05-27-2025"));
+    ticketDataAPI.printCool( data.get("05-28-2025"));
+    ticketDataAPI.printCool( data.get("05-29-2025"));
+    ticketDataAPI.printCool( data.get("05-30-2025"));
+    ticketDataAPI.printCool( data.get("05-31-2025"));
+    ticketDataAPI.printCool(data.get("06-01-2025"));
+    ticketDataAPI.printCool(data.get("06-02-2025"));
     ticketDataAPI.printCool(data.get("06-03-2025"));
     ticketDataAPI.printCool(data.get("06-04-2025"));
     ticketDataAPI.printCool(data.get("06-05-2025"));
@@ -212,5 +228,26 @@ public class TicketDataAPI {
     ticketDataAPI.printCool(data.get("06-14-2025"));
     ticketDataAPI.printCool(data.get("06-15-2025"));
     ticketDataAPI.printCool(data.get("06-16-2025"));
+    ticketDataAPI.printCool(data.get("06-17-2025"));
+    ticketDataAPI.printCool(data.get("06-18-2025"));
+    ticketDataAPI.printCool(data.get("06-19-2025"));
+    ticketDataAPI.printCool(data.get("06-20-2025"));
+    ticketDataAPI.printCool(data.get("06-21-2025"));
+    ticketDataAPI.printCool(data.get("06-22-2025"));
+    ticketDataAPI.printCool(data.get("06-23-2025"));
+    ticketDataAPI.printCool(data.get("06-24-2025"));
+    ticketDataAPI.printCool(data.get("06-25-2025"));
+    ticketDataAPI.printCool(data.get("06-26-2025"));
+    ticketDataAPI.printCool(data.get("06-27-2025"));
+    ticketDataAPI.printCool(data.get("06-28-2025"));
+    ticketDataAPI.printCool(data.get("06-29-2025"));
+    ticketDataAPI.printCool(data.get("06-30-2025"));
+  }
+
+  public String getDayOfWeek(String dateStr) {
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+    LocalDate date = LocalDate.parse(dateStr, formatter);
+    DayOfWeek dayOfWeek = date.getDayOfWeek();
+    return dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US);
   }
 }
