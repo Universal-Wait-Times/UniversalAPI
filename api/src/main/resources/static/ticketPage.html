@@ -42,11 +42,20 @@
 
         #controls {
             position: absolute;
-            right: 20px;
+            right: 10px;
             top: 10px;
             display: flex;
-            gap: 10px;
+            flex-direction: row;
+            gap: 6px;
             align-items: center;
+        }
+
+        @media (max-width: 600px) {
+            #controls {
+                position: static;
+                justify-content: center;
+                margin-top: 10px;
+            }
         }
 
         .icon-btn {
@@ -59,11 +68,6 @@
         .icon-btn img {
             width: 24px;
             height: 24px;
-        }
-
-        #controls label {
-            font-size: 0.75rem;
-            color: var(--text);
         }
 
         h1 {
@@ -129,14 +133,9 @@
 <body>
 <header>
     <div id="controls">
-<!--        <button class="icon-btn" id="todayBtn" title="Jump to Today">-->
-<!--            <img src="https://img.icons8.com/ios-filled/50/alarm.png" alt="Today">-->
-<!--        </button>-->
-<!--        <label for="todayBtn">Today</label>-->
         <button class="icon-btn" id="themeToggle" title="Toggle Theme">
             <img id="themeIcon" src="https://img.icons8.com/ios-filled/50/moon-symbol.png" alt="Theme">
         </button>
-        <label for="themeToggle">Theme</label>
     </div>
     <h1>Epic Ticket Availability Dashboard</h1>
 </header>
@@ -165,7 +164,6 @@
     const root = document.documentElement;
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
-    // const todayBtn = document.getElementById('todayBtn');
 
     const updateThemeIcon = () => {
         const theme = root.getAttribute('data-theme');
@@ -187,7 +185,7 @@
         return date >= today;
     };
 
-    async function fetchData() {
+    async function fetchDataAndUpdate() {
         const res = await fetch(API_ENDPOINT);
         const data = await res.json();
         allEntries = Object.entries(data)
@@ -247,17 +245,9 @@
         addButton('>>', pageCount, currentPage === pageCount);
     }
 
-    // todayBtn.onclick = () => {
-    //     const todayIndex = allEntries.findIndex(([date]) => {
-    //         const [m, d, y] = date.split('-');
-    //         const dateObj = new Date(`${m}/${d}/${y}`).setHours(0, 0, 0, 0);
-    //         return dateObj >= new Date().setHours(0, 0, 0, 0);
-    //     });
-    //     if (todayIndex >= 0) renderPage(Math.floor(todayIndex / ROWS_PER_PAGE) + 1);
-    // };
-
-    fetchData();
     updateThemeIcon();
+    fetchDataAndUpdate();
+    setInterval(fetchDataAndUpdate, 10000);
 </script>
 </body>
 </html>
