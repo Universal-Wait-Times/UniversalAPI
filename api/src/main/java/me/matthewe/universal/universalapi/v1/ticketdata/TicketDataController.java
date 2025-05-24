@@ -76,7 +76,7 @@ public class TicketDataController {
 
         if (resortRegion==ResortRegion.USJ) return ticketData;
         if (resortRegion==ResortRegion.USH) return ticketData;
-        Map<String, TicketData> dataCache = ticketDataService.getDataCache();
+        Map<String, TicketData> dataCache = ticketDataService.getSortedDataCache();
         if (dataCache==null)return ticketData;
         return dataCache;
     }
