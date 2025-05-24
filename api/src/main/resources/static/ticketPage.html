@@ -109,15 +109,26 @@
         }
         #ticket-table tr:nth-child(even) { background-color: var(--row-even); }
         #ticket-table tr:nth-child(odd) { background-color: var(--row-odd); }
-        .sold-out { color: #ff4b5c; font-weight: bold; }
         .highlighted-row {
             background-color: var(--highlight) !important;
             color: black;
-            animation: fadeHighlight 2s forwards;
+            animation: fadeHighlight 0.5s, fadeOutHighlight 0.5s 1.5s forwards;
         }
+
         @keyframes fadeHighlight {
-            0% { background-color: var(--highlight); }
-            100% { background-color: transparent; }
+            from {
+                background-color: transparent;
+            }
+            to {
+                background-color: var(--highlight);
+            }
+        }
+
+        @keyframes fadeOutHighlight {
+            to {
+                background-color: transparent;
+                color: inherit;
+            }
         }
         #pagination {
             display: flex;
@@ -243,6 +254,7 @@
         });
     }
 
+    // Replace the setupPagination function
     function setupPagination() {
         const pageCount = Math.ceil(allEntries.length / ROWS_PER_PAGE);
         const pagination = document.getElementById('pagination');
@@ -259,6 +271,7 @@
                 renderPage(currentPage);
                 setupPagination();
             };
+            btn.style.minWidth = '40px';
             pagination.appendChild(btn);
         };
 
@@ -266,21 +279,45 @@
         addButton('<', currentPage - 1, currentPage === 1);
 
         let maxVisible = 7;
-        let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
-        let end = start + maxVisible - 1;
+        let start = Math.max(2, currentPage - Math.floor(maxVisible / 2));
+        let end = Math.min(pageCount - 1, start + maxVisible - 1);
 
-        if (end > pageCount) {
-            end = pageCount;
-            start = Math.max(1, end - maxVisible + 1);
+        if (end - start < maxVisible - 1) {
+            start = Math.max(2, end - maxVisible + 1);
+        }
+
+        addButton(1, 1, false, currentPage === 1); // always show first
+
+        if (start > 2) {
+            const ellipsis = document.createElement('span');
+            ellipsis.textContent = '...';
+            ellipsis.className = 'page-btn';
+            ellipsis.style.cursor = 'default';
+            // ellipsis.style.minWidth = '2.5em';
+            pagination.appendChild(ellipsis);
         }
 
         for (let i = start; i <= end; i++) {
             addButton(i, i, false, i === currentPage);
         }
 
+        if (end < pageCount - 1) {
+            const ellipsis = document.createElement('span');
+            ellipsis.textContent = '...';
+            ellipsis.className = 'page-btn';
+            ellipsis.style.cursor = 'default';
+            // ellipsis.style.minWidth = '40px';
+            pagination.appendChild(ellipsis);
+        }
+
+        if (pageCount > 1) {
+            addButton(pageCount, pageCount, false, currentPage === pageCount); // always show last
+        }
+
         addButton('>', currentPage + 1, currentPage === pageCount);
         addButton('>>', pageCount, currentPage === pageCount);
     }
+
     datePicker.addEventListener('change', () => {
         const selected = datePicker.value;
         if (!selected) return;
@@ -298,7 +335,7 @@
             setTimeout(() => {
                 highlightedDate = null;
                 renderPage(currentPage);
-            }, 2000);
+            }, 1000);
         }
     });
 
