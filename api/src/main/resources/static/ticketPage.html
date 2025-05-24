@@ -14,7 +14,6 @@
             --accent: #0077ff;
             --hover: #1a3963;
         }
-
         [data-theme="light"] {
             --bg: #f4f6fa;
             --bg-alt: #ffffff;
@@ -24,7 +23,6 @@
             --accent: #004aad;
             --hover: #cbd8ec;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--bg);
@@ -33,13 +31,11 @@
             padding: 20px;
             transition: background 0.3s, color 0.3s;
         }
-
         header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             position: relative;
         }
-
         #controls {
             position: absolute;
             right: 10px;
@@ -49,7 +45,6 @@
             gap: 6px;
             align-items: center;
         }
-
         @media (max-width: 600px) {
             #controls {
                 position: static;
@@ -57,25 +52,33 @@
                 margin-top: 10px;
             }
         }
-
         .icon-btn {
             background: none;
             border: none;
             cursor: pointer;
             padding: 5px;
         }
-
         .icon-btn img {
             width: 24px;
             height: 24px;
         }
-
         h1 {
             font-size: 2.5rem;
             margin: 0;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.15);
         }
-
+        #picker-wrap {
+            display: flex;
+            justify-content: center;
+            margin: 10px 0;
+        }
+        #datePicker {
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid var(--accent);
+            background: var(--bg-alt);
+            color: var(--text);
+        }
         #ticket-table {
             width: 100%;
             max-width: 960px;
@@ -85,28 +88,26 @@
             overflow: hidden;
             box-shadow: 0 0 30px rgba(0, 128, 255, 0.2);
         }
-
         #ticket-table th, #ticket-table td {
             padding: 14px;
             text-align: center;
         }
-
         #ticket-table th {
             background-color: var(--bg-alt);
             text-transform: uppercase;
         }
-
         #ticket-table tr:nth-child(even) { background-color: var(--row-even); }
         #ticket-table tr:nth-child(odd) { background-color: var(--row-odd); }
-
         .sold-out { color: #ff4b5c; font-weight: bold; }
-        .updated { animation: flash 0.7s ease-in-out; }
-
-        @keyframes flash {
-            0% { background-color: #ffff99; }
+        .highlighted-row {
+            animation: highlightRow 2s ease-in-out;
+            background-color: yellow !important;
+            color: black;
+        }
+        @keyframes highlightRow {
+            0% { background-color: yellow; }
             100% { background-color: transparent; }
         }
-
         #pagination {
             display: flex;
             justify-content: center;
@@ -115,7 +116,6 @@
             gap: 6px;
             margin-top: 20px;
         }
-
         .page-btn {
             background: var(--bg-alt);
             border: 1px solid var(--accent);
@@ -125,7 +125,6 @@
             cursor: pointer;
             transition: background 0.2s;
         }
-
         .page-btn:hover { background: var(--hover); }
         .page-btn.active { background: var(--accent); color: #fff; font-weight: bold; }
     </style>
@@ -139,6 +138,10 @@
     </div>
     <h1>Epic Ticket Availability Dashboard</h1>
 </header>
+
+<div id="picker-wrap">
+    <input type="date" id="datePicker">
+</div>
 
 <table id="ticket-table">
     <thead>
@@ -160,10 +163,12 @@
     const ROWS_PER_PAGE = 7;
     let currentPage = 1;
     let allEntries = [];
+    let highlightedDate = null;
 
     const root = document.documentElement;
     const themeToggle = document.getElementById('themeToggle');
     const themeIcon = document.getElementById('themeIcon');
+    const datePicker = document.getElementById('datePicker');
 
     const updateThemeIcon = () => {
         const theme = root.getAttribute('data-theme');
@@ -204,6 +209,7 @@
         tbody.innerHTML = '';
         entries.forEach(([date, td]) => {
             const row = document.createElement('tr');
+            if (highlightedDate === date) row.classList.add('highlighted-row');
             const soldPercent = td.capacity > 0 ? ((td.capacity - td.available) / td.capacity * 100).toFixed(2) : "0.00";
             const soldDisplay = td.capacity > 0 && soldPercent === "100.00" ? `<span class="sold-out">Sold Out</span>` : `${soldPercent}%`;
             const capacityDisplay = td.capacity === -1 ? "Unknown" : td.capacity.toLocaleString();
@@ -244,6 +250,19 @@
         addButton('>', currentPage + 1, currentPage === pageCount);
         addButton('>>', pageCount, currentPage === pageCount);
     }
+
+    datePicker.addEventListener('change', () => {
+        const selected = datePicker.value;
+        if (!selected) return;
+        const formatted = new Date(selected).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+        const [month, day, year] = formatted.split('/');
+        const search = `${month}-${day}-${year}`;
+        const index = allEntries.findIndex(([date]) => date === search);
+        if (index >= 0) {
+            highlightedDate = search;
+            renderPage(Math.floor(index / ROWS_PER_PAGE) + 1);
+        }
+    });
 
     updateThemeIcon();
     fetchDataAndUpdate();
