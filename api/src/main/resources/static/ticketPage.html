@@ -254,7 +254,7 @@
         });
     }
 
-    / Replace the setupPagination function
+
     function setupPagination() {
         const pageCount = Math.ceil(allEntries.length / ROWS_PER_PAGE);
         const pagination = document.getElementById('pagination');
@@ -291,23 +291,14 @@
         ul.appendChild(createLiButton('⏮', 1, currentPage === 1));
         ul.appendChild(createLiButton('‹', currentPage - 1, currentPage === 1));
 
-        const maxVisible = 5;
-        let start = Math.max(2, currentPage - Math.floor(maxVisible / 2));
-        let end = Math.min(pageCount - 1, start + maxVisible - 1);
-        if (end - start < maxVisible - 1) start = Math.max(2, end - maxVisible + 1);
+        const maxVisible = 7;
+        let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let end = Math.min(pageCount, start + maxVisible - 1);
 
-        ul.appendChild(createLiButton('1', 1, false, currentPage === 1));
-
-        if (start > 2) ul.appendChild(createLiButton('…', null, true, false, true));
+        if (end - start < maxVisible - 1) start = Math.max(1, end - maxVisible + 1);
 
         for (let i = start; i <= end; i++) {
             ul.appendChild(createLiButton(i.toString(), i, false, i === currentPage));
-        }
-
-        if (end < pageCount - 1) {
-            ul.appendChild(createLiButton('…', null, true, false, true));
-        } else if (end === pageCount - 1) {
-            ul.appendChild(createLiButton(pageCount.toString(), pageCount, false, currentPage === pageCount));
         }
 
         ul.appendChild(createLiButton('›', currentPage + 1, currentPage === pageCount));
