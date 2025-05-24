@@ -10,6 +10,7 @@
             --bg-alt: #1c2a40;
             --row-odd: #253b5c;
             --row-even: #1e2f47;
+            --highlight: #ffe680;
             --text: #e0e0e0;
             --accent: #0077ff;
             --hover: #1a3963;
@@ -19,6 +20,7 @@
             --bg-alt: #ffffff;
             --row-odd: #eef2f7;
             --row-even: #dce5f0;
+            --highlight: #fff7c2;
             --text: #111;
             --accent: #004aad;
             --hover: #cbd8ec;
@@ -100,12 +102,12 @@
         #ticket-table tr:nth-child(odd) { background-color: var(--row-odd); }
         .sold-out { color: #ff4b5c; font-weight: bold; }
         .highlighted-row {
-            animation: highlightRow 2s ease-in-out;
-            background-color: yellow !important;
+            background-color: var(--highlight) !important;
             color: black;
+            animation: fadeHighlight 2s forwards;
         }
-        @keyframes highlightRow {
-            0% { background-color: yellow; }
+        @keyframes fadeHighlight {
+            0% { background-color: var(--highlight); }
             100% { background-color: transparent; }
         }
         #pagination {
@@ -196,6 +198,14 @@
         allEntries = Object.entries(data)
             .filter(([date]) => isFutureOrToday(date))
             .sort(([a], [b]) => new Date(a) - new Date(b));
+
+        if (allEntries.length) {
+            const min = new Date(allEntries[0][0]);
+            const max = new Date(allEntries[allEntries.length - 1][0]);
+            datePicker.min = min.toISOString().split('T')[0];
+            datePicker.max = max.toISOString().split('T')[0];
+        }
+
         renderPage(currentPage);
         setupPagination();
     }
@@ -254,13 +264,13 @@
     datePicker.addEventListener('change', () => {
         const selected = datePicker.value;
         if (!selected) return;
-        const formatted = new Date(selected).toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-        const [month, day, year] = formatted.split('/');
+        const [year, month, day] = selected.split('-');
         const search = `${month}-${day}-${year}`;
         const index = allEntries.findIndex(([date]) => date === search);
         if (index >= 0) {
             highlightedDate = search;
             renderPage(Math.floor(index / ROWS_PER_PAGE) + 1);
+            setTimeout(() => { highlightedDate = null; renderPage(currentPage); }, 2000);
         }
     });
 
