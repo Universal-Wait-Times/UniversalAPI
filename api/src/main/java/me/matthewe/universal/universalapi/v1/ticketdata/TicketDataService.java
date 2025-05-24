@@ -5,24 +5,19 @@ import lombok.Getter;
 import lombok.extern.java.Log;
 import me.matthewe.universal.commons.ticketdata.TicketData;
 import me.matthewe.universal.commons.ticketdata.TicketDataAPI;
-import me.matthewe.universal.commons.virtualline.VirtualLine;
 import me.matthewe.universal.universalapi.v1.AttractionWebhookClient;
-import me.matthewe.universal.universalapi.v1.virtualline.VirtualLineResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.time.DateTimeException;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -72,9 +67,7 @@ public class TicketDataService {
 
         // clear the sorted cache so it rebuilds on next fetch
         var cache = cacheManager.getCache("sortedTickets");
-        if (cache != null) {
-            cache.clear();
-        }
+        if (cache != null) cache.clear();
     }
 
     private void onUpdate(TicketData oldData, TicketData newData) {
@@ -86,16 +79,19 @@ public class TicketDataService {
     }
 
     /**
-     * Returns the entire ticket-data map sorted by date (MM-dd-yyyy),
+     * Returns the ticket-data map sorted by date (MM-dd-yyyy),
      * caching the result until the next updateCache() run.
+     * Only entries matching the pattern "MM-dd-yyyy" are included.
      */
     @Cacheable("sortedTickets")
     public Map<String, TicketData> getSortedDataCache() {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         return dataCache.entrySet().stream()
-                .sorted(Comparator.comparing(e ->
-                        LocalDate.parse(e.getKey(), fmt)
-                ))
+                // include only properly formatted date keys
+                .filter(e -> e.getKey().matches("\\d{2}-\\d{2}-\\d{4}"))
+                // sort by parsed LocalDate
+                .sorted(Comparator.comparing(e -> LocalDate.parse(e.getKey(), fmt)))
+                // collect into linked map to preserve order
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         Map.Entry::getValue,
