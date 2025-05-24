@@ -63,10 +63,10 @@
         .icon-btn img {
             width: 24px;
             height: 24px;
-            filter: invert(1);
+            filter: none;
         }
         [data-theme="dark"] .icon-btn img {
-            filter: none;
+            filter: invert(1);
         }
         h1 {
             font-size: 2.5rem;
@@ -254,69 +254,68 @@
         });
     }
 
-    // Replace the setupPagination function
+    / Replace the setupPagination function
     function setupPagination() {
         const pageCount = Math.ceil(allEntries.length / ROWS_PER_PAGE);
         const pagination = document.getElementById('pagination');
         pagination.innerHTML = '';
 
-        const addButton = (label, page, disabled = false, isActive = false) => {
-            const btn = document.createElement('button');
-            btn.textContent = label;
-            btn.className = 'page-btn' + (isActive ? ' active' : '');
-            btn.disabled = disabled;
-            btn.onclick = () => {
-                if (page < 1 || page > pageCount) return;
-                currentPage = page;
-                renderPage(currentPage);
-                setupPagination();
-            };
-            btn.style.minWidth = '40px';
-            pagination.appendChild(btn);
+        const ul = document.createElement('ul');
+        ul.style.display = 'flex';
+        ul.style.flexWrap = 'wrap';
+        ul.style.justifyContent = 'center';
+        ul.style.padding = '0';
+        ul.style.listStyle = 'none';
+        ul.style.gap = '6px';
+
+        const createLiButton = (label, page, disabled = false, active = false, staticText = false) => {
+            const li = document.createElement('li');
+            const el = document.createElement(staticText ? 'span' : 'button');
+            el.textContent = label;
+            el.className = 'page-btn' + (active ? ' active' : '');
+            el.style.minWidth = '2.75em';
+            if (!staticText) {
+                el.disabled = disabled;
+                el.onclick = () => {
+                    if (page >= 1 && page <= pageCount) {
+                        currentPage = page;
+                        renderPage(currentPage);
+                        setupPagination();
+                    }
+                };
+            }
+            li.appendChild(el);
+            return li;
         };
 
-        addButton('<<', 1, currentPage === 1);
-        addButton('<', currentPage - 1, currentPage === 1);
+        ul.appendChild(createLiButton('⏮', 1, currentPage === 1));
+        ul.appendChild(createLiButton('‹', currentPage - 1, currentPage === 1));
 
-        let maxVisible = 7;
+        const maxVisible = 5;
         let start = Math.max(2, currentPage - Math.floor(maxVisible / 2));
         let end = Math.min(pageCount - 1, start + maxVisible - 1);
+        if (end - start < maxVisible - 1) start = Math.max(2, end - maxVisible + 1);
 
-        if (end - start < maxVisible - 1) {
-            start = Math.max(2, end - maxVisible + 1);
-        }
+        ul.appendChild(createLiButton('1', 1, false, currentPage === 1));
 
-        addButton(1, 1, false, currentPage === 1); // always show first
-
-        if (start > 2) {
-            const ellipsis = document.createElement('span');
-            ellipsis.textContent = '...';
-            ellipsis.className = 'page-btn';
-            ellipsis.style.cursor = 'default';
-            // ellipsis.style.minWidth = '2.5em';
-            pagination.appendChild(ellipsis);
-        }
+        if (start > 2) ul.appendChild(createLiButton('…', null, true, false, true));
 
         for (let i = start; i <= end; i++) {
-            addButton(i, i, false, i === currentPage);
+            ul.appendChild(createLiButton(i.toString(), i, false, i === currentPage));
         }
 
         if (end < pageCount - 1) {
-            const ellipsis = document.createElement('span');
-            ellipsis.textContent = '...';
-            ellipsis.className = 'page-btn';
-            ellipsis.style.cursor = 'default';
-            // ellipsis.style.minWidth = '40px';
-            pagination.appendChild(ellipsis);
+            ul.appendChild(createLiButton('…', null, true, false, true));
+        } else if (end === pageCount - 1) {
+            ul.appendChild(createLiButton(pageCount.toString(), pageCount, false, currentPage === pageCount));
         }
 
-        if (pageCount > 1) {
-            addButton(pageCount, pageCount, false, currentPage === pageCount); // always show last
-        }
+        ul.appendChild(createLiButton('›', currentPage + 1, currentPage === pageCount));
+        ul.appendChild(createLiButton('⏭', pageCount, currentPage === pageCount));
 
-        addButton('>', currentPage + 1, currentPage === pageCount);
-        addButton('>>', pageCount, currentPage === pageCount);
+        pagination.appendChild(ul);
     }
+
 
     datePicker.addEventListener('change', () => {
         const selected = datePicker.value;
