@@ -200,11 +200,21 @@
             : 'https://img.icons8.com/ios-filled/50/moon-symbol.png';
     };
 
+    // Persist theme preference
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateThemeIcon();
+    }
+
     themeToggle.onclick = () => {
-        const current = root.getAttribute('data-theme');
-        root.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+        const current = document.documentElement.getAttribute('data-theme');
+        const next = current === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('theme', next);
         updateThemeIcon();
     };
+
 
     const isFutureOrToday = (dateStr) => {
         const today = new Date().setHours(0, 0, 0, 0);
