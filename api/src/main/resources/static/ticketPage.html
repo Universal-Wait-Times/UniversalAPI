@@ -63,6 +63,10 @@
         .icon-btn img {
             width: 24px;
             height: 24px;
+            filter: invert(1);
+        }
+        [data-theme="dark"] .icon-btn img {
+            filter: none;
         }
         h1 {
             font-size: 2.5rem;
@@ -72,7 +76,12 @@
         #picker-wrap {
             display: flex;
             justify-content: center;
+            align-items: center;
+            gap: 10px;
             margin: 10px 0;
+        }
+        #picker-wrap span {
+            font-weight: bold;
         }
         #datePicker {
             padding: 6px;
@@ -142,6 +151,7 @@
 </header>
 
 <div id="picker-wrap">
+    <span>Jump to Date:</span>
     <input type="date" id="datePicker">
 </div>
 
@@ -224,11 +234,11 @@
             const soldDisplay = td.capacity > 0 && soldPercent === "100.00" ? `<span class="sold-out">Sold Out</span>` : `${soldPercent}%`;
             const capacityDisplay = td.capacity === -1 ? "Unknown" : td.capacity.toLocaleString();
             row.innerHTML = `
-        <td>${date}</td>
-        <td>${td.available}</td>
-        <td>${capacityDisplay}</td>
-        <td>${soldDisplay}</td>
-      `;
+                <td>${date}</td>
+                <td>${td.available}</td>
+                <td>${capacityDisplay}</td>
+                <td>${soldDisplay}</td>
+            `;
             tbody.appendChild(row);
         });
     }
@@ -243,24 +253,34 @@
             btn.textContent = label;
             btn.className = 'page-btn' + (isActive ? ' active' : '');
             btn.disabled = disabled;
-            btn.onclick = () => renderPage(page);
+            btn.onclick = () => {
+                if (page < 1 || page > pageCount) return;
+                currentPage = page;
+                renderPage(currentPage);
+                setupPagination();
+            };
             pagination.appendChild(btn);
         };
 
         addButton('<<', 1, currentPage === 1);
         addButton('<', currentPage - 1, currentPage === 1);
 
-        let start = Math.max(1, currentPage - 4);
-        let end = Math.min(pageCount, currentPage + 3);
-        if (currentPage < 5) end = Math.min(8, pageCount);
-        if (currentPage > pageCount - 4) start = Math.max(1, pageCount - 7);
+        let maxVisible = 7;
+        let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
+        let end = start + maxVisible - 1;
 
-        for (let i = start; i <= end; i++) addButton(i, i, false, i === currentPage);
+        if (end > pageCount) {
+            end = pageCount;
+            start = Math.max(1, end - maxVisible + 1);
+        }
+
+        for (let i = start; i <= end; i++) {
+            addButton(i, i, false, i === currentPage);
+        }
 
         addButton('>', currentPage + 1, currentPage === pageCount);
         addButton('>>', pageCount, currentPage === pageCount);
     }
-
     datePicker.addEventListener('change', () => {
         const selected = datePicker.value;
         if (!selected) return;
@@ -281,7 +301,6 @@
             }, 2000);
         }
     });
-
 
     updateThemeIcon();
     fetchDataAndUpdate();
