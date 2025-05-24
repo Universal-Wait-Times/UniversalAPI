@@ -53,7 +53,6 @@
         <th>Date</th>
         <th>Available</th>
         <th>Capacity</th>
-        <th>Types Remaining</th>
         <th>% Sold</th>
     </tr>
     </thead>
@@ -79,13 +78,25 @@
         tbody.innerHTML = '';
         Object.entries(data).forEach(([date, td]) => {
             const row = document.createElement('tr');
-            const soldPercent = ((td.capacity - td.available) / td.capacity * 100).toFixed(2);
+            let soldPercent = ((td.capacity - td.available) / td.capacity * 100).toFixed(2);
+            let soldDisplay = `${soldPercent}%`;
+
+            if (soldPercent === "100.00") {
+                soldDisplay = `<strong><span style="color:red">Sold Out</span></strong>`;
+            }
+
+            let capacityDisplay;
+            if (td.capacity === -1) {
+                capacityDisplay = "Unknown";
+            } else {
+                capacityDisplay = td.capacity.toLocaleString();
+            }
+
             row.innerHTML = `
           <td>${date}</td>
           <td>${td.available}</td>
-          <td>${td.capacity}</td>
-          <td>${td.typesRemaining}</td>
-          <td>${soldPercent}%</td>
+          <td>${capacityDisplay}</td>
+          <td>${soldDisplay}</td>
         `;
             // highlight updated cells
             if (prevData[date]) {
