@@ -57,6 +57,7 @@ public class TicketDataService {
             } else {
                 onUpdate(null, entry.getValue());
             }
+            dataCache.put(entry.getKey(), entry.getValue());
             lastUpdatedCache.put(entry.getKey(), System.currentTimeMillis());
         }
     }
