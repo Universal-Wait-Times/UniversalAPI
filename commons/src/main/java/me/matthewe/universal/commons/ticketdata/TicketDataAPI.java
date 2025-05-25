@@ -1,5 +1,6 @@
 package me.matthewe.universal.commons.ticketdata;
 
+import lombok.extern.java.Log;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -17,7 +18,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.*;
-
+@Log
 public class TicketDataAPI {
 
   private String fetchTableAfterHeading(
@@ -44,6 +45,7 @@ public class TicketDataAPI {
 //    connection.setConnectTimeout(7000);
 //    connection.setReadTimeout(10000);
     File file = new File("cache.txt"); // or provide full path
+    log.info("FOUND CACHE FILE " + file.getAbsolutePath());
 
     try (Reader r = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
 //    try (Reader r = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
