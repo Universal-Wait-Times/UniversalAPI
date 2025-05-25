@@ -200,6 +200,7 @@ public class Attraction {
                 try {
                     return Status.valueOf(value.toUpperCase());
                 } catch (Exception e) {
+                    System.err.println("Invalid status value: " + value);
                     return UNKNOWN; // Fallback for values like "N/A"
                 }
             }
