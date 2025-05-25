@@ -185,10 +185,20 @@
 <script>
     const RESORT = 'UOR';
     const API_ENDPOINT = `https://themeparks.matthewe.me/api/v1/ticket_data/${RESORT}/all`;
-    const ROWS_PER_PAGE = 7;
     let currentPage = 1;
     let allEntries = [];
     let highlightedDate = null;
+
+    let ROWS_PER_PAGE;
+    const height = window.innerHeight;
+    if (height < 700) {
+        ROWS_PER_PAGE = 5;
+    } else if (height >= 1000) {
+        ROWS_PER_PAGE = 12;
+    } else {
+        ROWS_PER_PAGE = 8;
+    }
+
 
     const root = document.documentElement;
     const themeToggle = document.getElementById('themeToggle');
@@ -266,6 +276,47 @@
         });
     }
 
+    document.body.style.userSelect = 'none';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const table = document.getElementById('ticket-table');
+        if (table) {
+            table.style.userSelect = 'none';
+            table.style.tableLayout = 'fixed';
+            table.style.width = '100%';
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+        @media (max-width: 600px) {
+            #ticket-table th, #ticket-table td {
+                font-size: 0.75rem;
+                padding: 6px;
+                word-break: break-word;
+            }
+        }
+
+        @media (min-width: 1600px) {
+            #ticket-table {
+                font-size: 1.25rem;
+                max-width: 90%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            #ticket-table th, #ticket-table td {
+                padding: 20px;
+            }
+
+            .page-btn {
+                font-size: 1.15rem;
+                min-width: 3.5em !important;
+                padding: 10px 16px;
+            }
+        }
+    `;
+        document.head.appendChild(style);
+    });
 
     function setupPagination() {
         const pageCount = Math.ceil(allEntries.length / ROWS_PER_PAGE);
@@ -303,7 +354,15 @@
         ul.appendChild(createLiButton('⏮', 1, currentPage === 1));
         ul.appendChild(createLiButton('‹', currentPage - 1, currentPage === 1));
 
-        const maxVisible = 7;
+        let maxVisible;
+        if (window.innerWidth < 600) {
+            maxVisible = 3;
+        } else if (window.innerWidth >= 1600) {
+            maxVisible = 8;
+        } else {
+            maxVisible = 5;
+        }
+
         let start = Math.max(1, currentPage - Math.floor(maxVisible / 2));
         let end = Math.min(pageCount, start + maxVisible - 1);
 
