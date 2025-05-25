@@ -58,17 +58,34 @@ public class TicketDataService {
     }
 
     private void updateCache() {
-        api.pullTicketTable().forEach((key, newData) -> {
-            TicketData old = dataCache.get(key);
-            onUpdate(old, newData);
+        System.out.println("[TicketDataService] Running updateCache()");
+
+        Map<String, TicketData> newTable = api.pullTicketTable();
+
+        for (Map.Entry<String, TicketData> entry : newTable.entrySet()) {
+            String key = entry.getKey();
+            TicketData newData = entry.getValue();
+            TicketData oldData = dataCache.get(key);
+
+            if (oldData == null) {
+                System.out.println("[TicketDataService] NEW ENTRY: " + key + " -> " + newData);
+            } else if (!oldData.equals(newData)) {
+                System.out.println("[TicketDataService] UPDATED ENTRY for " + key);
+                System.out.println("  OLD: " + oldData);
+                System.out.println("  NEW: " + newData);
+            }
+
             dataCache.put(key, newData);
             lastUpdatedCache.put(key, System.currentTimeMillis());
-        });
+        }
 
-        // clear the sorted cache so it rebuilds on next fetch
         var cache = cacheManager.getCache("sortedTickets");
-        if (cache != null) cache.clear();
+        if (cache != null) {
+            System.out.println("[TicketDataService] Clearing sortedTickets cache");
+            cache.clear();
+        }
     }
+
 
     private void onUpdate(TicketData oldData, TicketData newData) {
         // TODO implement any change-driven logic

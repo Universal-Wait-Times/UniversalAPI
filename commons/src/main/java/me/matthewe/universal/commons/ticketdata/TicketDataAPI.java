@@ -126,7 +126,7 @@ public class TicketDataAPI {
    */
   private Map < String, TicketData > parseTicketTable(String tableHtml) throws IOException {
     Map < String, TicketData > map = new HashMap < > ();
-    System.out.println(tableHtml);
+//    System.out.println(tableHtml);
     Document doc = Jsoup.parseBodyFragment(tableHtml);
     Element table = doc.selectFirst("table.calendar-table.sortable");
     if (table == null) {
@@ -142,6 +142,8 @@ public class TicketDataAPI {
 
 
 //      System.out.println(cells);
+
+      if (cells.isEmpty())continue;
       String date = cells.get(0);
       if (date.equalsIgnoreCase("Date")) continue;
       int available = parseNumber(cells.get(1));

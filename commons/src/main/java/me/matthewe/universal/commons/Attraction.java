@@ -96,6 +96,9 @@ public class Attraction {
     @JsonProperty("land_id")
     private String landId;
 
+    @JsonProperty("closes_at")
+    private String closesAt;
+
     @JsonProperty("name")
     private String displayName;
 
@@ -193,7 +196,7 @@ public class Attraction {
         }
 
         public static enum Status {
-            BRIEF_DELAY, CLOSED, OPENS_AT, RIDE_NOW, OPEN,AT_CAPACITY, SPECIAL_EVENT, UNKNOWN, WEATHER_DELAY, VIRTUAL_LINE_ONLY, EXTENDED_CLOSURE ;
+            BRIEF_DELAY, CLOSED, OPENS_AT, RIDE_NOW, OPEN,AT_CAPACITY, SPECIAL_EVENT, UNKNOWN, WEATHER_DELAY, VIRTUAL_LINE_ONLY, EXTENDED_CLOSURE, CLOSES_AT;
 
             @JsonCreator 
             public static Status fromString(String value) {
