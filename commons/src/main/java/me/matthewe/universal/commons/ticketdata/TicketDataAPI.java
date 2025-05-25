@@ -38,27 +38,15 @@ public class TicketDataAPI {
     StringBuilder outBuf = new StringBuilder();
     StringBuilder carry = new StringBuilder();
 
+//
+//    URLConnection connection = new URL(url).openConnection();
+//    connection.setRequestProperty("User-Agent", "Mozilla/5.0");
+//    connection.setConnectTimeout(7000);
+//    connection.setReadTimeout(10000);
+    File file = new File("cache.txt"); // or provide full path
 
-    Proxy proxy = proxies.isEmpty() ? null :
-            proxies.get(new Random().nextInt(proxies.size()));
-    if (proxy== null) {
-        try {
-            proxies=ProxyLoader.fetchHttpsProxies();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-      proxy = proxies.isEmpty() ? null :
-              proxies.get(new Random().nextInt(proxies.size()));
-    }
-    if (proxy==null){
-      proxy=Proxy.NO_PROXY;
-    }
-    URLConnection connection = new URL(url).openConnection(proxy);
-    connection.setRequestProperty("User-Agent", "Mozilla/5.0");
-    connection.setConnectTimeout(7000);
-    connection.setReadTimeout(10000);
-
-    try (Reader r = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
+    try (Reader r = new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)) {
+//    try (Reader r = new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8)) {
       char[] chunk = new char[8192];
       int len;
       while ((len = r.read(chunk)) != -1) {
@@ -128,19 +116,8 @@ public class TicketDataAPI {
     );
   }
 
-  private static List<Proxy> proxies =new ArrayList<>();
 
-  static {
-    initProxies();
-  }
-  private  static void initProxies() {
 
-      try {
-          proxies=ProxyLoader.fetchHttpsProxies();
-      } catch (Exception e) {
-          e.printStackTrace();
-      }
-  }
 
   private String pullTicketData() {
     try {
