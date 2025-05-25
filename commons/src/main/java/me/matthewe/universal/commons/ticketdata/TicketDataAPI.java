@@ -109,7 +109,7 @@ public class TicketDataAPI {
   private String pullTicketData() {
     try {
       String snippet = fetchTableAfterHeading(
-              "https://www.thrill-data.com/epic-universe-tickets/#",
+              "https://www.thrill-data.com/epic-universe-capacity",
               "All Ticket Data Combined Availability",
               1 // first table after that heading
       );
