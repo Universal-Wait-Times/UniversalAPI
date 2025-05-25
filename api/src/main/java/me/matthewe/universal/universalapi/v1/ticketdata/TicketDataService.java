@@ -51,7 +51,7 @@ public class TicketDataService {
 
     private void loopUpdate() {
         updateCache();  // repopulates dataCache & evicts sortedTickets
-        long delay = 4000 + random.nextInt(2602);
+        long delay = 40000 + random.nextInt(26020);
         Mono.delay(Duration.ofMillis(delay))
                 .doOnNext(i -> loopUpdate())
                 .subscribe();
