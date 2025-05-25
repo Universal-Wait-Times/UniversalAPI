@@ -126,12 +126,12 @@ public class TicketDataAPI {
       String snippet = fetchTableAfterHeading(
               System.getenv("CAPACITY_ENDPOINT"),
               "All Ticket Data Combined Availability",
-              1 // first table after that heading
+            1// first table after that heading
       );
       return snippet;
     } catch (IOException e) {
       e.printStackTrace();
-    }
+    } 
     return null;
   }
 
