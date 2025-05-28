@@ -125,7 +125,7 @@ public class TicketDataAPI {
     try {
       String snippet = fetchTableAfterHeading(
               System.getenv("CAPACITY_ENDPOINT"),
-              "All Ticket Data Combined Availability",
+              "All Ticket Data",
             1// first table after that heading
       );
       return snippet;
