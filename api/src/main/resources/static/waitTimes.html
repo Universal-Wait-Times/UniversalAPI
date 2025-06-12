@@ -60,6 +60,12 @@
             margin: 10px 0;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            flex-direction: column;
+            display: flex;
+            cursor: default;
+        }
+
+        .ride-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -68,11 +74,29 @@
         .ride-name {
             font-weight: bold;
             font-size: 16px;
+            text-align: left;
         }
 
         .wait {
             font-weight: bold;
             font-size: 16px;
+            text-align: right;
+        }
+
+        .ride-details {
+            display: none;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #555;
+            text-align: left;
+        }
+
+        .ride.expanded .ride-details {
+            display: block;
+        }
+
+        .ride-details p {
+            margin: 4px 0;
         }
 
         .updated {
@@ -126,43 +150,62 @@
             tabsContainer.appendChild(tab);
         });
     }
-     function extractLocalHourFromISOString(dateTimeStr) {
-        const date = new Date(dateTimeStr); // Parses the ISO string and applies local timezone
+
+    function extractLocalHourFromISOString(dateTimeStr) {
+        const date = new Date(dateTimeStr);
         let hours = date.getHours();
         const minutes = date.getMinutes();
-
         const period = hours >= 12 ? "PM" : "AM";
-        hours = hours % 12 || 12; // Convert to 12-hour format
-
+        hours = hours % 12 || 12;
         return `${hours}${minutes === 0 ? '' : `:${minutes.toString().padStart(2, '0')}`} ${period}`;
     }
+
     function getWaitColor(mins) {
         if (mins <= 25) return 'green';
         if (mins < 60) return 'orange';
         return 'red';
     }
+
     function getWaitPriority(standby) {
         if (!standby || !standby.status) return { priority: 99, wait: 0 };
-
         switch (standby.status) {
-            case 'OPEN':
-                return { priority: 0, wait: standby.wait_time || standby.display_wait_time || 0 };
-            case 'WALK_ON':
-                return { priority: 1, wait: 0 };
-            case 'BRIEF_DELAY':
-                return { priority: 2, wait: 0 };
-            case 'OPENS_AT':
-                return { priority: 3, wait: 0 };
-            case 'CLOSED':
-                return { priority: 4, wait: 0 };
-            case 'UNKNOWN':
-            default:
-                return { priority: 5, wait: 0 };
+            case 'OPEN': return { priority: 0, wait: standby.wait_time || standby.display_wait_time || 0 };
+            case 'WALK_ON': return { priority: 1, wait: 0 };
+            case 'BRIEF_DELAY': return { priority: 2, wait: 0 };
+            case 'OPENS_AT': return { priority: 3, wait: 0 };
+            case 'CLOSED': return { priority: 4, wait: 0 };
+            default: return { priority: 5, wait: 0 };
         }
     }
 
+    let descList = {
 
 
+    };
+
+    function getWaitColorByStatus(status) {
+        if (status==="AT_CAPACITY") {
+            return 'red';
+        } else if( status==='OPEN') {
+            return 'green';
+        } else if( status==='CLOSED') {
+            return 'red';
+        }
+        return 'dark_gray';
+    }
+
+    function formatSingleRiderStatus(singleRider) {
+
+        if (singleRider.status==="AT_CAPACITY") {
+            return 'At Capacity';
+        }
+        if (singleRider.status==="CLOSED") {
+            return 'Closed';
+        }
+        return singleRider.status;
+
+
+    }
     function renderRides() {
         const container = document.getElementById('rides');
         container.innerHTML = '';
@@ -171,63 +214,73 @@
 
         filtered.sort((a, b) => {
             const getStandby = ride => ride.queues?.find(q => q.queue_type === 'STANDBY') || null;
-            const standbyA = getStandby(a);
-            const standbyB = getStandby(b);
-
-            const priA = getWaitPriority(standbyA);
-            const priB = getWaitPriority(standbyB);
-
-            if (priA.priority !== priB.priority) {
-                return priA.priority - priB.priority;
-            } else {
-                return priB.wait - priA.wait; // Sort descending by wait time
-            }
+            const priA = getWaitPriority(getStandby(a));
+            const priB = getWaitPriority(getStandby(b));
+            return priA.priority !== priB.priority ? priA.priority - priB.priority : priB.wait - priA.wait;
         });
-
 
         let anyShown = false;
 
         filtered.forEach(attraction => {
-            if (attraction.name==="Hogwarts™ Express - Last Train") return;
-            if (attraction.name==="Raptor Encounter") return;
-            if (attraction.name==="Hogwarts™ Express - First Train") return;
+            if (["Hogwarts™ Express - Last Train", "Raptor Encounter", "Hogwarts™ Express - First Train"].includes(attraction.name)) return;
 
             const standby = attraction.queues?.find(q => q.queue_type === 'STANDBY');
-            if (!standby) return; // Skip if no standby
+            const singleRider = attraction.queues?.find(q => q.queue_type === 'SINGLE');
+            const expressRider = attraction.queues?.find(q => q.queue_type === 'EXPRESS');
+            if (!standby) return;
 
             let displayWaitTime = '';
+            let waitColor;
 
-            let waitColor ;
-            if (standby.status === 'OPEN') {
-                displayWaitTime = standby.display_wait_time + " minutes";
-                waitColor = getWaitColor(standby.display_wait_time);
-            } else if (standby.status === 'BRIEF_DELAY') {
-                displayWaitTime = 'Brief Delay';
-                waitColor = 'red';
-            } else if (standby.status === 'WALK_ON') {
-                displayWaitTime = 'Walk ON';
-                waitColor = 'green';
-            } else if (standby.status === 'OPENS_AT') {
-
-                let time =   extractLocalHourFromISOString(standby.opens_at);
-                displayWaitTime = "Opens At: " + time;
-                waitColor = 'dark_gray';
-            } else {
-                displayWaitTime = standby.status ;
-                waitColor = 'green';
+            switch (standby.status) {
+                case 'OPEN':
+                    displayWaitTime = `${standby.display_wait_time} minutes`;
+                    waitColor = getWaitColor(standby.display_wait_time);
+                    break;
+                case 'BRIEF_DELAY':
+                    displayWaitTime = 'Brief Delay';
+                    waitColor = 'red';
+                    break;
+                case 'WALK_ON':
+                    displayWaitTime = 'Walk ON';
+                    waitColor = 'green';
+                    break;
+                case 'OPENS_AT':
+                    displayWaitTime = "Opens At: " + extractLocalHourFromISOString(standby.opens_at);
+                    waitColor = 'darkgray';
+                    break;
+                default:
+                    displayWaitTime = standby.status;
+                    waitColor = 'green';
             }
 
-            if (standby.status === 'CLOSED' && attraction.name==="E.T. Adventure™") {
+            if (standby.status === 'CLOSED' && attraction.name === "E.T. Adventure™") {
                 displayWaitTime = "Closed — Back June 14";
-
                 waitColor = 'red';
             }
+
             const div = document.createElement('div');
             div.className = 'ride';
             div.innerHTML = `
-            <span class="ride-name">${attraction.name}</span>
-            <span class="wait" style="color:${waitColor}">${displayWaitTime}</span>
-        `;
+        <div class="ride-header">
+          <div class="ride-name">${attraction.name}</div>
+          <div class="wait" style="color:${waitColor}">${displayWaitTime}</div>
+        </div>
+       <div class="ride-details">
+  ${singleRider ?  `<p><strong>Single Rider:</strong> <span style="color:${getWaitColorByStatus(singleRider.status)}">${formatSingleRiderStatus(singleRider)}</span></p>` : ''}
+  ${expressRider ?  `<p><strong>Express Line:</strong> <span style="color:${getWaitColorByStatus(expressRider.status)}">${formatSingleRiderStatus(expressRider)}</span></p>` : ''}
+  <!-- <p><strong>Status:</strong> ${standby.status}</p> -->
+
+</div>
+
+      `;
+            div.addEventListener('click', () => {
+                const details = div.querySelector('.ride-details');
+                if (details && details.textContent.trim() !== '') {
+                    div.classList.toggle('expanded');
+                }
+            });
+
             container.appendChild(div);
             anyShown = true;
         });
@@ -237,14 +290,12 @@
         }
     }
 
-
     async function fetchWaitTimes() {
         try {
             const response = await fetch(WAIT_API);
             allData = await response.json();
             renderRides();
-            document.getElementById('updated').textContent =
-                'Last updated: ' + new Date().toLocaleTimeString();
+            document.getElementById('updated').textContent = 'Last updated: ' + new Date().toLocaleTimeString();
         } catch {
             document.getElementById('rides').textContent = 'Failed to load wait times.';
         }
@@ -252,9 +303,8 @@
 
     async function fetchParkHours() {
         const today = new Date();
-        const dateKey = today.toISOString().split('T')[0];
-        const [year, month, day] = dateKey.split('-');
-        const formattedDate = `${month}-${day}-${year}`;
+        const formattedDate = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}-${today.getFullYear()}`;
+
         const url = `${HOURS_API_BASE}${currentPark}/${formattedDate}`;
 
         try {
@@ -262,10 +312,8 @@
             const hoursData = await res.json();
             let hours = hoursData[formattedDate]?.ReadableString || 'Hours not available';
 
-            const hourObject = hoursData[formattedDate];
-
-            if (hourObject['EarlyEntryString']) {
-                const early =  extractLocalHourFromISOString(hourObject['EarlyEntryString']);
+            if (hoursData[formattedDate]?.EarlyEntryString) {
+                const early = extractLocalHourFromISOString(hoursData[formattedDate].EarlyEntryString);
                 hours += ` <span style="font-weight: bold;">| Early Admission: ${early}</span>`;
             }
 
@@ -273,7 +321,6 @@
         } catch {
             document.getElementById('hours').textContent = 'Failed to load park hours.';
         }
-
     }
 
     renderTabs();
@@ -287,5 +334,4 @@
     <p>© 2025 ThemeParks.Matthewe.me — All rights reserved.</p>
     <p>This website is an independent fan project and is not affiliated with, endorsed by, or officially connected to Universal Parks & Resorts or any of its subsidiaries.</p>
 </footer>
-
 </html>
