@@ -8,6 +8,7 @@ import me.matthewe.universal.universalapi.v1.venue.VenueService;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -54,16 +55,12 @@ public class ParkHoursController {
         Venue venue = venueMap.get(venueName);
         Map<String, Venue.Hours> hours = new LinkedHashMap<>();
 
-        // Convert input date from MM-dd-yyyy to yyyy-MM-dd
-        String[] parts = date.split("-");
-        if (parts.length != 3) {
-            throw new Exception("Invalid date format: " + date);
-        }
-        String formattedDate = parts[2] + "-" + parts[0] + "-" + parts[1]; // yyyy-MM-dd
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy");
 
         for (Venue.Hours h : venue.getHours()) {
-            if (h.getDate().equals(formattedDate)) {
-                hours.put(date, h); // return using original input format
+            String formatted = sdf.format(h.getDate());
+            if (formatted.equals(date)) {
+                hours.put(date, h);
                 break;
             }
         }

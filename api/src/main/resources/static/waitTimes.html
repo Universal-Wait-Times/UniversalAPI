@@ -97,6 +97,12 @@
     let currentPark = 'UEU';
     let allData = [];
 
+    const keyMap = {
+        "UEU": "Epic",
+        "USF": "Studios",
+        "IOA": "Islands",
+    }
+
     function setActiveTab(park) {
         currentPark = park;
         document.querySelectorAll('.tab').forEach(tab => {
@@ -112,7 +118,7 @@
             const tab = document.createElement('div');
             tab.className = 'tab';
             tab.dataset.park = park;
-            tab.textContent = park;
+            tab.textContent = keyMap[park];
             tab.onclick = () => setActiveTab(park);
             if (park === currentPark) tab.classList.add('active');
             tabsContainer.appendChild(tab);
@@ -120,8 +126,8 @@
     }
 
     function getWaitColor(mins) {
-        if (mins <= 10) return 'green';
-        if (mins <= 30) return 'orange';
+        if (mins <= 25) return 'green';
+        if (mins < 60) return 'orange';
         return 'red';
     }
 
@@ -129,29 +135,50 @@
         const container = document.getElementById('rides');
         container.innerHTML = '';
 
-        const filtered = allData.filter(a =>
-            a.park === currentPark &&
-            a.queues?.some(q => q.queue_type === 'STANDBY' && q.status === 'OPEN')
-        );
+        const filtered = allData.filter(a => a.park === currentPark);
 
         if (filtered.length === 0) {
-            container.textContent = 'No open attractions found.';
+            container.textContent = 'No attractions found for this park.';
             return;
         }
 
+        let anyShown = false;
+
         filtered.forEach(attraction => {
-            const standby = attraction.queues.find(q => q.queue_type === 'STANDBY');
+            const standby = attraction.queues?.find(q => q.queue_type === 'STANDBY');
+            if (!standby) return; // Skip if no standby
+
+            let displayWaitTime = '';
+            let waitColor = 'gray';
+
+            if (standby.status === 'OPEN') {
+                displayWaitTime = standby.display_wait_time + " minutes";
+                waitColor = getWaitColor(standby.display_wait_time);
+            } else if (standby.status === 'BRIEF_DELAY') {
+                displayWaitTime = 'Brief Delay';
+                waitColor = 'red';
+            } else if (standby.status === 'WALK_ON') {
+                displayWaitTime = 'Walk ON';
+                waitColor = 'green';
+            } else {
+                return; // Skip if not open or in delay
+            }
+
             const div = document.createElement('div');
             div.className = 'ride';
             div.innerHTML = `
-        <span class="ride-name">${attraction.name}</span>
-        <span class="wait" style="color:${getWaitColor(standby.display_wait_time)}">
-          ${standby.display_wait_time} min
-        </span>
-      `;
+            <span class="ride-name">${attraction.name}</span>
+            <span class="wait" style="color:${waitColor}">${displayWaitTime}</span>
+        `;
             container.appendChild(div);
+            anyShown = true;
         });
+
+        if (!anyShown) {
+            container.textContent = 'No open attractions found.';
+        }
     }
+
 
     async function fetchWaitTimes() {
         try {
@@ -170,8 +197,9 @@
         const dateKey = today.toISOString().split('T')[0];
         const [year, month, day] = dateKey.split('-');
         const formattedDate = `${month}-${day}-${year}`;
-        const url = `${HOURS_API_BASE}${currentPark}`;
+        const url = `${HOURS_API_BASE}${currentPark}/${formattedDate}`;
 
+        console.log(url);
         try {
             const res = await fetch(url);
             const hoursData = await res.json();
