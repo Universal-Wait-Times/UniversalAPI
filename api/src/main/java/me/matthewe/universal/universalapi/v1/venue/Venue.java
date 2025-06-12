@@ -49,8 +49,11 @@ public class Venue {
         @JsonProperty("Date")  private Date date;
         @JsonProperty("OpenTimeString")  private String openTimeString;
         @JsonProperty("CloseTimeString")  private String closeTimeString;
+        @JsonProperty("EarlyEntryString")  private String earlyEntryString;
         @JsonProperty("OpenTimeUnix")  private long openTimeUnix;
         @JsonProperty("CloseTimeUnix")  private long closeTimeUnix;
+        @JsonProperty("IsShowScheduled")  private boolean showScheduled;
+        @JsonProperty("Holiday")  private boolean holiday;
 
         @JsonProperty("ReadableString")
         public String getReadableString() {

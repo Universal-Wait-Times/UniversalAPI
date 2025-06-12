@@ -22,6 +22,59 @@ public class ParkHoursController {
         this.venueService = venueService;
     }
 
+    @GetMapping("/{resort}/{venueName}/{date}")
+    public Map<String, Venue.Hours> getHoursByDate(
+            @PathVariable String resort,
+            @PathVariable String venueName,
+            @PathVariable String date) throws Exception {
+
+        ResortRegion resortRegion = ResortRegion.getByName(resort);
+        if (resortRegion == null) {
+            throw new Exception("Null resort region " + resort);
+        }
+
+        if (resortRegion == ResortRegion.USJ) {
+            throw new Exception("Cannot check hours at Universal Japan.");
+        }
+
+        UniversalPark byPark = UniversalPark.getByPark(venueName);
+        if (byPark != null) {
+            venueName = byPark.getDisplayName();
+        }
+
+        Map<String, Venue> venueMap = venueService.get(resortRegion);
+        if (venueMap == null) {
+            throw new Exception("Venue map null");
+        }
+
+        if (!venueMap.containsKey(venueName)) {
+            throw new Exception("Venue " + venueName + " not found");
+        }
+
+        Venue venue = venueMap.get(venueName);
+        Map<String, Venue.Hours> hours = new LinkedHashMap<>();
+
+        // Convert input date from MM-dd-yyyy to yyyy-MM-dd
+        String[] parts = date.split("-");
+        if (parts.length != 3) {
+            throw new Exception("Invalid date format: " + date);
+        }
+        String formattedDate = parts[2] + "-" + parts[0] + "-" + parts[1]; // yyyy-MM-dd
+
+        for (Venue.Hours h : venue.getHours()) {
+            if (h.getDate().equals(formattedDate)) {
+                hours.put(date, h); // return using original input format
+                break;
+            }
+        }
+
+        if (hours.isEmpty()) {
+            throw new Exception("No hours found for date " + date);
+        }
+
+        return hours;
+    }
+
     @GetMapping("/{resort}/{venueName}")
     public Map<String, Venue.Hours> getHours(@PathVariable String resort, @PathVariable String venueName) throws Exception {
         ResortRegion resortRegion = ResortRegion.getByName(resort);

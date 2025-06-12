@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Universal Orlando Wait Times</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f4f4f4;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            background: #ddd;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .tab.active {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .hours {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .ride {
+            background: white;
+            padding: 14px 16px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ride-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .wait {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .updated {
+            text-align: center;
+            margin-top: 20px;
+            color: gray;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Universal Orlando Wait Times</h1>
+    <div class="tabs" id="tabs"></div>
+    <div class="hours" id="hours">Loading park hours...</div>
+    <div id="rides">Loading...</div>
+    <div class="updated" id="updated"></div>
+</div>
+
+<script>
+    const WAIT_API = 'https://themeparks.matthewe.me/api/v1/attractions/UOR';
+    const HOURS_API_BASE = 'https://themeparks.matthewe.me/api/v1/parks/hours/uor/';
+    const parks = ['UEU', 'USF', 'IOA'];
+    let currentPark = 'UEU';
+    let allData = [];
+
+    function setActiveTab(park) {
+        currentPark = park;
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.park === park);
+        });
+        renderRides();
+        fetchParkHours();
+    }
+
+    function renderTabs() {
+        const tabsContainer = document.getElementById('tabs');
+        parks.forEach(park => {
+            const tab = document.createElement('div');
+            tab.className = 'tab';
+            tab.dataset.park = park;
+            tab.textContent = park;
+            tab.onclick = () => setActiveTab(park);
+            if (park === currentPark) tab.classList.add('active');
+            tabsContainer.appendChild(tab);
+        });
+    }
+
+    function getWaitColor(mins) {
+        if (mins <= 10) return 'green';
+        if (mins <= 30) return 'orange';
+        return 'red';
+    }
+
+    function renderRides() {
+        const container = document.getElementById('rides');
+        container.innerHTML = '';
+
+        const filtered = allData.filter(a =>
+            a.park === currentPark &&
+            a.queues?.some(q => q.queue_type === 'STANDBY' && q.status === 'OPEN')
+        );
+
+        if (filtered.length === 0) {
+            container.textContent = 'No open attractions found.';
+            return;
+        }
+
+        filtered.forEach(attraction => {
+            const standby = attraction.queues.find(q => q.queue_type === 'STANDBY');
+            const div = document.createElement('div');
+            div.className = 'ride';
+            div.innerHTML = `
+        <span class="ride-name">${attraction.name}</span>
+        <span class="wait" style="color:${getWaitColor(standby.display_wait_time)}">
+          ${standby.display_wait_time} min
+        </span>
+      `;
+            container.appendChild(div);
+        });
+    }
+
+    async function fetchWaitTimes() {
+        try {
+            const response = await fetch(WAIT_API);
+            allData = await response.json();
+            renderRides();
+            document.getElementById('updated').textContent =
+                'Last updated: ' + new Date().toLocaleTimeString();
+        } catch {
+            document.getElementById('rides').textContent = 'Failed to load wait times.';
+        }
+    }
+
+    async function fetchParkHours() {
+        const today = new Date();
+        const dateKey = today.toISOString().split('T')[0];
+        const [year, month, day] = dateKey.split('-');
+        const formattedDate = `${month}-${day}-${year}`;
+        const url = `${HOURS_API_BASE}${currentPark}`;
+
+        try {
+            const res = await fetch(url);
+            const hoursData = await res.json();
+            const hours = hoursData[formattedDate]?.ReadableString || 'Hours not available';
+            document.getElementById('hours').textContent = `Park Hours: ${hours}`;
+        } catch {
+            document.getElementById('hours').textContent = 'Failed to load park hours.';
+        }
+    }
+
+    renderTabs();
+    fetchWaitTimes();
+    fetchParkHours();
+    setInterval(fetchWaitTimes, 60000);
+    setInterval(fetchParkHours, 60000);
+</script>
+</body>
+</html>
