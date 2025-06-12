@@ -124,7 +124,16 @@
             tabsContainer.appendChild(tab);
         });
     }
+     function extractLocalHourFromISOString(dateTimeStr) {
+        const date = new Date(dateTimeStr); // Parses the ISO string and applies local timezone
+        let hours = date.getHours();
+        const minutes = date.getMinutes();
 
+        const period = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12; // Convert to 12-hour format
+
+        return `${hours}${minutes === 0 ? '' : `:${minutes.toString().padStart(2, '0')}`} ${period}`;
+    }
     function getWaitColor(mins) {
         if (mins <= 25) return 'green';
         if (mins < 60) return 'orange';
@@ -145,11 +154,15 @@
         let anyShown = false;
 
         filtered.forEach(attraction => {
+            if (attraction.name==="Hogwarts™ Express - Last Train") return;
+            if (attraction.name==="Raptor Encounter") return;
+            if (attraction.name==="Hogwarts™ Express - First Train") return;
             const standby = attraction.queues?.find(q => q.queue_type === 'STANDBY');
+
             if (!standby) return; // Skip if no standby
 
             let displayWaitTime = '';
-            let waitColor = 'gray';
+            let waitColor ;
 
             if (standby.status === 'OPEN') {
                 displayWaitTime = standby.display_wait_time + " minutes";
@@ -160,8 +173,15 @@
             } else if (standby.status === 'WALK_ON') {
                 displayWaitTime = 'Walk ON';
                 waitColor = 'green';
+            } else if (standby.status === 'OPENS_AT') {
+
+                let time =   extractLocalHourFromISOString(standby.opens_at);
+                displayWaitTime = "Opens At: " + time;
+                console.log(standby);
+                waitColor = 'dark_gray';
             } else {
-                return; // Skip if not open or in delay
+                displayWaitTime = standby.status ;
+                waitColor = 'green';
             }
 
             const div = document.createElement('div');
@@ -199,21 +219,30 @@
         const formattedDate = `${month}-${day}-${year}`;
         const url = `${HOURS_API_BASE}${currentPark}/${formattedDate}`;
 
-        console.log(url);
         try {
             const res = await fetch(url);
             const hoursData = await res.json();
-            const hours = hoursData[formattedDate]?.ReadableString || 'Hours not available';
-            document.getElementById('hours').textContent = `Park Hours: ${hours}`;
+            let hours = hoursData[formattedDate]?.ReadableString || 'Hours not available';
+
+            const hourObject = hoursData[formattedDate];
+
+            if (hourObject['EarlyEntryString']) {
+                const early =  extractLocalHourFromISOString(hourObject['EarlyEntryString']);
+                hours += ` <span style="font-weight: bold;">| Early Admission: ${early}</span>`;
+            }
+
+            console.log(hoursData);
+            document.getElementById('hours').innerHTML = `Park Hours: ${hours}`;
         } catch {
             document.getElementById('hours').textContent = 'Failed to load park hours.';
         }
+
     }
 
     renderTabs();
     fetchWaitTimes();
     fetchParkHours();
-    setInterval(fetchWaitTimes, 60000);
+    setInterval(fetchWaitTimes, 5000);
     setInterval(fetchParkHours, 60000);
 </script>
 </body>
