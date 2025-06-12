@@ -191,13 +191,13 @@
             if (attraction.name==="Hogwarts™ Express - Last Train") return;
             if (attraction.name==="Raptor Encounter") return;
             if (attraction.name==="Hogwarts™ Express - First Train") return;
-            const standby = attraction.queues?.find(q => q.queue_type === 'STANDBY');
 
+            const standby = attraction.queues?.find(q => q.queue_type === 'STANDBY');
             if (!standby) return; // Skip if no standby
 
             let displayWaitTime = '';
-            let waitColor ;
 
+            let waitColor ;
             if (standby.status === 'OPEN') {
                 displayWaitTime = standby.display_wait_time + " minutes";
                 waitColor = getWaitColor(standby.display_wait_time);
@@ -211,7 +211,6 @@
 
                 let time =   extractLocalHourFromISOString(standby.opens_at);
                 displayWaitTime = "Opens At: " + time;
-                console.log(standby);
                 waitColor = 'dark_gray';
             } else {
                 displayWaitTime = standby.status ;
@@ -270,7 +269,6 @@
                 hours += ` <span style="font-weight: bold;">| Early Admission: ${early}</span>`;
             }
 
-            console.log(hoursData);
             document.getElementById('hours').innerHTML = `Park Hours: ${hours}`;
         } catch {
             document.getElementById('hours').textContent = 'Failed to load park hours.';
