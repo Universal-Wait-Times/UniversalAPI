@@ -139,6 +139,27 @@
         if (mins < 60) return 'orange';
         return 'red';
     }
+    function getWaitPriority(standby) {
+        if (!standby || !standby.status) return { priority: 99, wait: 0 };
+
+        switch (standby.status) {
+            case 'OPEN':
+                return { priority: 0, wait: standby.wait_time || standby.display_wait_time || 0 };
+            case 'WALK_ON':
+                return { priority: 1, wait: 0 };
+            case 'BRIEF_DELAY':
+                return { priority: 2, wait: 0 };
+            case 'OPENS_AT':
+                return { priority: 3, wait: 0 };
+            case 'CLOSED':
+                return { priority: 4, wait: 0 };
+            case 'UNKNOWN':
+            default:
+                return { priority: 5, wait: 0 };
+        }
+    }
+
+
 
     function renderRides() {
         const container = document.getElementById('rides');
@@ -146,10 +167,21 @@
 
         const filtered = allData.filter(a => a.park === currentPark);
 
-        if (filtered.length === 0) {
-            container.textContent = 'No attractions found for this park.';
-            return;
-        }
+        filtered.sort((a, b) => {
+            const getStandby = ride => ride.queues?.find(q => q.queue_type === 'STANDBY') || null;
+            const standbyA = getStandby(a);
+            const standbyB = getStandby(b);
+
+            const priA = getWaitPriority(standbyA);
+            const priB = getWaitPriority(standbyB);
+
+            if (priA.priority !== priB.priority) {
+                return priA.priority - priB.priority;
+            } else {
+                return priB.wait - priA.wait; // Sort descending by wait time
+            }
+        });
+
 
         let anyShown = false;
 
