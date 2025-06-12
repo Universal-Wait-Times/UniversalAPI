@@ -184,6 +184,11 @@
                 waitColor = 'green';
             }
 
+            if (standby.status === 'CLOSED' && attraction.name==="E.T. Adventure™") {
+                displayWaitTime = "Closed — Back June 14";
+
+                waitColor = 'red';
+            }
             const div = document.createElement('div');
             div.className = 'ride';
             div.innerHTML = `
