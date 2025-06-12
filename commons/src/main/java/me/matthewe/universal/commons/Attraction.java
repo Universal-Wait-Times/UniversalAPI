@@ -214,7 +214,7 @@ public class Attraction {
 
         public static enum Type {
             STANDBY,
-            SINGLE
+            SINGLE,EXPRESS
         }
 
 
