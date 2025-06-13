@@ -77,11 +77,8 @@ public class WeatherController {
             private double temperature;
             @JsonProperty("wind_speed_10m")
             private double windSpeed;
-
-
             @JsonProperty("precipitation")
             private double precipitation;
-
             @JsonProperty("precipitation_probability")
             private double precipitationProbability;
             @JsonProperty("weather_code")
