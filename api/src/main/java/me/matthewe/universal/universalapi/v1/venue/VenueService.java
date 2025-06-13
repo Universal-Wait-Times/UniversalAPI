@@ -5,9 +5,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.extern.java.Log;
 import me.matthewe.universal.commons.ResortRegion;
 import me.matthewe.universal.commons.UniversalPark;
-import me.matthewe.universal.commons.virtualline.VirtualLine;
 import me.matthewe.universal.universalapi.v1.AttractionWebhookClient;
-import me.matthewe.universal.universalapi.v1.virtualline.VirtualLineResponse;
 import me.micartey.webhookly.DiscordWebhook;
 import me.micartey.webhookly.embeds.EmbedObject;
 import me.micartey.webhookly.embeds.Footer;
@@ -22,7 +20,6 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,7 +66,7 @@ public class VenueService {
                         oldData = dataCache.get(city);
 
                     }
-                    Map<String, Venue> newDatas =new HashMap<>();
+                    Map<String, Venue> newDatas = new HashMap<>();
                     for (Venue newDatum : newData) {
                         newDatas.put(newDatum.getDisplayName(), newDatum);
                     }
@@ -91,12 +88,12 @@ public class VenueService {
         }
 
 
-        checkEpicHoursAdded( oldData, newData);
+        checkEpicHoursAdded(oldData, newData);
 
     }
 
-    private void checkEpicHoursAdded( Map<String, Venue> oldData,  Map<String, Venue> newData) throws IOException {
-        if (oldData==null)return;
+    private void checkEpicHoursAdded(Map<String, Venue> oldData, Map<String, Venue> newData) throws IOException {
+        if (oldData == null) return;
 
         for (Venue oldDatum : oldData.values()) {
 
@@ -107,8 +104,8 @@ public class VenueService {
 
 
                 //FOUND EPIC;
-                if (oldDatum.getHours()==null||oldDatum.getHours().isEmpty()) {
-                    if (venue.getHours()!=null&&!venue.getHours().isEmpty()) {
+                if (oldDatum.getHours() == null || oldDatum.getHours().isEmpty()) {
+                    if (venue.getHours() != null && !venue.getHours().isEmpty()) {
                         logEpicHoursAddedFinally();
                     }
                 }
@@ -118,12 +115,12 @@ public class VenueService {
 
     private void logEpicHoursAddedFinally() throws IOException {
 
-        DiscordWebhook discordWebhook =new DiscordWebhook(System.getenv("ADDITIONAL_EPIC_WEBHOOK"));
+        DiscordWebhook discordWebhook = new DiscordWebhook(System.getenv("ADDITIONAL_EPIC_WEBHOOK"));
         discordWebhook.setUsername("Epic Hours");
         discordWebhook.setContent("<@158445315412852736>");
         discordWebhook.setAvatarUrl(UniversalPark.UEU.getLogoSource());
 
-        EmbedObject embedObject =new EmbedObject()
+        EmbedObject embedObject = new EmbedObject()
                 .setTimestamp(OffsetDateTime.now())
                 .setColor(Color.YELLOW.darker().darker())
                 .setFooter(new Footer(UniversalPark.UEU.getParkName(), UniversalPark.UEU.getLogoSource()))
@@ -140,7 +137,7 @@ public class VenueService {
                 .subscribe();
     }
 
-    public  Map<String, Venue> get(ResortRegion region) {
+    public Map<String, Venue> get(ResortRegion region) {
         switch (region) {
             case UOR -> {
                 return dataCache.get("Orlando");
