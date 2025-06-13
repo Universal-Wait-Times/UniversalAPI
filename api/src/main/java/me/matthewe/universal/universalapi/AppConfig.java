@@ -26,9 +26,4 @@ public class AppConfig {
             }
         };
     }
-//
-//    @Bean
-//    public RedisPublisher redisPublisher() {
-//        return new RedisPublisher();
-//    }
 }

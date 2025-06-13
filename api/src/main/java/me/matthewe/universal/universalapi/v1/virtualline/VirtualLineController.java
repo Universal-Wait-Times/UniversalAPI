@@ -14,7 +14,6 @@ import java.util.List;
 @RequestMapping("/api/v1/virtual_line")
 @RestController()
 public class VirtualLineController {
-
     private VirtualLineService virtualLineService;
 
     @Autowired

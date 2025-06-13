@@ -32,7 +32,6 @@ public class TicketDataController {
             return Collections.emptyMap();
         }
 
-        // normalize any "/" to "-", trim whitespace
         String norm = date.replace('/', '-').trim();
         String[] parts = norm.split("-");
         if (parts.length != 3) {
@@ -41,8 +40,8 @@ public class TicketDataController {
 
         try {
             int month = Integer.parseInt(parts[0]);
-            int day   = Integer.parseInt(parts[1]);
-            String y  = parts[2];
+            int day = Integer.parseInt(parts[1]);
+            String y = parts[2];
             int year;
 
             if (y.length() == 2) {
@@ -62,7 +61,6 @@ public class TicketDataController {
             }
             return Collections.singletonMap(key, dataCache.get(key));
         } catch (NumberFormatException | DateTimeException e) {
-            // invalid numbers or date out of range
             return Collections.emptyMap();
         }
     }
@@ -72,12 +70,14 @@ public class TicketDataController {
         ResortRegion resortRegion = ResortRegion.getByName(resort);
 
         Map<String, TicketData> ticketData = new HashMap<>();
-        if  (resortRegion==null)return ticketData;
+        if (resortRegion == null) return ticketData;
 
-        if (resortRegion==ResortRegion.USJ) return ticketData;
-        if (resortRegion==ResortRegion.USH) return ticketData;
+        if (resortRegion == ResortRegion.USJ) return ticketData;
+        if (resortRegion == ResortRegion.USH) return ticketData;
+
         Map<String, TicketData> dataCache = ticketDataService.getSortedDataCache();
-        if (dataCache==null)return ticketData;
+        if (dataCache == null) return ticketData;
+
         return dataCache;
     }
 }

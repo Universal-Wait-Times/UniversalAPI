@@ -19,7 +19,6 @@ import java.util.concurrent.ConcurrentHashMap;
 @Log
 @Service
 public class VirtualLineService {
-
     private final WebClient webClient = WebClient.builder()
             .baseUrl(System.getenv("UNIVERSAL_ENDPOINT_VIRTUAL_QUEUE"))
 
@@ -78,10 +77,7 @@ public class VirtualLineService {
     }
 
     private void onVirtualLineUpdate(String city, List<VirtualLine> oldData, List<VirtualLine> newData) {
-//        log.info("🔄 Virtual Line Update Detected for " + city);
-
-        if (oldData!=null) {
-
+        if (oldData != null) {
             for (VirtualLine oldDatum : oldData) {
                 for (VirtualLine newDatum : newData) {
                     if (oldDatum.getName().equals(newDatum.getName())) {
@@ -94,7 +90,6 @@ public class VirtualLineService {
                 onUpdate(city, null, newDatum);
             }
         }
-        // Example: webhookService.notifyUpdate(city, oldData, newData);
     }
 
     private void onUpdate(String city, VirtualLine oldDatum, VirtualLine newDatum) {
@@ -102,8 +97,8 @@ public class VirtualLineService {
         if (!newDatum.isEnabled() && !newDatum.isUnavailable() && !newDatum.isProfileAware()) {
             return;
         }
-        if (newDatum.getId().equals("10102"))return;
-        if (newDatum.getId().equals("10101"))return;
+        if (newDatum.getId().equals("10102")) return;
+        if (newDatum.getId().equals("10101")) return;
 
         attractionWebhookClient.sendVirtualQueueStatus(oldDatum, newDatum);
 
