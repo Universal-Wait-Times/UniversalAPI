@@ -15,7 +15,7 @@ import reactor.core.scheduler.Schedulers;
 
 import java.awt.*;
 import java.time.Duration;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
 
@@ -23,7 +23,6 @@ import java.util.Random;
 @Service
 public class QueueTimesService {
     private final CacheManager cacheManager;
-
     @Autowired
     public QueueTimesService(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
@@ -54,19 +53,18 @@ public class QueueTimesService {
 
     public void updateCache() {
         UniversalPark[] parks = UniversalPark.values();
+        LocalDate now = LocalDate.now();  // correct year/month
 
         for (int i = 0; i < parks.length; i++) {
             UniversalPark park = parks[i];
-            int delay = i * (1500 + random.nextInt(500)); // e.g., 1.5–2.0 seconds per park staggered
-
-            Date date = new Date();
-
+            int delay = i * (1500 + random.nextInt(500));
 
             Mono.delay(Duration.ofMillis(delay))
                     .publishOn(Schedulers.boundedElastic())
-                    .subscribe(ignored -> fetchParkCalendar(park, date.getYear(), date.getMonth()));
+                    .subscribe(ignored -> fetchParkCalendar(park, now.getYear(), now.getMonthValue()));
         }
     }
+
 
     private void fetchParkCalendar(UniversalPark park, int year, int month) {
         String yearString = String.format("%04d", year);   // e.g., 2025
@@ -92,28 +90,32 @@ public class QueueTimesService {
             if (elements.isEmpty()) return;
 
             for (Element box : elements.get(0).select(".tile.is-child.box.is-radiusless.is-clearfix")) {
-                // 1. Crowd percent
+                // Crowd %
                 String crowdPercent = box.select("div.tags.is-pulled-right span").first().text().trim();
 
-                // 2. Background color
+                // Background color
                 String style = box.attr("style");
                 Color color = null;
+                int r=0;
+                int g=0;
+                int b=0;
                 if (style.contains("rgb")) {
                     String rgbString = style.substring(style.indexOf("rgb") + 4, style.indexOf(")"));
                     String[] parts = rgbString.split(",");
                     try {
-                        int r = Integer.parseInt(parts[0].trim());
-                        int g = Integer.parseInt(parts[1].trim());
-                        int b = Integer.parseInt(parts[2].trim());
+                         r = Integer.parseInt(parts[0].trim());
+                         g = Integer.parseInt(parts[1].trim());
+                         b = Integer.parseInt(parts[2].trim());
                         color = new Color(r, g, b);
                     } catch (Exception ignored) {}
                 }
 
-                // 3. Date (e.g., "Sun 8" or just "8")
-                String dateText = box.select("div.tags.is-pulled-left .tag").last().text().trim(); // "Sun 8" or "8"
+                // Extract day number from left tag (e.g., "Sun 28" or just "28")
+                String leftText = box.select("div.tags.is-pulled-left .tag").last().text().trim();
+                int day = Integer.parseInt(leftText.replaceAll("\\D", "")); // remove non-digits
 
-                // Optional: standardize to "2025-06-08"
-                String fullDate = String.format("%04d-%02d-%02d", year, month, Integer.parseInt(dateText.replaceAll("\\D", "")));
+                // Assemble proper full date
+                String fullDate = String.format("%04d-%02d-%02d", year, month, day);
 
                 // Output
                 System.out.println("Date: " + fullDate);
@@ -123,6 +125,9 @@ public class QueueTimesService {
                 }
                 System.out.println("Full Text: " + box.text());
                 System.out.println("----");
+
+                cacheManager.getCache("queueTimes-"+park.name() ).put(fullDate, new QueueTimeInfo(fullDate,Integer.parseInt(crowdPercent.replaceAll("\\D+", "").trim()),r,g,b));
+
             }
 
 
