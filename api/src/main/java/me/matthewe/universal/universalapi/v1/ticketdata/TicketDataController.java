@@ -2,14 +2,15 @@ package me.matthewe.universal.universalapi.v1.ticketdata;
 
 import me.matthewe.universal.commons.ResortRegion;
 import me.matthewe.universal.commons.ticketdata.TicketData;
-import me.matthewe.universal.commons.virtualline.VirtualLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequestMapping("/api/v1/ticket_data")
 @RestController()

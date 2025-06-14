@@ -1,6 +1,7 @@
 package me.matthewe.universal.universalapi.v1.queuetimes;
 
 import jakarta.annotation.PostConstruct;
+import lombok.Getter;
 import lombok.extern.java.Log;
 import me.matthewe.universal.commons.UniversalPark;
 import org.jsoup.Jsoup;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import java.awt.*;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,17 +24,17 @@ import java.util.Random;
 @Log
 @Service
 public class QueueTimesService {
-    private final CacheManager cacheManager = createSimpleCacheManager();
+    @Getter private final CacheManager cacheManager = createSimpleCacheManager();
 
     private CacheManager createSimpleCacheManager() {
         SimpleCacheManager manager = new SimpleCacheManager();
 
         List<ConcurrentMapCache> list = new ArrayList<>();
         for (UniversalPark value : UniversalPark.values()) {
-            list.add(new ConcurrentMapCache("queueTimes-"+value.name()));
+            list.add(new ConcurrentMapCache("queueTimes-" + value.name()));
         }
         manager.setCaches(list);
-        manager.initializeCaches(); // 🔐 REQUIRED to avoid NPEs
+        manager.initializeCaches();
 
 
         return manager;
@@ -107,19 +107,20 @@ public class QueueTimesService {
 
                 // Background color
                 String style = box.attr("style");
-                Color color = null;
-                int r=0;
-                int g=0;
-                int b=0;
+//                Color color = null;
+                int r = 0;
+                int g = 0;
+                int b = 0;
                 if (style.contains("rgb")) {
                     String rgbString = style.substring(style.indexOf("rgb") + 4, style.indexOf(")"));
                     String[] parts = rgbString.split(",");
                     try {
-                         r = Integer.parseInt(parts[0].trim());
-                         g = Integer.parseInt(parts[1].trim());
-                         b = Integer.parseInt(parts[2].trim());
-                        color = new Color(r, g, b);
-                    } catch (Exception ignored) {}
+                        r = Integer.parseInt(parts[0].trim());
+                        g = Integer.parseInt(parts[1].trim());
+                        b = Integer.parseInt(parts[2].trim());
+//                        color = new Color(r, g, b);
+                    } catch (Exception ignored) {
+                    }
                 }
 
                 // Extract day number from left tag (e.g., "Sun 28" or just "28")
@@ -130,18 +131,17 @@ public class QueueTimesService {
                 String fullDate = String.format("%04d-%02d-%02d", year, month, day);
 
                 // Output
-                System.out.println("Date: " + fullDate);
-                System.out.println("Crowd: " + crowdPercent);
-                if (color != null) {
-                    System.out.printf("Color: rgb(%d, %d, %d)%n", color.getRed(), color.getGreen(), color.getBlue());
-                }
-                System.out.println("Full Text: " + box.text());
-                System.out.println("----");
+//                System.out.println("Date: " + fullDate);
+//                System.out.println("Crowd: " + crowdPercent);
+//                if (color != null) {
+//                    System.out.printf("Color: rgb(%d, %d, %d)%n", color.getRed(), color.getGreen(), color.getBlue());
+//                }
+//                System.out.println("Full Text: " + box.text());
+//                System.out.println("----");
 
-                cacheManager.getCache("queueTimes-"+park.name() ).put(fullDate, new QueueTimeInfo(fullDate,Integer.parseInt(crowdPercent.replaceAll("\\D+", "").trim()),r,g,b));
+                cacheManager.getCache("queueTimes-" + park.name()).put(fullDate, new QueueTimeInfo(fullDate, Integer.parseInt(crowdPercent.replaceAll("\\D+", "").trim()), r, g, b));
 
             }
-
 
 
             System.out.println("Fetched " + park.name() + " with UA: " + userAgent);
