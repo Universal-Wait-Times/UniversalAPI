@@ -7,8 +7,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -16,16 +17,27 @@ import reactor.core.scheduler.Schedulers;
 import java.awt.*;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 @Log
 @Service
 public class QueueTimesService {
-    private final CacheManager cacheManager;
-    @Autowired
-    public QueueTimesService(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
+    private final CacheManager cacheManager = createSimpleCacheManager();
+
+    private CacheManager createSimpleCacheManager() {
+        SimpleCacheManager manager = new SimpleCacheManager();
+
+        List<ConcurrentMapCache> list = new ArrayList<>();
+        for (UniversalPark value : UniversalPark.values()) {
+            list.add(new ConcurrentMapCache("queueTimes-"+value.name()));
+        }
+        manager.setCaches(list);
+        manager.initializeCaches(); // 🔐 REQUIRED to avoid NPEs
+
+
+        return manager;
     }
 
     @PostConstruct
