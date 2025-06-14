@@ -88,30 +88,9 @@ public class VenueService {
         }
 
 
-        checkEpicHoursAdded(oldData, newData);
 
     }
 
-    private void checkEpicHoursAdded(Map<String, Venue> oldData, Map<String, Venue> newData) throws IOException {
-        if (oldData == null) return;
-
-        for (Venue oldDatum : oldData.values()) {
-
-            if (!oldDatum.getDisplayName().equalsIgnoreCase("Universals Epic Universe")) continue;
-
-            for (Venue venue : newData.values()) {
-                if (!venue.getDisplayName().equalsIgnoreCase("Universals Epic Universe")) continue;
-
-
-                //FOUND EPIC;
-                if (oldDatum.getHours() == null || oldDatum.getHours().isEmpty()) {
-                    if (venue.getHours() != null && !venue.getHours().isEmpty()) {
-                        logEpicHoursAddedFinally();
-                    }
-                }
-            }
-        }
-    }
 
     private void logEpicHoursAddedFinally() throws IOException {
 
