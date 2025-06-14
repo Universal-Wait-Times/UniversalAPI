@@ -19,8 +19,14 @@ public class QueueTimeController {
     public QueueTimeInfo getCrowdLevels(@PathVariable String resort,
                                         @PathVariable String park,
                                         @RequestParam String date) {
+        ResortRegion resortRegion = ResortRegion.getByName(resort);
 
-        String key = park.toUpperCase() + "-" + date; // match how you stored it
+        if (resortRegion == null) return null;
+        UniversalPark universalPark = UniversalPark.getByPark(park);
+
+        if (universalPark == null) return null;
+
+        String key = date; // match how you stored it
         Cache cache =getCrowdLevels(resort, park);
         if (cache == null) return null;
 
