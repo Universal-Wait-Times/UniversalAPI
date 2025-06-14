@@ -69,13 +69,19 @@ public class QueueTimesService {
 
         for (int i = 0; i < parks.length; i++) {
             UniversalPark park = parks[i];
-            int delay = i * (1500 + random.nextInt(500));
+            int parkIndex = i;
 
-            Mono.delay(Duration.ofMillis(delay))
-                    .publishOn(Schedulers.boundedElastic())
-                    .subscribe(ignored -> fetchParkCalendar(park, now.getYear(), now.getMonthValue()));
+            for (int month = now.getMonthValue(); month <= 12; month++) {
+                int delay = parkIndex * 1000 + month * 300;  // stagger delay further by month too
+
+                int finalMonth = month;
+                Mono.delay(Duration.ofMillis(delay))
+                        .publishOn(Schedulers.boundedElastic())
+                        .subscribe(ignored -> fetchParkCalendar(park, now.getYear(), finalMonth));
+            }
         }
     }
+
 
 
     private void fetchParkCalendar(UniversalPark park, int year, int month) {
