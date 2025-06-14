@@ -119,6 +119,7 @@
 <script>
     const WAIT_API = 'https://themeparks.matthewe.me/api/v1/attractions/UOR';
     const HOURS_API_BASE = 'https://themeparks.matthewe.me/api/v1/parks/hours/uor/';
+    const CROWD_LEVEL_URL = 'https://themeparks.matthewe.me/api/v1/queue_times/uor/';
     const parks = ['UEU', 'USF', 'IOA'];
     let currentPark = 'UEU';
     let allData = [];
@@ -299,12 +300,18 @@
     async function fetchParkHours() {
         const today = new Date();
         const formattedDate = `${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}-${today.getFullYear()}`;
+        let isoFormattedDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
         const url = `${HOURS_API_BASE}${currentPark}/${formattedDate}`;
-
+        const crowdLevelURL = `${CROWD_LEVEL_URL}${currentPark}/crowd_level_by_date?date=${isoFormattedDate}`;
+        console.log(crowdLevelURL);
         try {
             const res = await fetch(url);
+            const resCrowdLevel = await fetch(crowdLevelURL);
             const hoursData = await res.json();
+            const crowdData = await resCrowdLevel.json();
+
+            console.log(crowdData);
             let hours = hoursData[formattedDate]?.ReadableString || 'Hours not available';
 
             if (hoursData[formattedDate]?.EarlyEntryString) {
@@ -312,7 +319,10 @@
                 hours += ` <span style="font-weight: bold;">| Early Admission: ${early}</span>`;
             }
 
-            document.getElementById('hours').innerHTML = `Park Hours: ${hours}`;
+
+            let crowdLevels =crowdData['crowdPercent'] ? crowdData['crowdPercent'] +"%" : "Unknown";
+            let crowdLevelsColor = crowdData['color'] ? crowdData['color'] : "dark_gray";
+            document.getElementById('hours').innerHTML = `Park Hours: ${hours} <br><p style="font-weight: bold">Crowd Levels: <strong style="color: ${crowdLevelsColor}">${crowdLevels}</strong></p>`;
         } catch {
             document.getElementById('hours').textContent = 'Failed to load park hours.';
         }
