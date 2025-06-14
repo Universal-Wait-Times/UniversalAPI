@@ -15,7 +15,7 @@ public class QueueTimeController {
     public QueueTimeController(QueueTimesService queueTimesService) {
         this.queueTimesService = queueTimesService;
     }
-    @GetMapping("/{resort}/{park}/crowd_level")
+    @GetMapping("/{resort}/{park}/crowd_level_by_date")
     public QueueTimeInfo getCrowdLevels(@PathVariable String resort,
                                         @PathVariable String park,
                                         @RequestParam String date) {
