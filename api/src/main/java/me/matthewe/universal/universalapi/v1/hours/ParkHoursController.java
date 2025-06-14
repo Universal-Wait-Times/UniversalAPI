@@ -18,7 +18,8 @@ import java.util.*;
 public class ParkHoursController {
 
     private VenueService venueService;
-    private final SimpleDateFormat formatter =new SimpleDateFormat("MM-dd-yyyy");
+    private final SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
+
     public ParkHoursController(VenueService venueService) {
         this.venueService = venueService;
     }
@@ -75,21 +76,21 @@ public class ParkHoursController {
     @GetMapping("/{resort}/{venueName}")
     public Map<String, Venue.Hours> getHours(@PathVariable String resort, @PathVariable String venueName) throws Exception {
         ResortRegion resortRegion = ResortRegion.getByName(resort);
-        if (resortRegion==null){
+        if (resortRegion == null) {
             throw new Exception("Null resort region " + resort);
         }
-        if (resortRegion==ResortRegion.USJ) {
+        if (resortRegion == ResortRegion.USJ) {
             throw new Exception("Cannot check hours at Universal Japan.");
         }
         UniversalPark byPark = UniversalPark.getByPark(venueName);
-        if (byPark!=null) {
+        if (byPark != null) {
             venueName = byPark.getDisplayName();
         }
         Map<String, Venue> venueMap = venueService.get(resortRegion);
-        if (venueMap==null){
+        if (venueMap == null) {
             throw new Exception("Venue map null");
         }
-        if (!venueMap.containsKey(venueName)){
+        if (!venueMap.containsKey(venueName)) {
             throw new Exception("Venue " + venueName + " not found");
         }
         Venue venue = venueMap.get(venueName);
