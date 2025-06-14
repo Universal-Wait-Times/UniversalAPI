@@ -67,37 +67,31 @@ public class QueueTimesService {
         }
     }
 
-    private void fetchParkCalendar(UniversalPark park, int month, int year) {
-        String yearString = String.valueOf(year);
-        if (yearString.length() == 2) {
-            yearString = "20" + yearString; //will break in 75 years;
-        }
-
-        String monthString = String.valueOf(month);
-        if (monthString.length() == 1) {
-            monthString = "0" + monthString; // pad zeros
-        }
-
-
+    private void fetchParkCalendar(UniversalPark park, int year, int month) {
+        String yearString = String.format("%04d", year);   // e.g., 2025
+        String monthString = String.format("%02d", month); // e.g., 06
 
         String url = String.format("https://queue-times.com/en-US/parks/%s/calendar/%s/%s",
                 park.getQueueTimeId(),
                 yearString,
                 monthString
-                );
+        );
 
         log.info("Pulling: " + url);
+
         try {
             String userAgent = userAgents.get(random.nextInt(userAgents.size()));
             Document doc = Jsoup.connect(url)
                     .userAgent(userAgent)
                     .timeout(10_000)
                     .get();
-            Elements elementsByClass = doc.getElementsByClass("tile is-ancestor is-vertical");
-            log.info(elementsByClass.size() +" SIZE ");
-            if (elementsByClass.isEmpty())return;
-            for (Element byClass : elementsByClass.get(0).getElementsByClass("tile is-child box is-radiusless is-clearfix")) {
-                System.out.println(byClass.text());
+
+            Elements elements = doc.select(".tile.is-ancestor.is-vertical");
+            log.info(elements.size() + " SIZE ");
+            if (elements.isEmpty()) return;
+
+            for (Element box : elements.get(0).select(".tile.is-child.box.is-radiusless.is-clearfix")) {
+                System.out.println(box.text());
             }
 
             System.out.println("Fetched " + park.name() + " with UA: " + userAgent);
