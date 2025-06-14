@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
+import java.awt.*;
 import java.time.Duration;
 import java.util.Date;
 import java.util.List;
@@ -91,8 +92,40 @@ public class QueueTimesService {
             if (elements.isEmpty()) return;
 
             for (Element box : elements.get(0).select(".tile.is-child.box.is-radiusless.is-clearfix")) {
-                System.out.println(box.text());
+                // 1. Crowd percent
+                String crowdPercent = box.select("div.tags.is-pulled-right span").first().text().trim();
+
+                // 2. Background color
+                String style = box.attr("style");
+                Color color = null;
+                if (style.contains("rgb")) {
+                    String rgbString = style.substring(style.indexOf("rgb") + 4, style.indexOf(")"));
+                    String[] parts = rgbString.split(",");
+                    try {
+                        int r = Integer.parseInt(parts[0].trim());
+                        int g = Integer.parseInt(parts[1].trim());
+                        int b = Integer.parseInt(parts[2].trim());
+                        color = new Color(r, g, b);
+                    } catch (Exception ignored) {}
+                }
+
+                // 3. Date (e.g., "Sun 8" or just "8")
+                String dateText = box.select("div.tags.is-pulled-left .tag").last().text().trim(); // "Sun 8" or "8"
+
+                // Optional: standardize to "2025-06-08"
+                String fullDate = String.format("%04d-%02d-%02d", year, month, Integer.parseInt(dateText.replaceAll("\\D", "")));
+
+                // Output
+                System.out.println("Date: " + fullDate);
+                System.out.println("Crowd: " + crowdPercent);
+                if (color != null) {
+                    System.out.printf("Color: rgb(%d, %d, %d)%n", color.getRed(), color.getGreen(), color.getBlue());
+                }
+                System.out.println("Full Text: " + box.text());
+                System.out.println("----");
             }
+
+
 
             System.out.println("Fetched " + park.name() + " with UA: " + userAgent);
         } catch (Exception e) {
