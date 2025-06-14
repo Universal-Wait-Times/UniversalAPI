@@ -52,28 +52,33 @@ public class QueueTimesService {
     private final Random random = new Random();
 
     public void updateCache() {
+        UniversalPark[] parks = UniversalPark.values();
 
-        for (UniversalPark value : UniversalPark.values()) {
-            String url = String.format("https://queue-times.com/en-US/parks/%s/calendar", value.getQueueTimeId());
+        for (int i = 0; i < parks.length; i++) {
+            UniversalPark park = parks[i];
+            int delay = i * (1500 + random.nextInt(500)); // e.g., 1.5–2.0 seconds per park staggered
 
-            try {
-                String userAgent = userAgents.get(random.nextInt(userAgents.size()));
-                Document doc = Jsoup.connect(url)
-                        .userAgent(userAgent)
-                        .timeout(10_000)
-                        .get();
-
-                // Optional: Print or cache result
-                System.err.println(doc);
-                System.out.println("Fetched " + value.name() + " with UA: " + userAgent);
-                // Example: Extract something (e.g., calendar dates)
-                // Elements days = doc.select(".calendar-day"); // Adjust as needed
-
-            } catch (Exception e) {
-                System.err.println("Failed to fetch " + url);
-                e.printStackTrace();
-            }
+            Mono.delay(Duration.ofMillis(delay))
+                    .publishOn(Schedulers.boundedElastic())
+                    .subscribe(ignored -> fetchParkCalendar(park));
         }
     }
+
+    private void fetchParkCalendar(UniversalPark park) {
+        String url = String.format("https://queue-times.com/en-US/parks/%s/calendar", park.getQueueTimeId());
+        try {
+            String userAgent = userAgents.get(random.nextInt(userAgents.size()));
+            Document doc = Jsoup.connect(url)
+                    .userAgent(userAgent)
+                    .timeout(10_000)
+                    .get();
+
+            System.out.println("Fetched " + park.name() + " with UA: " + userAgent);
+        } catch (Exception e) {
+            System.err.println("Failed to fetch " + url);
+            e.printStackTrace();
+        }
+    }
+
 
 }
