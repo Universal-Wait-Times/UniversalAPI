@@ -3,11 +3,10 @@ package me.matthewe.universal.universalapi.v1.queuetimes;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.java.Log;
 import me.matthewe.universal.commons.UniversalPark;
-import me.matthewe.universal.commons.ticketdata.TicketData;
-import me.matthewe.universal.universalapi.v1.AttractionWebhookClient;
-import me.matthewe.universal.universalapi.v1.hours.ParkHoursService;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
@@ -15,14 +14,15 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
 import java.time.Duration;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 @Log
 @Service
 public class QueueTimesService {
     private final CacheManager cacheManager;
+
     @Autowired
     public QueueTimesService(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
@@ -35,7 +35,7 @@ public class QueueTimesService {
 
     private void loopUpdate() {
         updateCache();  // repopulates dataCache & evicts sortedTickets
-        long delay = 80000 +random.nextInt(52040);
+        long delay = 80000 + random.nextInt(52040);
         Mono.delay(Duration.ofMillis(delay))
                 .doOnNext(i -> loopUpdate())
                 .subscribe();
@@ -58,20 +58,47 @@ public class QueueTimesService {
             UniversalPark park = parks[i];
             int delay = i * (1500 + random.nextInt(500)); // e.g., 1.5–2.0 seconds per park staggered
 
+            Date date = new Date();
+
+
             Mono.delay(Duration.ofMillis(delay))
                     .publishOn(Schedulers.boundedElastic())
-                    .subscribe(ignored -> fetchParkCalendar(park));
+                    .subscribe(ignored -> fetchParkCalendar(park, date.getYear(), date.getMonth()));
         }
     }
 
-    private void fetchParkCalendar(UniversalPark park) {
-        String url = String.format("https://queue-times.com/en-US/parks/%s/calendar", park.getQueueTimeId());
+    private void fetchParkCalendar(UniversalPark park, int month, int year) {
+        String yearString = String.valueOf(year);
+        if (yearString.length() == 2) {
+            yearString = "20" + yearString; //will break in 75 years;
+        }
+
+        String monthString = String.valueOf(month);
+        if (monthString.length() == 1) {
+            monthString = "0" + monthString; // pad zeros
+        }
+
+
+
+        String url = String.format("https://queue-times.com/en-US/parks/%s/calendar/%s/%s",
+                park.getQueueTimeId(),
+                yearString,
+                monthString
+                );
+
+        log.info("Pulling: " + url);
         try {
             String userAgent = userAgents.get(random.nextInt(userAgents.size()));
             Document doc = Jsoup.connect(url)
                     .userAgent(userAgent)
                     .timeout(10_000)
                     .get();
+            Elements elementsByClass = doc.getElementsByClass("tile is-ancestor is-vertical");
+            log.info(elementsByClass.size() +" SIZE ");
+            if (elementsByClass.isEmpty())return;
+            for (Element byClass : elementsByClass.get(0).getElementsByClass("tile is-child box is-radiusless is-clearfix")) {
+                System.out.println(byClass.text());
+            }
 
             System.out.println("Fetched " + park.name() + " with UA: " + userAgent);
         } catch (Exception e) {
