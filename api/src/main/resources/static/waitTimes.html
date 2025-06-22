@@ -172,12 +172,31 @@
         switch (standby.status) {
             case 'OPEN': return { priority: 0, wait: standby.wait_time || standby.display_wait_time || 0 };
             case 'WALK_ON': return { priority: 1, wait: 0 };
-            case 'BRIEF_DELAY': return { priority: 2, wait: 0 };
-            case 'OPENS_AT': return { priority: 3, wait: 0 };
-            case 'CLOSED': return { priority: 4, wait: 0 };
-            default: return { priority: 5, wait: 0 };
+            case 'WEATHER_DELAY': return { priority: 2, wait: 0 };
+            case 'BRIEF_DELAY': return { priority: 3, wait: 0 };
+            case 'OPENS_AT': return { priority: 4, wait: 0 };
+            case 'CLOSED': return { priority: 5, wait: 0 };
+            default: return { priority: 6, wait: 0 };
         }
+
     }
+    let weatherDataByPark = {};
+    function fetchAllWeather() {
+        parks.forEach(park => {
+            fetch(`https://themeparks.matthewe.me/api/v1/weather?parkName=${park}`)
+                .then(res => res.json())
+                .then(data => {
+                    weatherDataByPark[park] = data;
+                })
+                .catch(err => {
+                    console.error(`Failed to fetch weather for ${park}:`, err);
+                    weatherDataByPark[park] = null;
+                });
+        });
+    }
+    fetchAllWeather();
+    setInterval(fetchAllWeather, 1000); // every 10 sec
+
 
     let descList = {
 
@@ -241,6 +260,14 @@
                 case 'BRIEF_DELAY':
                     displayWaitTime = 'Brief Delay';
                     waitColor = 'red';
+                    break;
+                case 'WEATHER_DELAY':
+                    const weather = weatherDataByPark[currentPark];
+                    waitColor = '#0d39f2';
+                    console.log(weather)
+                    displayWaitTime = 'Weather Delay ' + weather.weatherEmoji;
+
+
                     break;
                 case 'WALK_ON':
                     displayWaitTime = 'Walk ON';
